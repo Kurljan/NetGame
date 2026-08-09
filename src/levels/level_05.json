@@ -1,0 +1,112 @@
+{
+  "id": 5,
+  "title": "WAN Static Routing",
+  "topic": "WAN & Static Routes",
+  "description": "Two LANs are separated by a point-to-point WAN link. Configure static routes on both routers so PCs on opposite sides can communicate. Use the Terminal: ip route <network> <mask> <next-hop>.",
+  "ccnaRef": "CCNA ITN: Module 9 – Basic Router Configuration / Module 10 – IP Routing",
+  "sandboxMode": false,
+  "objectives": [
+    { "id": "obj1", "desc": "R1 has a static route to 10.2.0.0/24" },
+    { "id": "obj2", "desc": "R2 has a static route to 10.1.0.0/24" },
+    { "id": "obj3", "desc": "PC1 can ping PC2 (10.2.0.10)" },
+    { "id": "obj4", "desc": "PC2 can ping PC1 (10.1.0.10)" }
+  ],
+  "requirements": [
+    {
+      "id": "obj1",
+      "type": "route-exists",
+      "desc": "R1 has route to 10.2.0.0/24",
+      "hostname": "R1",
+      "network": "10.2.0.0",
+      "mask": "255.255.255.0"
+    },
+    {
+      "id": "obj2",
+      "type": "route-exists",
+      "desc": "R2 has route to 10.1.0.0/24",
+      "hostname": "R2",
+      "network": "10.1.0.0",
+      "mask": "255.255.255.0"
+    },
+    {
+      "id": "obj3",
+      "type": "ping",
+      "desc": "PC1 → PC2 cross-WAN ping",
+      "srcDeviceId": "pc-5a",
+      "dstIp": "10.2.0.10"
+    },
+    {
+      "id": "obj4",
+      "type": "ping",
+      "desc": "PC2 → PC1 cross-WAN ping",
+      "srcDeviceId": "pc-5b",
+      "dstIp": "10.1.0.10"
+    }
+  ],
+  "hints": [
+    "Select R1 in the terminal. Run: enable → conf t → ip route 10.2.0.0 255.255.255.0 10.0.0.2",
+    "Select R2 in the terminal. Run: enable → conf t → ip route 10.1.0.0 255.255.255.0 10.0.0.1",
+    "The WAN link is 10.0.0.0/30. R1's WAN IP is 10.0.0.1; R2's is 10.0.0.2.",
+    "Each PC needs its router as the default gateway. PC1 gateway = 10.1.0.1, PC2 gateway = 10.2.0.1.",
+    "Verify with: show ip route (on each router)."
+  ],
+  "topology": {
+    "devices": [
+      {
+        "id": "pc-5a", "type": "pc", "hostname": "PC1", "x": 120, "y": 320,
+        "interfaces": [
+          { "name": "FastEthernet0", "shortName": "Fa0", "status": "up", "ipAddress": "10.1.0.10", "subnetMask": "255.255.255.0", "macAddress": "AA:BB:CC:05:00:01" }
+        ],
+        "config": { "defaultGateway": "10.1.0.1" }
+      },
+      {
+        "id": "sw-5a", "type": "switch", "hostname": "SW-Left", "x": 300, "y": 320,
+        "interfaces": [
+          { "name": "FastEthernet0/0", "shortName": "Fa0/0", "status": "up", "vlanId": 1 },
+          { "name": "FastEthernet0/1", "shortName": "Fa0/1", "status": "up", "vlanId": 1 }
+        ],
+        "vlans": [{ "id": 1, "name": "default" }],
+        "config": {}
+      },
+      {
+        "id": "r-5a", "type": "router", "hostname": "R1", "x": 490, "y": 320,
+        "interfaces": [
+          { "name": "GigabitEthernet0/0", "shortName": "G0/0", "status": "up", "ipAddress": "10.1.0.1", "subnetMask": "255.255.255.0" },
+          { "name": "GigabitEthernet0/1", "shortName": "G0/1", "status": "up", "ipAddress": "10.0.0.1", "subnetMask": "255.255.255.252" }
+        ],
+        "config": {}
+      },
+      {
+        "id": "r-5b", "type": "router", "hostname": "R2", "x": 680, "y": 320,
+        "interfaces": [
+          { "name": "GigabitEthernet0/0", "shortName": "G0/0", "status": "up", "ipAddress": "10.0.0.2", "subnetMask": "255.255.255.252" },
+          { "name": "GigabitEthernet0/1", "shortName": "G0/1", "status": "up", "ipAddress": "10.2.0.1", "subnetMask": "255.255.255.0" }
+        ],
+        "config": {}
+      },
+      {
+        "id": "sw-5b", "type": "switch", "hostname": "SW-Right", "x": 870, "y": 320,
+        "interfaces": [
+          { "name": "FastEthernet0/0", "shortName": "Fa0/0", "status": "up", "vlanId": 1 },
+          { "name": "FastEthernet0/1", "shortName": "Fa0/1", "status": "up", "vlanId": 1 }
+        ],
+        "vlans": [{ "id": 1, "name": "default" }],
+        "config": {}
+      },
+      {
+        "id": "pc-5b", "type": "pc", "hostname": "PC2", "x": 1050, "y": 320,
+        "interfaces": [
+          { "name": "FastEthernet0", "shortName": "Fa0", "status": "up", "ipAddress": "10.2.0.10", "subnetMask": "255.255.255.0", "macAddress": "AA:BB:CC:05:00:02" }
+        ],
+        "config": { "defaultGateway": "10.2.0.1" }
+      }
+    ],
+    "links": [
+      { "id": "l5-1", "sourceDeviceId": "pc-5a",  "sourceInterface": "FastEthernet0",       "destDeviceId": "sw-5a",  "destInterface": "FastEthernet0/0",    "type": "ethernet", "status": "up" },
+      { "id": "l5-2", "sourceDeviceId": "sw-5a",  "sourceInterface": "FastEthernet0/1",     "destDeviceId": "r-5a",   "destInterface": "GigabitEthernet0/0", "type": "ethernet", "status": "up" },
+      { "id": "l5-3", "sourceDeviceId": "r-5a",   "sourceInterface": "GigabitEthernet0/1",  "destDeviceId": "r-5b",   "destInterface": "GigabitEthernet0/0", "type": "serial",   "status": "up" },
+      { "id": "l5-4", "sourceDeviceId": "r-5b",   "sourceInterface": "GigabitEthernet0/1",  "destDeviceId": "sw-5b",  "destInterface": "FastEthernet0/0",    "type": "ethernet", "status": "up" },
+      { "id": "l5-5", "sourceDeviceId": "sw-5b",  "sourceInterface": "FastEthernet0/1",     "destDeviceId": "pc-5b",  "destInterface": "FastEthernet0",       "type": "ethernet", "status": "up" }
+    ]
+  }
+}

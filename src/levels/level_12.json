@@ -1,0 +1,64 @@
+{
+  "id": 12,
+  "title": "ICMP Ping & Traceroute",
+  "topic": "ICMP / Upper Layers",
+  "description": "The network has a broken hop — one router interface is misconfigured. Use 'ping' and 'traceroute' to locate the fault, fix it, and restore full end-to-end connectivity across the 3-router chain.",
+  "ccnaRef": "CCNA ITN: Module 13 – ICMP",
+  "sandboxMode": false,
+  "objectives": [
+    { "id": "obj1", "desc": "PC1 traceroute to 10.3.0.10 shows all 3 hops" },
+    { "id": "obj2", "desc": "R2 G0/1 has correct IP 10.2.0.2/30" },
+    { "id": "obj3", "desc": "R3 has route to 10.1.0.0/24 via 10.2.0.1" },
+    { "id": "obj4", "desc": "PC1 can ping PC-Remote (10.3.0.10)" }
+  ],
+  "requirements": [
+    { "id": "obj1", "type": "ping", "desc": "PC1 → 10.2.0.2 (R2 G0/0)", "srcDeviceId": "pc-12a", "dstIp": "10.2.0.2" },
+    { "id": "obj2", "type": "subnet", "desc": "R2 G0/1 in 10.2.0.0/30", "hostname": "R2", "interface": "G0/1", "expectedNetwork": "10.2.0.0", "expectedMask": "255.255.255.252" },
+    { "id": "obj3", "type": "route-exists", "desc": "R3 has route to 10.1.0.0/24", "hostname": "R3", "network": "10.1.0.0", "mask": "255.255.255.0" },
+    { "id": "obj4", "type": "ping", "desc": "PC1 → PC-Remote full path", "srcDeviceId": "pc-12a", "dstIp": "10.3.0.10" }
+  ],
+  "hints": [
+    "Run traceroute 10.3.0.10 on PC1 to see where it fails.",
+    "ICMP uses the Network Layer (L3) — no ports, just echo request/reply.",
+    "Check R2's interfaces: G0/0 should be 10.1.0.2/30, G0/1 should be 10.2.0.2/30 — one is wrong!",
+    "Fix R2's broken interface, then add static routes so R1 and R3 can forward traffic.",
+    "R1 needs: ip route 10.3.0.0 255.255.255.0 10.1.0.2",
+    "R3 needs: ip route 10.1.0.0 255.255.255.0 10.2.0.1"
+  ],
+  "topology": {
+    "devices": [
+      { "id": "pc-12a", "type": "pc", "hostname": "PC1", "x": 80, "y": 310, "interfaces": [{ "name": "FastEthernet0", "shortName": "Fa0", "status": "up", "ipAddress": "192.168.1.10", "subnetMask": "255.255.255.0", "macAddress": "AA:BB:CC:0C:00:01" }], "config": { "defaultGateway": "192.168.1.1" } },
+      {
+        "id": "r-12a", "type": "router", "hostname": "R1", "x": 280, "y": 310,
+        "interfaces": [
+          { "name": "GigabitEthernet0/0", "shortName": "G0/0", "status": "up", "ipAddress": "192.168.1.1", "subnetMask": "255.255.255.0" },
+          { "name": "GigabitEthernet0/1", "shortName": "G0/1", "status": "up", "ipAddress": "10.1.0.1", "subnetMask": "255.255.255.252" }
+        ],
+        "config": {}
+      },
+      {
+        "id": "r-12b", "type": "router", "hostname": "R2", "x": 540, "y": 310,
+        "interfaces": [
+          { "name": "GigabitEthernet0/0", "shortName": "G0/0", "status": "up", "ipAddress": "10.1.0.2", "subnetMask": "255.255.255.252" },
+          { "name": "GigabitEthernet0/1", "shortName": "G0/1", "status": "up", "ipAddress": "10.99.99.2", "subnetMask": "255.255.255.252" }
+        ],
+        "config": {}
+      },
+      {
+        "id": "r-12c", "type": "router", "hostname": "R3", "x": 800, "y": 310,
+        "interfaces": [
+          { "name": "GigabitEthernet0/0", "shortName": "G0/0", "status": "up", "ipAddress": "10.2.0.1", "subnetMask": "255.255.255.252" },
+          { "name": "GigabitEthernet0/1", "shortName": "G0/1", "status": "up", "ipAddress": "10.3.0.1", "subnetMask": "255.255.255.0" }
+        ],
+        "config": {}
+      },
+      { "id": "pc-12b", "type": "pc", "hostname": "PC-Remote", "x": 1000, "y": 310, "interfaces": [{ "name": "FastEthernet0", "shortName": "Fa0", "status": "up", "ipAddress": "10.3.0.10", "subnetMask": "255.255.255.0", "macAddress": "AA:BB:CC:0C:00:02" }], "config": { "defaultGateway": "10.3.0.1" } }
+    ],
+    "links": [
+      { "id": "l12-1", "sourceDeviceId": "pc-12a", "sourceInterface": "FastEthernet0", "destDeviceId": "r-12a", "destInterface": "GigabitEthernet0/0", "type": "ethernet", "status": "up" },
+      { "id": "l12-2", "sourceDeviceId": "r-12a", "sourceInterface": "GigabitEthernet0/1", "destDeviceId": "r-12b", "destInterface": "GigabitEthernet0/0", "type": "serial", "status": "up" },
+      { "id": "l12-3", "sourceDeviceId": "r-12b", "sourceInterface": "GigabitEthernet0/1", "destDeviceId": "r-12c", "destInterface": "GigabitEthernet0/0", "type": "serial", "status": "up" },
+      { "id": "l12-4", "sourceDeviceId": "r-12c", "sourceInterface": "GigabitEthernet0/1", "destDeviceId": "pc-12b", "destInterface": "FastEthernet0", "type": "ethernet", "status": "up" }
+    ]
+  }
+}

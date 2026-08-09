@@ -1,0 +1,98 @@
+{
+  "id": 9,
+  "title": "IPv4 Addressing Deep Dive",
+  "topic": "IPv4 Unicast / Multicast / Broadcast",
+  "description": "Three departments share a router. Each has its own /26 subnet carved from 192.168.50.0/24. Assign the correct first-usable IP to each router sub-interface and verify all three department PCs can ping the router gateway.",
+  "ccnaRef": "CCNA ITN: Modules 11–12 – IPv4 Addressing",
+  "sandboxMode": false,
+  "objectives": [
+    { "id": "obj1", "desc": "Dept-A PC can ping its gateway (192.168.50.1)" },
+    { "id": "obj2", "desc": "Dept-B PC can ping its gateway (192.168.50.65)" },
+    { "id": "obj3", "desc": "Dept-C PC can ping its gateway (192.168.50.129)" },
+    { "id": "obj4", "desc": "R1 G0/0 is in 192.168.50.0/26" },
+    { "id": "obj5", "desc": "R1 G0/1 is in 192.168.50.64/26" },
+    { "id": "obj6", "desc": "R1 G0/2 is in 192.168.50.128/26" }
+  ],
+  "requirements": [
+    { "id": "obj1", "type": "ping", "desc": "Dept-A → gateway", "srcDeviceId": "pc-9a", "dstIp": "192.168.50.1" },
+    { "id": "obj2", "type": "ping", "desc": "Dept-B → gateway", "srcDeviceId": "pc-9b", "dstIp": "192.168.50.65" },
+    { "id": "obj3", "type": "ping", "desc": "Dept-C → gateway", "srcDeviceId": "pc-9c", "dstIp": "192.168.50.129" },
+    { "id": "obj4", "type": "subnet", "desc": "R1 G0/0 in .0/26", "hostname": "R1", "interface": "G0/0", "expectedNetwork": "192.168.50.0", "expectedMask": "255.255.255.192" },
+    { "id": "obj5", "type": "subnet", "desc": "R1 G0/1 in .64/26", "hostname": "R1", "interface": "G0/1", "expectedNetwork": "192.168.50.64", "expectedMask": "255.255.255.192" },
+    { "id": "obj6", "type": "subnet", "desc": "R1 G0/2 in .128/26", "hostname": "R1", "interface": "G0/2", "expectedNetwork": "192.168.50.128", "expectedMask": "255.255.255.192" }
+  ],
+  "hints": [
+    "192.168.50.0/26 gives 4 subnets of 64 IPs each (62 usable hosts). Increment by 64.",
+    "Subnet A: 192.168.50.0–63  → gateway 192.168.50.1  mask 255.255.255.192",
+    "Subnet B: 192.168.50.64–127 → gateway 192.168.50.65 mask 255.255.255.192",
+    "Subnet C: 192.168.50.128–191 → gateway 192.168.50.129 mask 255.255.255.192",
+    "Select R1 in the terminal: enable → conf t → int g0/0 → ip address 192.168.50.1 255.255.255.192 → no shut",
+    "Repeat for G0/1 and G0/2 with the respective subnet gateways."
+  ],
+  "topology": {
+    "devices": [
+      {
+        "id": "r-9a", "type": "router", "hostname": "R1", "x": 540, "y": 310,
+        "interfaces": [
+          { "name": "GigabitEthernet0/0", "shortName": "G0/0", "status": "up", "ipAddress": "", "subnetMask": "" },
+          { "name": "GigabitEthernet0/1", "shortName": "G0/1", "status": "up", "ipAddress": "", "subnetMask": "" },
+          { "name": "GigabitEthernet0/2", "shortName": "G0/2", "status": "up", "ipAddress": "", "subnetMask": "" }
+        ],
+        "config": {}
+      },
+      {
+        "id": "sw-9a", "type": "switch", "hostname": "SW-A", "x": 280, "y": 190,
+        "interfaces": [
+          { "name": "FastEthernet0/0", "shortName": "Fa0/0", "status": "up", "vlanId": 1 },
+          { "name": "FastEthernet0/1", "shortName": "Fa0/1", "status": "up", "vlanId": 1 }
+        ],
+        "vlans": [{ "id": 1, "name": "default" }], "config": {}
+      },
+      {
+        "id": "sw-9b", "type": "switch", "hostname": "SW-B", "x": 280, "y": 310,
+        "interfaces": [
+          { "name": "FastEthernet0/0", "shortName": "Fa0/0", "status": "up", "vlanId": 1 },
+          { "name": "FastEthernet0/1", "shortName": "Fa0/1", "status": "up", "vlanId": 1 }
+        ],
+        "vlans": [{ "id": 1, "name": "default" }], "config": {}
+      },
+      {
+        "id": "sw-9c", "type": "switch", "hostname": "SW-C", "x": 280, "y": 430,
+        "interfaces": [
+          { "name": "FastEthernet0/0", "shortName": "Fa0/0", "status": "up", "vlanId": 1 },
+          { "name": "FastEthernet0/1", "shortName": "Fa0/1", "status": "up", "vlanId": 1 }
+        ],
+        "vlans": [{ "id": 1, "name": "default" }], "config": {}
+      },
+      {
+        "id": "pc-9a", "type": "pc", "hostname": "DeptA-PC", "x": 80, "y": 190,
+        "interfaces": [
+          { "name": "FastEthernet0", "shortName": "Fa0", "status": "up", "ipAddress": "192.168.50.10", "subnetMask": "255.255.255.192", "macAddress": "AA:BB:CC:09:00:01" }
+        ],
+        "config": { "defaultGateway": "192.168.50.1" }
+      },
+      {
+        "id": "pc-9b", "type": "pc", "hostname": "DeptB-PC", "x": 80, "y": 310,
+        "interfaces": [
+          { "name": "FastEthernet0", "shortName": "Fa0", "status": "up", "ipAddress": "192.168.50.74", "subnetMask": "255.255.255.192", "macAddress": "AA:BB:CC:09:00:02" }
+        ],
+        "config": { "defaultGateway": "192.168.50.65" }
+      },
+      {
+        "id": "pc-9c", "type": "pc", "hostname": "DeptC-PC", "x": 80, "y": 430,
+        "interfaces": [
+          { "name": "FastEthernet0", "shortName": "Fa0", "status": "up", "ipAddress": "192.168.50.138", "subnetMask": "255.255.255.192", "macAddress": "AA:BB:CC:09:00:03" }
+        ],
+        "config": { "defaultGateway": "192.168.50.129" }
+      }
+    ],
+    "links": [
+      { "id": "l9-1", "sourceDeviceId": "pc-9a", "sourceInterface": "FastEthernet0",      "destDeviceId": "sw-9a", "destInterface": "FastEthernet0/0",    "type": "ethernet", "status": "up" },
+      { "id": "l9-2", "sourceDeviceId": "sw-9a", "sourceInterface": "FastEthernet0/1",    "destDeviceId": "r-9a",  "destInterface": "GigabitEthernet0/0", "type": "ethernet", "status": "up" },
+      { "id": "l9-3", "sourceDeviceId": "pc-9b", "sourceInterface": "FastEthernet0",      "destDeviceId": "sw-9b", "destInterface": "FastEthernet0/0",    "type": "ethernet", "status": "up" },
+      { "id": "l9-4", "sourceDeviceId": "sw-9b", "sourceInterface": "FastEthernet0/1",    "destDeviceId": "r-9a",  "destInterface": "GigabitEthernet0/1", "type": "ethernet", "status": "up" },
+      { "id": "l9-5", "sourceDeviceId": "pc-9c", "sourceInterface": "FastEthernet0",      "destDeviceId": "sw-9c", "destInterface": "FastEthernet0/0",    "type": "ethernet", "status": "up" },
+      { "id": "l9-6", "sourceDeviceId": "sw-9c", "sourceInterface": "FastEthernet0/1",    "destDeviceId": "r-9a",  "destInterface": "GigabitEthernet0/2", "type": "ethernet", "status": "up" }
+    ]
+  }
+}

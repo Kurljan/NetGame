@@ -1,0 +1,85 @@
+{
+  "id": 10,
+  "title": "IPv6 Addressing",
+  "topic": "IPv6 GUA & LLA",
+  "description": "Configure IPv6 Global Unicast Addresses (GUA) on PC1 and PC2. PC1 gets 2001:db8:acad:1::10/64 and PC2 gets 2001:db8:acad:1::20/64. The switch handles Layer 2. Verify connectivity with a ping.",
+  "ccnaRef": "CCNA ITN: Module 12 – IPv6 Addressing",
+  "sandboxMode": false,
+  "objectives": [
+    { "id": "obj1", "desc": "PC1 has IPv6 GUA 2001:db8:acad:1::10/64" },
+    { "id": "obj2", "desc": "PC2 has IPv6 GUA 2001:db8:acad:1::20/64" },
+    { "id": "obj3", "desc": "PC1 can ping PC2 via IPv6" }
+  ],
+  "requirements": [
+    {
+      "id": "obj1",
+      "type": "ipv6-address",
+      "desc": "PC1 IPv6 GUA assigned",
+      "hostname": "PC1",
+      "interface": "Fa0",
+      "expectedIPv6": "2001:db8:acad:1::10",
+      "expectedPrefix": 64
+    },
+    {
+      "id": "obj2",
+      "type": "ipv6-address",
+      "desc": "PC2 IPv6 GUA assigned",
+      "hostname": "PC2",
+      "interface": "Fa0",
+      "expectedIPv6": "2001:db8:acad:1::20",
+      "expectedPrefix": 64
+    },
+    {
+      "id": "obj3",
+      "type": "ping",
+      "desc": "PC1 → PC2 IPv6 ping",
+      "srcDeviceId": "pc-10a",
+      "dstIp": "2001:db8:acad:1::20"
+    }
+  ],
+  "hints": [
+    "IPv6 addresses are 128 bits written as 8 groups of 4 hex digits, separated by colons.",
+    "GUA (Global Unicast Address) starts with 2000::/3 — the most common routable range.",
+    "LLA (Link-Local Address) starts with FE80::/10 and is auto-configured.",
+    "In the terminal: ipv6 address 2001:db8:acad:1::10/64",
+    "The /64 prefix means the first 64 bits are the network (2001:db8:acad:1) and the last 64 bits are the host (::10).",
+    "Run: ping 2001:db8:acad:1::20 from PC1 to verify."
+  ],
+  "topology": {
+    "devices": [
+      {
+        "id": "pc-10a", "type": "pc", "hostname": "PC1", "x": 220, "y": 300,
+        "interfaces": [
+          { "name": "FastEthernet0", "shortName": "Fa0", "status": "up",
+            "ipAddress": "", "subnetMask": "",
+            "ipv6Address": "", "ipv6Prefix": 64,
+            "macAddress": "AA:BB:CC:0A:00:01" }
+        ],
+        "config": {}
+      },
+      {
+        "id": "sw-10a", "type": "switch", "hostname": "SW1", "x": 520, "y": 300,
+        "interfaces": [
+          { "name": "FastEthernet0/0", "shortName": "Fa0/0", "status": "up", "vlanId": 1 },
+          { "name": "FastEthernet0/1", "shortName": "Fa0/1", "status": "up", "vlanId": 1 }
+        ],
+        "vlans": [{ "id": 1, "name": "default" }],
+        "config": {}
+      },
+      {
+        "id": "pc-10b", "type": "pc", "hostname": "PC2", "x": 820, "y": 300,
+        "interfaces": [
+          { "name": "FastEthernet0", "shortName": "Fa0", "status": "up",
+            "ipAddress": "", "subnetMask": "",
+            "ipv6Address": "", "ipv6Prefix": 64,
+            "macAddress": "AA:BB:CC:0A:00:02" }
+        ],
+        "config": {}
+      }
+    ],
+    "links": [
+      { "id": "l10-1", "sourceDeviceId": "pc-10a", "sourceInterface": "FastEthernet0", "destDeviceId": "sw-10a", "destInterface": "FastEthernet0/0", "type": "ethernet", "status": "up" },
+      { "id": "l10-2", "sourceDeviceId": "pc-10b", "sourceInterface": "FastEthernet0", "destDeviceId": "sw-10a", "destInterface": "FastEthernet0/1", "type": "ethernet", "status": "up" }
+    ]
+  }
+}

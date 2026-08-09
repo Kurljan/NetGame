@@ -1,0 +1,84 @@
+{
+  "id": 8,
+  "title": "Ethernet Frames & MAC Addresses",
+  "topic": "Data Link Layer / MAC Addressing",
+  "description": "Switches learn MAC addresses dynamically. In this lab, send packets between PCs to populate the MAC address tables, then use 'show mac address-table' on SW1 to verify the entries. Finally, wire everything correctly so PC1 can ping all hosts.",
+  "ccnaRef": "CCNA ITN: Modules 4–7 – Physical & Data Link Layers",
+  "sandboxMode": false,
+  "objectives": [
+    { "id": "obj1", "desc": "PC1 can ping PC2 (192.168.10.20)" },
+    { "id": "obj2", "desc": "PC1 can ping PC3 (192.168.10.30)" },
+    { "id": "obj3", "desc": "PC1 can ping PC4 (192.168.10.40)" },
+    { "id": "obj4", "desc": "SW1 MAC table is populated (run ping first, then show mac address-table)" }
+  ],
+  "requirements": [
+    { "id": "obj1", "type": "ping", "desc": "PC1 → PC2", "srcDeviceId": "pc-8a", "dstIp": "192.168.10.20" },
+    { "id": "obj2", "type": "ping", "desc": "PC1 → PC3", "srcDeviceId": "pc-8a", "dstIp": "192.168.10.30" },
+    { "id": "obj3", "type": "ping", "desc": "PC1 → PC4", "srcDeviceId": "pc-8a", "dstIp": "192.168.10.40" },
+    {
+      "id": "obj4",
+      "type": "subnet",
+      "desc": "PC1 correctly in 192.168.10.0/24",
+      "hostname": "PC1",
+      "interface": "Fa0",
+      "expectedNetwork": "192.168.10.0",
+      "expectedMask": "255.255.255.0"
+    }
+  ],
+  "hints": [
+    "A switch builds its MAC table by inspecting source MAC addresses of incoming frames.",
+    "Hex: 0-9 then A-F. Each hex digit represents 4 bits. FF = 11111111 = 255 in decimal.",
+    "MAC addresses are 48 bits (6 bytes) written as XX:XX:XX:XX:XX:XX in hex.",
+    "Select SW1 and run: show mac address-table (after pinging to populate it).",
+    "All PCs are already wired — just make sure PC1 has the correct IP: 192.168.10.10/24."
+  ],
+  "topology": {
+    "devices": [
+      {
+        "id": "pc-8a", "type": "pc", "hostname": "PC1", "x": 150, "y": 200,
+        "interfaces": [
+          { "name": "FastEthernet0", "shortName": "Fa0", "status": "up", "ipAddress": "", "subnetMask": "", "macAddress": "AA:BB:CC:08:00:01" }
+        ],
+        "config": { "defaultGateway": "" }
+      },
+      {
+        "id": "pc-8b", "type": "pc", "hostname": "PC2", "x": 700, "y": 130,
+        "interfaces": [
+          { "name": "FastEthernet0", "shortName": "Fa0", "status": "up", "ipAddress": "192.168.10.20", "subnetMask": "255.255.255.0", "macAddress": "AA:BB:CC:08:00:02" }
+        ],
+        "config": { "defaultGateway": "" }
+      },
+      {
+        "id": "pc-8c", "type": "pc", "hostname": "PC3", "x": 700, "y": 260,
+        "interfaces": [
+          { "name": "FastEthernet0", "shortName": "Fa0", "status": "up", "ipAddress": "192.168.10.30", "subnetMask": "255.255.255.0", "macAddress": "AA:BB:CC:08:00:03" }
+        ],
+        "config": { "defaultGateway": "" }
+      },
+      {
+        "id": "pc-8d", "type": "pc", "hostname": "PC4", "x": 700, "y": 390,
+        "interfaces": [
+          { "name": "FastEthernet0", "shortName": "Fa0", "status": "up", "ipAddress": "192.168.10.40", "subnetMask": "255.255.255.0", "macAddress": "AA:BB:CC:08:00:04" }
+        ],
+        "config": { "defaultGateway": "" }
+      },
+      {
+        "id": "sw-8a", "type": "switch", "hostname": "SW1", "x": 440, "y": 290,
+        "interfaces": [
+          { "name": "FastEthernet0/0", "shortName": "Fa0/0", "status": "up", "vlanId": 1 },
+          { "name": "FastEthernet0/1", "shortName": "Fa0/1", "status": "up", "vlanId": 1 },
+          { "name": "FastEthernet0/2", "shortName": "Fa0/2", "status": "up", "vlanId": 1 },
+          { "name": "FastEthernet0/3", "shortName": "Fa0/3", "status": "up", "vlanId": 1 }
+        ],
+        "vlans": [{ "id": 1, "name": "default" }],
+        "config": {}
+      }
+    ],
+    "links": [
+      { "id": "l8-1", "sourceDeviceId": "pc-8a", "sourceInterface": "FastEthernet0", "destDeviceId": "sw-8a", "destInterface": "FastEthernet0/0", "type": "ethernet", "status": "up" },
+      { "id": "l8-2", "sourceDeviceId": "pc-8b", "sourceInterface": "FastEthernet0", "destDeviceId": "sw-8a", "destInterface": "FastEthernet0/1", "type": "ethernet", "status": "up" },
+      { "id": "l8-3", "sourceDeviceId": "pc-8c", "sourceInterface": "FastEthernet0", "destDeviceId": "sw-8a", "destInterface": "FastEthernet0/2", "type": "ethernet", "status": "up" },
+      { "id": "l8-4", "sourceDeviceId": "pc-8d", "sourceInterface": "FastEthernet0", "destDeviceId": "sw-8a", "destInterface": "FastEthernet0/3", "type": "ethernet", "status": "up" }
+    ]
+  }
+}

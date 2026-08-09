@@ -1,0 +1,105 @@
+{
+  "id": 7,
+  "title": "OSI Model — Packet Trace",
+  "topic": "OSI & TCP/IP Models",
+  "description": "A network is already wired up and working. Your mission: use the Terminal to run 'ping' and 'traceroute', then use the Packet Inspector to observe which OSI layer each protocol header belongs to. Answer the layer-quiz objectives by configuring the correct interface IPs to match the expected OSI-layer mappings.",
+  "ccnaRef": "CCNA ITN: Module 3 – Protocols and Models",
+  "sandboxMode": false,
+  "objectives": [
+    { "id": "obj1", "desc": "PC1 can reach SRV1 (ping 172.16.1.100)" },
+    { "id": "obj2", "desc": "R1 G0/0 is configured at the Network Layer (has an IP)" },
+    { "id": "obj3", "desc": "SW1 operates at the Data Link Layer (no IP needed)" },
+    { "id": "obj4", "desc": "PC1 → SRV1 traceroute completes (R1 appears as hop 1)" }
+  ],
+  "requirements": [
+    {
+      "id": "obj1",
+      "type": "ping",
+      "desc": "PC1 ping to SRV1 succeeds",
+      "srcDeviceId": "pc-7a",
+      "dstIp": "172.16.1.100"
+    },
+    {
+      "id": "obj2",
+      "type": "subnet",
+      "desc": "R1 G0/0 has 172.16.0.1/24",
+      "hostname": "R1",
+      "interface": "G0/0",
+      "expectedNetwork": "172.16.0.0",
+      "expectedMask": "255.255.255.0"
+    },
+    {
+      "id": "obj3",
+      "type": "ping",
+      "desc": "SW1 correctly forwards (no IP needed — Layer 2 device)",
+      "srcDeviceId": "pc-7a",
+      "dstIp": "172.16.0.1"
+    },
+    {
+      "id": "obj4",
+      "type": "ping",
+      "desc": "PC1 can reach SRV1 via R1",
+      "srcDeviceId": "pc-7a",
+      "dstIp": "172.16.1.100"
+    }
+  ],
+  "hints": [
+    "The OSI model has 7 layers: L1=Physical, L2=Data Link, L3=Network, L4=Transport, L5-7=Upper Layers.",
+    "Routers operate at Layer 3 (Network) — they forward packets using IP addresses.",
+    "Switches operate at Layer 2 (Data Link) — they forward frames using MAC addresses.",
+    "PCs are end devices spanning L1-L7.",
+    "Configure R1 G0/0 with IP 172.16.0.1/24 and G0/1 with 172.16.1.1/24.",
+    "Set PC1 gateway to 172.16.0.1 and SRV1 gateway to 172.16.1.1.",
+    "Run traceroute 172.16.1.100 on PC1 to observe the L3 hop through R1."
+  ],
+  "topology": {
+    "devices": [
+      {
+        "id": "pc-7a", "type": "pc", "hostname": "PC1", "x": 130, "y": 320,
+        "interfaces": [
+          { "name": "FastEthernet0", "shortName": "Fa0", "status": "up", "ipAddress": "172.16.0.10", "subnetMask": "255.255.255.0", "macAddress": "AA:BB:CC:07:00:01" }
+        ],
+        "config": { "defaultGateway": "172.16.0.1" }
+      },
+      {
+        "id": "sw-7a", "type": "switch", "hostname": "SW1", "x": 330, "y": 320,
+        "interfaces": [
+          { "name": "FastEthernet0/0", "shortName": "Fa0/0", "status": "up", "vlanId": 1 },
+          { "name": "FastEthernet0/1", "shortName": "Fa0/1", "status": "up", "vlanId": 1 }
+        ],
+        "vlans": [{ "id": 1, "name": "default" }],
+        "config": {}
+      },
+      {
+        "id": "r-7a", "type": "router", "hostname": "R1", "x": 550, "y": 320,
+        "interfaces": [
+          { "name": "GigabitEthernet0/0", "shortName": "G0/0", "status": "up", "ipAddress": "", "subnetMask": "" },
+          { "name": "GigabitEthernet0/1", "shortName": "G0/1", "status": "up", "ipAddress": "172.16.1.1", "subnetMask": "255.255.255.0" }
+        ],
+        "config": {}
+      },
+      {
+        "id": "sw-7b", "type": "switch", "hostname": "SW2", "x": 750, "y": 320,
+        "interfaces": [
+          { "name": "FastEthernet0/0", "shortName": "Fa0/0", "status": "up", "vlanId": 1 },
+          { "name": "FastEthernet0/1", "shortName": "Fa0/1", "status": "up", "vlanId": 1 }
+        ],
+        "vlans": [{ "id": 1, "name": "default" }],
+        "config": {}
+      },
+      {
+        "id": "srv-7", "type": "server", "hostname": "SRV1", "x": 950, "y": 320,
+        "interfaces": [
+          { "name": "FastEthernet0", "shortName": "Fa0", "status": "up", "ipAddress": "172.16.1.100", "subnetMask": "255.255.255.0", "macAddress": "AA:BB:CC:07:00:FF" }
+        ],
+        "config": { "defaultGateway": "172.16.1.1" }
+      }
+    ],
+    "links": [
+      { "id": "l7-1", "sourceDeviceId": "pc-7a", "sourceInterface": "FastEthernet0",       "destDeviceId": "sw-7a", "destInterface": "FastEthernet0/0",    "type": "ethernet", "status": "up" },
+      { "id": "l7-2", "sourceDeviceId": "sw-7a", "sourceInterface": "FastEthernet0/1",     "destDeviceId": "r-7a",  "destInterface": "GigabitEthernet0/0", "type": "ethernet", "status": "up" },
+      { "id": "l7-3", "sourceDeviceId": "r-7a",  "sourceInterface": "GigabitEthernet0/1",  "destDeviceId": "sw-7b", "destInterface": "FastEthernet0/0",    "type": "ethernet", "status": "up" },
+      { "id": "l7-4", "sourceDeviceId": "sw-7b", "sourceInterface": "FastEthernet0/1",     "destDeviceId": "srv-7", "destInterface": "FastEthernet0",       "type": "ethernet", "status": "up" }
+    ]
+  }
+}

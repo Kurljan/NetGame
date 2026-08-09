@@ -1,0 +1,104 @@
+{
+  "id": 1,
+  "title": "LAN Basics",
+  "topic": "IP Addressing",
+  "description": "Assign IP addresses to two PCs on the same network and verify connectivity with a ping.",
+  "ccnaRef": "CCNA ITN: Chapter 8 – Network Layer",
+  "sandboxMode": false,
+  "objectives": [
+    { "id": "obj1", "desc": "Assign IP 192.168.1.10/24 to PC1" },
+    { "id": "obj2", "desc": "Assign IP 192.168.1.20/24 to PC2" },
+    { "id": "obj3", "desc": "PC1 can ping PC2" }
+  ],
+  "requirements": [
+    {
+      "id": "obj1",
+      "type": "subnet",
+      "desc": "PC1 IP is 192.168.1.10/24",
+      "hostname": "PC1",
+      "interface": "Fa0",
+      "expectedNetwork": "192.168.1.0",
+      "expectedMask": "255.255.255.0"
+    },
+    {
+      "id": "obj2",
+      "type": "subnet",
+      "desc": "PC2 IP is 192.168.1.20/24",
+      "hostname": "PC2",
+      "interface": "Fa0",
+      "expectedNetwork": "192.168.1.0",
+      "expectedMask": "255.255.255.0"
+    },
+    {
+      "id": "obj3",
+      "type": "ping",
+      "desc": "PC1 → PC2 ping succeeds",
+      "srcDeviceId": "pc-1",
+      "dstIp": "192.168.1.20"
+    }
+  ],
+  "hints": [
+    "Click a PC to select it. Configure its interface in the right panel.",
+    "Both PCs must be in the same /24 subnet (192.168.1.0/255.255.255.0).",
+    "Click 'Test All Connections' to check your work."
+  ],
+  "topology": {
+    "devices": [
+      {
+        "id": "pc-1",
+        "type": "pc",
+        "hostname": "PC1",
+        "x": 280,
+        "y": 300,
+        "interfaces": [
+          { "name": "FastEthernet0", "shortName": "Fa0", "status": "up", "ipAddress": "", "subnetMask": "", "macAddress": "AA:BB:CC:00:00:01" }
+        ],
+        "config": { "defaultGateway": "" }
+      },
+      {
+        "id": "sw-1",
+        "type": "switch",
+        "hostname": "SW1",
+        "x": 520,
+        "y": 300,
+        "interfaces": [
+          { "name": "FastEthernet0/0", "shortName": "Fa0/0", "status": "up", "vlanId": 1 },
+          { "name": "FastEthernet0/1", "shortName": "Fa0/1", "status": "up", "vlanId": 1 }
+        ],
+        "vlans": [{ "id": 1, "name": "default" }],
+        "config": {}
+      },
+      {
+        "id": "pc-2",
+        "type": "pc",
+        "hostname": "PC2",
+        "x": 760,
+        "y": 300,
+        "interfaces": [
+          { "name": "FastEthernet0", "shortName": "Fa0", "status": "up", "ipAddress": "", "subnetMask": "", "macAddress": "AA:BB:CC:00:00:02" }
+        ],
+        "config": { "defaultGateway": "" }
+      }
+    ],
+    "links": [
+      {
+        "id": "link-1",
+        "sourceDeviceId": "pc-1",
+        "sourceInterface": "FastEthernet0",
+        "destDeviceId": "sw-1",
+        "destInterface": "FastEthernet0/0",
+        "type": "ethernet",
+        "status": "up"
+      },
+      {
+        "id": "link-2",
+        "sourceDeviceId": "sw-1",
+        "sourceInterface": "FastEthernet0/1",
+        "destDeviceId": "pc-2",
+        "destInterface": "FastEthernet0",
+        "type": "ethernet",
+        "status": "up"
+      }
+    ]
+  }
+}

@@ -1,0 +1,94 @@
+{
+  "id": 6,
+  "title": "Default Route to the Internet",
+  "topic": "Default Routes & Internet Gateway",
+  "description": "The edge router R1 connects your LAN to the Internet (Cloud). Add a default route on R1 pointing to the ISP gateway (203.0.113.1) so that PCs can reach the Internet. This is the 'gateway of last resort'.",
+  "ccnaRef": "CCNA ITN: Module 10 – IP Routing Concepts",
+  "sandboxMode": false,
+  "objectives": [
+    { "id": "obj1", "desc": "R1 has a default route (0.0.0.0/0) via 203.0.113.1" },
+    { "id": "obj2", "desc": "PC1 can ping the Internet (8.8.8.8)" },
+    { "id": "obj3", "desc": "PC2 can ping the Internet (8.8.8.8)" }
+  ],
+  "requirements": [
+    {
+      "id": "obj1",
+      "type": "route-exists",
+      "desc": "R1 default route exists",
+      "hostname": "R1",
+      "network": "0.0.0.0",
+      "mask": "0.0.0.0"
+    },
+    {
+      "id": "obj2",
+      "type": "ping",
+      "desc": "PC1 → Internet ping",
+      "srcDeviceId": "pc-6a",
+      "dstIp": "8.8.8.8"
+    },
+    {
+      "id": "obj3",
+      "type": "ping",
+      "desc": "PC2 → Internet ping",
+      "srcDeviceId": "pc-6b",
+      "dstIp": "8.8.8.8"
+    }
+  ],
+  "hints": [
+    "Select R1 in the terminal. The command is: ip route 0.0.0.0 0.0.0.0 203.0.113.1",
+    "A default route matches ANY destination not in the routing table — the 'catch-all'.",
+    "The ISP side has IP 203.0.113.1. R1's WAN interface is 203.0.113.2.",
+    "Verify with: show ip route — you should see a route marked 'S*' (static default).",
+    "The Internet cloud device already has IP 8.8.8.8 for ping testing."
+  ],
+  "topology": {
+    "devices": [
+      {
+        "id": "pc-6a", "type": "pc", "hostname": "PC1", "x": 140, "y": 280,
+        "interfaces": [
+          { "name": "FastEthernet0", "shortName": "Fa0", "status": "up", "ipAddress": "192.168.1.10", "subnetMask": "255.255.255.0", "macAddress": "AA:BB:CC:06:00:01" }
+        ],
+        "config": { "defaultGateway": "192.168.1.1" }
+      },
+      {
+        "id": "pc-6b", "type": "pc", "hostname": "PC2", "x": 140, "y": 380,
+        "interfaces": [
+          { "name": "FastEthernet0", "shortName": "Fa0", "status": "up", "ipAddress": "192.168.1.20", "subnetMask": "255.255.255.0", "macAddress": "AA:BB:CC:06:00:02" }
+        ],
+        "config": { "defaultGateway": "192.168.1.1" }
+      },
+      {
+        "id": "sw-6a", "type": "switch", "hostname": "SW1", "x": 340, "y": 330,
+        "interfaces": [
+          { "name": "FastEthernet0/0", "shortName": "Fa0/0", "status": "up", "vlanId": 1 },
+          { "name": "FastEthernet0/1", "shortName": "Fa0/1", "status": "up", "vlanId": 1 },
+          { "name": "FastEthernet0/2", "shortName": "Fa0/2", "status": "up", "vlanId": 1 }
+        ],
+        "vlans": [{ "id": 1, "name": "default" }],
+        "config": {}
+      },
+      {
+        "id": "r-6a", "type": "router", "hostname": "R1", "x": 560, "y": 330,
+        "interfaces": [
+          { "name": "GigabitEthernet0/0", "shortName": "G0/0", "status": "up", "ipAddress": "192.168.1.1", "subnetMask": "255.255.255.0" },
+          { "name": "GigabitEthernet0/1", "shortName": "G0/1", "status": "up", "ipAddress": "203.0.113.2", "subnetMask": "255.255.255.252" }
+        ],
+        "config": {}
+      },
+      {
+        "id": "cloud-6", "type": "cloud", "hostname": "Internet", "x": 800, "y": 330,
+        "interfaces": [
+          { "name": "FastEthernet0", "shortName": "Fa0", "status": "up", "ipAddress": "203.0.113.1", "subnetMask": "255.255.255.252", "macAddress": "AA:BB:CC:06:FF:01" },
+          { "name": "FastEthernet1", "shortName": "Fa1", "status": "up", "ipAddress": "8.8.8.8", "subnetMask": "255.255.255.255", "macAddress": "AA:BB:CC:06:FF:02" }
+        ],
+        "config": {}
+      }
+    ],
+    "links": [
+      { "id": "l6-1", "sourceDeviceId": "pc-6a",  "sourceInterface": "FastEthernet0",      "destDeviceId": "sw-6a",   "destInterface": "FastEthernet0/0",    "type": "ethernet", "status": "up" },
+      { "id": "l6-2", "sourceDeviceId": "pc-6b",  "sourceInterface": "FastEthernet0",      "destDeviceId": "sw-6a",   "destInterface": "FastEthernet0/1",    "type": "ethernet", "status": "up" },
+      { "id": "l6-3", "sourceDeviceId": "sw-6a",  "sourceInterface": "FastEthernet0/2",    "destDeviceId": "r-6a",    "destInterface": "GigabitEthernet0/0", "type": "ethernet", "status": "up" },
+      { "id": "l6-4", "sourceDeviceId": "r-6a",   "sourceInterface": "GigabitEthernet0/1", "destDeviceId": "cloud-6", "destInterface": "FastEthernet0",       "type": "serial",   "status": "up" }
+    ]
+  }
+}

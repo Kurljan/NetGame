@@ -1,0 +1,96 @@
+{
+  "id": 4,
+  "title": "DHCP Server Setup",
+  "topic": "DHCP & Application Layer",
+  "description": "A Server has been placed as the DHCP server. Configure a DHCP pool on it so that PC1 and PC2 automatically receive IP addresses. Then verify that both PCs can ping each other.",
+  "ccnaRef": "CCNA ITN: Module 15 – IP Addressing Services",
+  "sandboxMode": false,
+  "objectives": [
+    { "id": "obj1", "desc": "Server has a DHCP pool for 192.168.1.0/24" },
+    { "id": "obj2", "desc": "PC1 receives an IP from DHCP (192.168.1.0/24)" },
+    { "id": "obj3", "desc": "PC2 receives an IP from DHCP (192.168.1.0/24)" },
+    { "id": "obj4", "desc": "PC1 can ping PC2" }
+  ],
+  "requirements": [
+    {
+      "id": "obj1",
+      "type": "dhcp-pool",
+      "desc": "DHCP pool on SRV1 covers 192.168.1.0/24",
+      "hostname": "SRV1",
+      "expectedNetwork": "192.168.1.0",
+      "expectedMask": "255.255.255.0"
+    },
+    {
+      "id": "obj2",
+      "type": "subnet",
+      "desc": "PC1 is in 192.168.1.0/24",
+      "hostname": "PC1",
+      "interface": "Fa0",
+      "expectedNetwork": "192.168.1.0",
+      "expectedMask": "255.255.255.0"
+    },
+    {
+      "id": "obj3",
+      "type": "subnet",
+      "desc": "PC2 is in 192.168.1.0/24",
+      "hostname": "PC2",
+      "interface": "Fa0",
+      "expectedNetwork": "192.168.1.0",
+      "expectedMask": "255.255.255.0"
+    },
+    {
+      "id": "obj4",
+      "type": "ping",
+      "desc": "PC1 → PC2 ping succeeds",
+      "srcDeviceId": "pc-4a",
+      "dstIp": "192.168.1.20"
+    }
+  ],
+  "hints": [
+    "Click on SRV1, then go to the Advanced tab to configure the DHCP pool.",
+    "Set Network: 192.168.1.0, Start: 192.168.1.10, End: 192.168.1.100, Mask: 255.255.255.0",
+    "After applying the DHCP pool, manually assign IPs to PC1 (192.168.1.10) and PC2 (192.168.1.20) to simulate DHCP lease — the game auto-validates the subnet membership.",
+    "DHCP is an Application-Layer (L7) protocol that uses UDP port 67 (server) and 68 (client)."
+  ],
+  "topology": {
+    "devices": [
+      {
+        "id": "srv-4", "type": "server", "hostname": "SRV1", "x": 520, "y": 200,
+        "interfaces": [
+          { "name": "FastEthernet0", "shortName": "Fa0", "status": "up", "ipAddress": "192.168.1.1", "subnetMask": "255.255.255.0", "macAddress": "AA:BB:CC:04:00:01" }
+        ],
+        "config": { "defaultGateway": "" },
+        "dhcpPool": null
+      },
+      {
+        "id": "sw-4a", "type": "switch", "hostname": "SW1", "x": 520, "y": 320,
+        "interfaces": [
+          { "name": "FastEthernet0/0", "shortName": "Fa0/0", "status": "up", "vlanId": 1 },
+          { "name": "FastEthernet0/1", "shortName": "Fa0/1", "status": "up", "vlanId": 1 },
+          { "name": "FastEthernet0/2", "shortName": "Fa0/2", "status": "up", "vlanId": 1 }
+        ],
+        "vlans": [{ "id": 1, "name": "default" }],
+        "config": {}
+      },
+      {
+        "id": "pc-4a", "type": "pc", "hostname": "PC1", "x": 300, "y": 420,
+        "interfaces": [
+          { "name": "FastEthernet0", "shortName": "Fa0", "status": "up", "ipAddress": "", "subnetMask": "", "macAddress": "AA:BB:CC:04:00:02" }
+        ],
+        "config": { "defaultGateway": "192.168.1.1" }
+      },
+      {
+        "id": "pc-4b", "type": "pc", "hostname": "PC2", "x": 740, "y": 420,
+        "interfaces": [
+          { "name": "FastEthernet0", "shortName": "Fa0", "status": "up", "ipAddress": "", "subnetMask": "", "macAddress": "AA:BB:CC:04:00:03" }
+        ],
+        "config": { "defaultGateway": "192.168.1.1" }
+      }
+    ],
+    "links": [
+      { "id": "l4-1", "sourceDeviceId": "srv-4",  "sourceInterface": "FastEthernet0",   "destDeviceId": "sw-4a", "destInterface": "FastEthernet0/0", "type": "ethernet", "status": "up" },
+      { "id": "l4-2", "sourceDeviceId": "pc-4a",  "sourceInterface": "FastEthernet0",   "destDeviceId": "sw-4a", "destInterface": "FastEthernet0/1", "type": "ethernet", "status": "up" },
+      { "id": "l4-3", "sourceDeviceId": "pc-4b",  "sourceInterface": "FastEthernet0",   "destDeviceId": "sw-4a", "destInterface": "FastEthernet0/2", "type": "ethernet", "status": "up" }
+    ]
+  }
+}

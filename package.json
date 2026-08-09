@@ -1,0 +1,65 @@
+{
+  "name": "netgame",
+  "version": "1.0.0",
+  "description": "2D CCNA Network Simulation Game – WAN/LAN topology builder based on CCNA ITN & SRWE",
+  "main": "electron-main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder --win --x64",
+    "build:portable": "electron-builder --win portable --x64"
+  },
+  "keywords": [
+    "ccna",
+    "networking",
+    "simulation",
+    "game",
+    "education",
+    "routing",
+    "switching"
+  ],
+  "author": "NetGame",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^28.1.0",
+    "electron-builder": "^24.9.1"
+  },
+  "build": {
+    "appId": "com.netgame.networking",
+    "productName": "NetGame",
+    "copyright": "Copyright © 2025 NetGame",
+    "files": [
+      "**/*",
+      "!node_modules/.cache",
+      "!dist",
+      "!.git"
+    ],
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    }
+  },
+  "allowScripts": {
+    "electron@28.3.3": true
+  }
+}

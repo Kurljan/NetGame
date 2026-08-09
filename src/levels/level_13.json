@@ -1,0 +1,53 @@
+{
+  "id": 13,
+  "title": "TCP & UDP Transport Layer",
+  "topic": "TCP/UDP / Transport Layer",
+  "description": "Configure a server with the correct services running on standard TCP/UDP ports. Use the Packet Inspector to send TCP and UDP packets, observe the port numbers, and verify connectivity to each service port.",
+  "ccnaRef": "CCNA ITN: Module 14 – Transport Layer",
+  "sandboxMode": false,
+  "objectives": [
+    { "id": "obj1", "desc": "PC1 can reach SRV1 via TCP (send a TCP packet in the Packet Inspector)" },
+    { "id": "obj2", "desc": "PC1 can reach SRV1 via UDP (send a UDP packet in the Packet Inspector)" },
+    { "id": "obj3", "desc": "PC1 can ping SRV1 (192.168.1.100)" },
+    { "id": "obj4", "desc": "SRV1 is in the correct subnet 192.168.1.0/24" }
+  ],
+  "requirements": [
+    { "id": "obj1", "type": "ping", "desc": "PC1 → SRV1 TCP-style ping", "srcDeviceId": "pc-13a", "dstIp": "192.168.1.100" },
+    { "id": "obj2", "type": "ping", "desc": "PC1 → SRV1 UDP-style ping", "srcDeviceId": "pc-13a", "dstIp": "192.168.1.100" },
+    { "id": "obj3", "type": "ping", "desc": "PC1 → SRV1 ICMP ping succeeds", "srcDeviceId": "pc-13a", "dstIp": "192.168.1.100" },
+    { "id": "obj4", "type": "subnet", "desc": "SRV1 is in 192.168.1.0/24", "hostname": "SRV1", "interface": "Fa0", "expectedNetwork": "192.168.1.0", "expectedMask": "255.255.255.0" }
+  ],
+  "hints": [
+    "TCP (Transmission Control Protocol) is connection-oriented: SYN → SYN-ACK → ACK (3-way handshake).",
+    "UDP (User Datagram Protocol) is connectionless and faster — no handshake.",
+    "Well-known TCP ports: HTTP=80, HTTPS=443, FTP=21, SSH=22, Telnet=23.",
+    "Well-known UDP ports: DNS=53, DHCP=67/68, TFTP=69, SNMP=161.",
+    "Use the Packet Inspector (bottom-right) to send TCP and UDP packets to 192.168.1.100.",
+    "SRV1 needs IP 192.168.1.100/24. Assign it via the device panel or terminal."
+  ],
+  "topology": {
+    "devices": [
+      { "id": "pc-13a", "type": "pc", "hostname": "PC1", "x": 180, "y": 300, "interfaces": [{ "name": "FastEthernet0", "shortName": "Fa0", "status": "up", "ipAddress": "192.168.1.10", "subnetMask": "255.255.255.0", "macAddress": "AA:BB:CC:0D:00:01" }], "config": { "defaultGateway": "192.168.1.1" } },
+      { "id": "pc-13b", "type": "pc", "hostname": "PC2", "x": 180, "y": 420, "interfaces": [{ "name": "FastEthernet0", "shortName": "Fa0", "status": "up", "ipAddress": "192.168.1.20", "subnetMask": "255.255.255.0", "macAddress": "AA:BB:CC:0D:00:02" }], "config": { "defaultGateway": "192.168.1.1" } },
+      {
+        "id": "sw-13a", "type": "switch", "hostname": "SW1", "x": 450, "y": 360,
+        "interfaces": [
+          { "name": "FastEthernet0/0", "shortName": "Fa0/0", "status": "up", "vlanId": 1 },
+          { "name": "FastEthernet0/1", "shortName": "Fa0/1", "status": "up", "vlanId": 1 },
+          { "name": "FastEthernet0/2", "shortName": "Fa0/2", "status": "up", "vlanId": 1 }
+        ],
+        "vlans": [{ "id": 1, "name": "default" }], "config": {}
+      },
+      {
+        "id": "srv-13", "type": "server", "hostname": "SRV1", "x": 730, "y": 300,
+        "interfaces": [{ "name": "FastEthernet0", "shortName": "Fa0", "status": "up", "ipAddress": "", "subnetMask": "", "macAddress": "AA:BB:CC:0D:00:FF" }],
+        "config": { "defaultGateway": "192.168.1.1" }
+      }
+    ],
+    "links": [
+      { "id": "l13-1", "sourceDeviceId": "pc-13a", "sourceInterface": "FastEthernet0", "destDeviceId": "sw-13a", "destInterface": "FastEthernet0/0", "type": "ethernet", "status": "up" },
+      { "id": "l13-2", "sourceDeviceId": "pc-13b", "sourceInterface": "FastEthernet0", "destDeviceId": "sw-13a", "destInterface": "FastEthernet0/1", "type": "ethernet", "status": "up" },
+      { "id": "l13-3", "sourceDeviceId": "srv-13", "sourceInterface": "FastEthernet0",  "destDeviceId": "sw-13a", "destInterface": "FastEthernet0/2", "type": "ethernet", "status": "up" }
+    ]
+  }
+}

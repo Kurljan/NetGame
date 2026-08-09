@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="NetGame — 2D CCNA Network Simulation Game. Build and configure real-world WAN/LAN topologies." />
+  <title>NetGame — CCNA Network Simulator</title>
+
+  <!-- Google Fonts: Inter + JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="styles/main.css" />
+  <link rel="stylesheet" href="styles/hud.css" />
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     CUSTOM TITLE BAR
+════════════════════════════════════════════════════════════════════ -->
+<div id="titlebar">
+  <div class="titlebar-left">
+    <div class="app-icon">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+        <circle cx="12" cy="12" r="3" fill="#00d4ff"/>
+        <line x1="12" y1="1" x2="12" y2="5" stroke="#00d4ff" stroke-width="2" stroke-linecap="round"/>
+        <line x1="12" y1="19" x2="12" y2="23" stroke="#00d4ff" stroke-width="2" stroke-linecap="round"/>
+        <line x1="1" y1="12" x2="5" y2="12" stroke="#00d4ff" stroke-width="2" stroke-linecap="round"/>
+        <line x1="19" y1="12" x2="23" y2="12" stroke="#00d4ff" stroke-width="2" stroke-linecap="round"/>
+        <line x1="4.22" y1="4.22" x2="7.05" y2="7.05" stroke="#00d4ff" stroke-width="2" stroke-linecap="round"/>
+        <line x1="16.95" y1="16.95" x2="19.78" y2="19.78" stroke="#00d4ff" stroke-width="2" stroke-linecap="round"/>
+        <line x1="19.78" y1="4.22" x2="16.95" y2="7.05" stroke="#00d4ff" stroke-width="2" stroke-linecap="round"/>
+        <line x1="7.05" y1="16.95" x2="4.22" y2="19.78" stroke="#00d4ff" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <span class="app-title">NetGame</span>
+    <span class="app-subtitle">CCNA Network Simulator</span>
+  </div>
+  <div class="titlebar-drag"></div>
+  <div class="titlebar-controls">
+    <button id="btn-minimize" class="win-btn" title="Minimize">&#x2212;</button>
+    <button id="btn-maximize" class="win-btn" title="Maximize">&#x25A1;</button>
+    <button id="btn-close"    class="win-btn close-btn" title="Close">&#x2715;</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     SCREEN: MAIN MENU
+════════════════════════════════════════════════════════════════════ -->
+<div id="screen-menu" class="screen active">
+  <div class="menu-bg-grid"></div>
+  <div class="menu-content">
+    <div class="menu-logo">
+      <div class="logo-icon">
+        <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
+          <rect x="8" y="20" width="20" height="14" rx="3" stroke="#00d4ff" stroke-width="2" fill="none"/>
+          <rect x="36" y="20" width="20" height="14" rx="3" stroke="#00ff88" stroke-width="2" fill="none"/>
+          <rect x="22" y="42" width="20" height="14" rx="3" stroke="#00d4ff" stroke-width="2" fill="none"/>
+          <line x1="18" y1="34" x2="32" y2="42" stroke="#00d4ff" stroke-width="1.5"/>
+          <line x1="46" y1="34" x2="32" y2="42" stroke="#00ff88" stroke-width="1.5"/>
+          <!-- Packet dot -->
+          <circle cx="25" cy="38" r="3" fill="#00d4ff" opacity="0.9"/>
+        </svg>
+      </div>
+      <h1 class="logo-title">NetGame</h1>
+      <p class="logo-subtitle">CCNA Network Simulation</p>
+    </div>
+
+    <nav class="menu-nav">
+      <button id="menu-campaign" class="menu-btn primary">
+        <span class="btn-icon">🗺️</span>
+        <span class="btn-text">Campaign</span>
+        <span class="btn-sub">10 CCNA-aligned levels</span>
+      </button>
+      <button id="menu-sandbox" class="menu-btn">
+        <span class="btn-icon">🔧</span>
+        <span class="btn-text">Sandbox Mode</span>
+        <span class="btn-sub">Free-build any topology</span>
+      </button>
+      <button id="menu-study" class="menu-btn">
+        <span class="btn-icon">📖</span>
+        <span class="btn-text">Study Reference</span>
+        <span class="btn-sub">CCNA quick-reference guide</span>
+      </button>
+    </nav>
+
+    <div class="menu-footer">
+      <span>CCNA: Introduction to Networks &nbsp;|&nbsp; Switching, Routing &amp; Wireless Essentials</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     SCREEN: LEVEL SELECT
+════════════════════════════════════════════════════════════════════ -->
+<div id="screen-levels" class="screen">
+  <div class="levels-header">
+    <button id="levels-back" class="back-btn">&#8592; Menu</button>
+    <h2>Campaign Levels</h2>
+    <span class="levels-progress" id="levels-progress">0 / 10 Complete</span>
+  </div>
+  <div class="levels-grid" id="levels-grid">
+    <!-- Populated by JS -->
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     SCREEN: GAMEPLAY
+════════════════════════════════════════════════════════════════════ -->
+<div id="screen-game" class="screen">
+
+  <!-- TOP HUD -->
+  <div id="hud">
+    <div class="hud-left">
+      <button id="hud-menu-btn" class="hud-btn" title="Back to Menu">&#x2630; Menu</button>
+      <div class="hud-level-info">
+        <span id="hud-level-num" class="hud-level">LV 1</span>
+        <span id="hud-level-name" class="hud-level-name">LAN Basics</span>
+      </div>
+    </div>
+    <div class="hud-center">
+      <div id="hud-objectives" class="hud-objectives">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+    <div class="hud-right">
+      <div class="hud-score-block">
+        <span class="hud-label">Score</span>
+        <span id="hud-score" class="hud-score">0</span>
+      </div>
+      <div class="hud-timer-block">
+        <span class="hud-label">Time</span>
+        <span id="hud-timer" class="hud-timer">00:00</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN GAME AREA -->
+  <div id="game-area">
+
+    <!-- LEFT SIDEBAR: Device Palette -->
+    <!-- LEFT SIDEBAR: Device Palette -->
+    <div id="palette">
+      <div class="palette-header">Devices &amp; Models</div>
+
+      <div class="palette-section">
+        <div class="palette-label">ENTERPRISE ISRs (L3)</div>
+        <div class="palette-item" data-type="router" data-model="4331" draggable="true" title="Cisco 4331 ISR Router (3 GE, 2 SFP, NIM slots, Catalyst SD-WAN)">
+          <canvas class="device-icon-preview" width="48" height="48" data-draw="router"></canvas>
+          <span>Cisco 4331</span>
+        </div>
+        <div class="palette-item" data-type="router" data-model="4321" draggable="true" title="Cisco 4321 ISR Router (2 GE, SFP combo, NIM slot)">
+          <canvas class="device-icon-preview" width="48" height="48" data-draw="router"></canvas>
+          <span>Cisco 4321</span>
+        </div>
+        <div class="palette-item" data-type="router" data-model="2911" draggable="true" title="Cisco 2911 ISR Router (3 GE, 4 EHWIC, DSP Voice Gateway)">
+          <canvas class="device-icon-preview" width="48" height="48" data-draw="router"></canvas>
+          <span>Cisco 2911</span>
+        </div>
+        <div class="palette-item" data-type="router" data-model="2901" draggable="true" title="Cisco 2901 ISR Router (2 GE, 4 EHWIC, DSP Voice Gateway)">
+          <canvas class="device-icon-preview" width="48" height="48" data-draw="router"></canvas>
+          <span>Cisco 2901</span>
+        </div>
+        <div class="palette-item" data-type="router" data-model="1941" draggable="true" title="Cisco 1941 ISR Router (2 GE, 2 EHWIC, IPSec VPN)">
+          <canvas class="device-icon-preview" width="48" height="48" data-draw="router"></canvas>
+          <span>Cisco 1941</span>
+        </div>
+        <div class="palette-item" data-type="router" data-model="1841" draggable="true" title="Cisco 1841 Legacy ISR (2 FE, 2 WIC slots)">
+          <canvas class="device-icon-preview" width="48" height="48" data-draw="router"></canvas>
+          <span>Cisco 1841</span>
+        </div>
+        <div class="palette-item" data-type="router" data-model="2811" draggable="true" title="Cisco 2811 Legacy ISR (2 FE, 4 HWIC, Integrated Voice/Video)">
+          <canvas class="device-icon-preview" width="48" height="48" data-draw="router"></canvas>
+          <span>Cisco 2811</span>
+        </div>
+        <div class="palette-item" data-type="router" data-model="2621XM" draggable="true" title="Cisco 2621XM Modular Router (2 FE, WIC/NM slots)">
+          <canvas class="device-icon-preview" width="48" height="48" data-draw="router"></canvas>
+          <span>Cisco 2621XM</span>
+        </div>
+      </div>
+
+      <div class="palette-section">
+        <div class="palette-label">INDUSTRIAL &amp; GRID ROUTERS</div>
+        <div class="palette-item" data-type="router" data-model="819HGW" draggable="true" title="Cisco 819HGW (4 FE, 1 GE, 3G/4G Cellular, Integrated Wi-Fi)">
+          <canvas class="device-icon-preview" width="48" height="48" data-draw="router"></canvas>
+          <span>Cisco 819HGW</span>
+        </div>
+        <div class="palette-item" data-type="router" data-model="819HG-4G-IOX" draggable="true" title="Cisco 819HG-4G-IOX (4 FE, 1 GE, Cellular, IOx Edge Computing)">
+          <canvas class="device-icon-preview" width="48" height="48" data-draw="router"></canvas>
+          <span>819HG-4G-IOX</span>
+        </div>
+        <div class="palette-item" data-type="router" data-model="829" draggable="true" title="Cisco 829 Industrial Router (4 FE, 1 GE, Dual 4G LTE)">
+          <canvas class="device-icon-preview" width="48" height="48" data-draw="router"></canvas>
+          <span>Cisco 829</span>
+        </div>
+        <div class="palette-item" data-type="router" data-model="CGR1240" draggable="true" title="Cisco CGR 1240 Connected Grid Router (FAN, Outdoor Pole-Mounted)">
+          <canvas class="device-icon-preview" width="48" height="48" data-draw="router"></canvas>
+          <span>CGR 1240</span>
+        </div>
+        <div class="palette-item" data-type="router" data-model="IR1101" draggable="true" title="Cisco IR1101 Industrial ISR (5G/Cellular, Edge Computing, SCADA)">
+          <canvas class="device-icon-preview" width="48" height="48" data-draw="router"></canvas>
+          <span>Cisco IR1101</span>
+        </div>
+        <div class="palette-item" data-type="router" data-model="IR8340" draggable="true" title="Cisco IR8340 Heavy Industrial Router (5G, GE/SFP, SCADA Serial)">
+          <canvas class="device-icon-preview" width="48" height="48" data-draw="router"></canvas>
+          <span>Cisco IR8340</span>
+        </div>
+      </div>
+
+      <div class="palette-section">
+        <div class="palette-label">GENERIC SIMULATION ROUTERS</div>
+        <div class="palette-item" data-type="router" data-model="PT-Router" draggable="true" title="Router-PT Generic (10 Expansion Slots, Console, Aux)">
+          <canvas class="device-icon-preview" width="48" height="48" data-draw="router"></canvas>
+          <span>Router-PT</span>
+        </div>
+        <div class="palette-item" data-type="router" data-model="PT-Empty-Router" draggable="true" title="Router-PT-Empty (Blank Modular Chassis)">
+          <canvas class="device-icon-preview" width="48" height="48" data-draw="router"></canvas>
+          <span>Router-PT-Empty</span>
+        </div>
+      </div>
+
+      <div class="palette-section">
+        <div class="palette-label">LAYER 2 ACCESS SWITCHES</div>
+        <div class="palette-item" data-type="switch" data-model="2960-24TT" draggable="true" title="Catalyst 2960-24TT (24 FE, 2 GE Uplinks)">
+          <canvas class="device-icon-preview" width="48" height="48" data-draw="switch"></canvas>
+          <span>2960-24TT</span>
+        </div>
+        <div class="palette-item" data-type="switch" data-model="2950-24" draggable="true" title="Catalyst 2950-24 (24 FE Ports)">
+          <canvas class="device-icon-preview" width="48" height="48" data-draw="switch"></canvas>
+          <span>2950-24</span>
+        </div>
+        <div class="palette-item" data-type="switch" data-model="2950T-24" draggable="true" title="Catalyst 2950T-24 (24 FE, 2 GE Uplinks)">
+          <canvas class="device-icon-preview" width="48" height="48" data-draw="switch"></canvas>
+          <span>2950T-24</span>
+        </div>
+      </div>
+
+      <div class="palette-section">
+        <div class="palette-label">LAYER 3 MULTILAYER SWITCHES</div>
+        <div class="palette-item" data-type="l3switch" data-model="3560-24PS" draggable="true" title="Catalyst 3560-24PS (24 FE PoE, 2 SFP GE, Layer 3 Routing)">
+          <canvas class="device-icon-preview" width="48" height="48" data-draw="l3switch"></canvas>
+          <span>3560-24PS</span>
+        </div>
+        <div class="palette-item" data-type="l3switch" data-model="3650-24PS" draggable="true" title="Catalyst 3650-24PS (24 GE PoE+, 2 10G SFP+ Uplinks, Multilayer)">
+          <canvas class="device-icon-preview" width="48" height="48" data-draw="l3switch"></canvas>
+          <span>3650-24PS</span>
+        </div>
+      </div>
+
+      <div class="palette-section">
+        <div class="palette-label">INDUSTRIAL ETHERNET SWITCHES</div>
+        <div class="palette-item" data-type="switch" data-model="IE-2000" draggable="true" title="Cisco IE-2000 Industrial Switch (4 FE, 2 GE Combo Ports, DIN-Rail)">
+          <canvas class="device-icon-preview" width="48" height="48" data-draw="switch"></canvas>
+          <span>Cisco IE-2000</span>
+        </div>
+        <div class="palette-item" data-type="l3switch" data-model="IE-3400" draggable="true" title="Cisco Catalyst IE-3400 Industrial L3 Switch (Modular DIN-Rail, GE PoE+)">
+          <canvas class="device-icon-preview" width="48" height="48" data-draw="l3switch"></canvas>
+          <span>Cisco IE-3400</span>
+        </div>
+        <div class="palette-item" data-type="l3switch" data-model="IE-9320" draggable="true" title="Cisco Catalyst IE-9320 Heavy Industrial L3 Switch (Rack-Mount, 24 GE, 4 10G SFP+)">
+          <canvas class="device-icon-preview" width="48" height="48" data-draw="l3switch"></canvas>
+          <span>Cisco IE-9320</span>
+        </div>
+      </div>
+
+      <div class="palette-section">
+        <div class="palette-label">GENERIC SWITCHES &amp; BRIDGES</div>
+        <div class="palette-item" data-type="switch" data-model="Switch-PT" draggable="true" title="Switch-PT Generic (6 FE Ports)">
+          <canvas class="device-icon-preview" width="48" height="48" data-draw="switch"></canvas>
+          <span>Switch-PT</span>
+        </div>
+        <div class="palette-item" data-type="switch" data-model="Switch-PT-Empty" draggable="true" title="Switch-PT-Empty (Blank Modular Chassis)">
+          <canvas class="device-icon-preview" width="48" height="48" data-draw="switch"></canvas>
+          <span>Switch-PT-Empty</span>
+        </div>
+        <div class="palette-item" data-type="bridge" data-model="Bridge-PT" draggable="true" title="Bridge-PT Generic (2 FE Ports)">
+          <canvas class="device-icon-preview" width="48" height="48" data-draw="bridge"></canvas>
+          <span>Bridge-PT</span>
+        </div>
+      </div>
+
+      <div class="palette-section">
+        <div class="palette-label">PHYSICAL &amp; LAYER 1 DEVICES</div>
+        <div class="palette-item" data-type="hub" data-model="Hub-PT" draggable="true" title="Hub-PT Multiport Repeater (6 FE Ports)">
+          <canvas class="device-icon-preview" width="48" height="48" data-draw="hub"></canvas>
+          <span>Hub-PT Hub0</span>
+        </div>
+        <div class="palette-item" data-type="repeater" data-model="Repeater-PT" draggable="true" title="Repeater-PT Signal Repeater (2 FE Ports)">
+          <canvas class="device-icon-preview" width="48" height="48" data-draw="repeater"></canvas>
+          <span>Repeater-PT</span>
+        </div>
+        <div class="palette-item" data-type="coaxialsplitter" data-model="CoAxialSplitter-PT" draggable="true" title="CoAxialSplitter-PT Passive RF Splitter (3 Coaxial BNC Ports)">
+          <canvas class="device-icon-preview" width="48" height="48" data-draw="coaxialsplitter"></canvas>
+          <span>CoAxialSplitter-PT</span>
+        </div>
+      </div>
+
+      <div class="palette-section">
+        <div class="palette-label">WIRELESS &amp; FIREWALL</div>
+        <div class="palette-item" data-type="wirelessrouter" data-model="WRT300N" draggable="true" title="Linksys WRT300N Wireless Router">
+          <canvas class="device-icon-preview" width="48" height="48" data-draw="wirelessrouter"></canvas>
+          <span>WRT300N</span>
+        </div>
+        <div class="palette-item" data-type="ap" data-model="AP-PT" draggable="true" title="Access Point">
+          <canvas class="device-icon-preview" width="48" height="48" data-draw="ap"></canvas>
+          <span>Access Point</span>
+        </div>
+        <div class="palette-item" data-type="firewall" data-model="ASA-5506-X" draggable="true" title="Cisco ASA 5506-X Firewall">
+          <canvas class="device-icon-preview" width="48" height="48" data-draw="firewall"></canvas>
+          <span>ASA 5506-X</span>
+        </div>
+        <div class="palette-item" data-type="wlc" data-model="WLC-2504" draggable="true" title="Cisco 2504 Wireless Controller">
+          <canvas class="device-icon-preview" width="48" height="48" data-draw="wlc"></canvas>
+          <span>WLC-2504</span>
+        </div>
+      </div>
+
+      <div class="palette-section">
+        <div class="palette-label">WAN &amp; END DEVICES</div>
+        <div class="palette-item" data-type="pc" draggable="true" title="PC / Host">
+          <canvas class="device-icon-preview" width="48" height="48" data-draw="pc"></canvas>
+          <span>PC / Host</span>
+        </div>
+        <div class="palette-item" data-type="server" draggable="true" title="Server (DHCP/DNS)">
+          <canvas class="device-icon-preview" width="48" height="48" data-draw="server"></canvas>
+          <span>Server</span>
+        </div>
+        <div class="palette-item" data-type="modem" data-model="DSL-Modem" draggable="true" title="DSL Modem">
+          <canvas class="device-icon-preview" width="48" height="48" data-draw="modem"></canvas>
+          <span>DSL Modem</span>
+        </div>
+        <div class="palette-item" data-type="cloud" data-model="Cloud-PT" draggable="true" title="Cloud / Internet">
+          <canvas class="device-icon-preview" width="48" height="48" data-draw="cloud"></canvas>
+          <span>Internet</span>
+        </div>
+      </div>
+
+      <div class="palette-divider"></div>
+
+      <!-- Tools -->
+      <div class="palette-header">Tools</div>
+      <div class="tool-btns">
+        <button id="tool-select"  class="tool-btn active" title="Select / Move (S)">
+          <svg width="16" height="16" viewBox="0 0 24 24"><path d="M4 4l16 7-7 2-2 7z" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+          Select
+        </button>
+        <button id="tool-link"    class="tool-btn" title="Draw Link (L)">
+          <svg width="16" height="16" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12" stroke="currentColor" stroke-width="2"/><circle cx="5" cy="12" r="2" fill="currentColor"/><circle cx="19" cy="12" r="2" fill="currentColor"/></svg>
+          Link
+        </button>
+        <button id="tool-delete"  class="tool-btn danger" title="Delete device or link (Del)">
+          <svg width="16" height="16" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/></svg>
+          Delete
+        </button>
+      </div>
+
+      <div class="palette-divider"></div>
+
+      <button id="btn-test-all" class="palette-action-btn">
+        ▶ Test All Connections
+      </button>
+      <button id="btn-clear" class="palette-action-btn danger">
+        ✕ Clear Canvas
+      </button>
+    </div>
+
+    <!-- CENTER: Canvas -->
+    <div id="canvas-wrapper">
+      <canvas id="topology-canvas"></canvas>
+      <div id="canvas-hint">Drag devices from the left panel to place them. Use the <strong>Link</strong> tool to connect devices.</div>
+      <div id="zoom-controls">
+        <button id="zoom-in"  title="Zoom In  (+)">+</button>
+        <span   id="zoom-val">100%</span>
+        <button id="zoom-out" title="Zoom Out (-)">−</button>
+        <button id="zoom-fit" title="Fit to screen">⊡</button>
+      </div>
+    </div>
+
+    <!-- RIGHT SIDEBAR: Config Panel -->
+    <div id="config-panel">
+      <div id="panel-empty" class="panel-state">
+        <div class="panel-empty-icon">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="2" stroke="#00d4ff" stroke-width="1.5"/><path d="M9 12h6M12 9v6" stroke="#00d4ff" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+        <p>Click a device to configure it</p>
+      </div>
+
+      <div id="panel-device" class="panel-state hidden">
+        <div class="panel-device-header">
+          <canvas id="panel-device-icon" width="40" height="40"></canvas>
+          <div>
+            <div id="panel-device-type" class="panel-device-type">Router</div>
+            <input id="panel-hostname" class="panel-hostname-input" type="text" placeholder="Hostname" />
+            <select id="panel-model-select" class="panel-hostname-input" style="margin-top:4px; font-size:11px; padding:2px 4px; background:#111a28; color:#00d4ff; border:1px solid #00d4ff;">
+              <!-- Populated dynamically -->
+            </select>
+          </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="panel-tabs">
+          <button class="panel-tab active" data-tab="interfaces">Interfaces</button>
+          <button class="panel-tab" data-tab="routing">Routing</button>
+          <button class="panel-tab" data-tab="vlan">VLANs</button>
+          <button class="panel-tab" data-tab="advanced">Advanced</button>
+        </div>
+
+        <!-- Tab: Interfaces -->
+        <div id="tab-interfaces" class="tab-content active">
+          <div id="interfaces-list"></div>
+          <button id="btn-apply-interfaces" class="apply-btn">Apply Changes</button>
+        </div>
+
+        <!-- Tab: Routing Table -->
+        <div id="tab-routing" class="tab-content hidden">
+          <div class="routing-section">
+            <div class="section-label">Routing Table</div>
+            <div id="routing-table-list" class="routing-list"></div>
+          </div>
+          <div class="routing-section">
+            <div class="section-label">Add Static Route</div>
+            <div class="route-form">
+              <input id="route-network" type="text" placeholder="Network (e.g. 10.0.0.0)" class="route-input"/>
+              <input id="route-mask"    type="text" placeholder="Mask (e.g. 255.255.255.0)" class="route-input"/>
+              <input id="route-nexthop" type="text" placeholder="Next-Hop IP" class="route-input"/>
+              <button id="btn-add-route" class="apply-btn">Add Route</button>
+            </div>
+          </div>
+          <div class="routing-section">
+            <div class="section-label">Protocol</div>
+            <select id="routing-protocol" class="route-select">
+              <option value="none">None (Static only)</option>
+              <option value="rip">RIP v2</option>
+              <option value="ospf">OSPF</option>
+            </select>
+            <button id="btn-apply-routing" class="apply-btn">Apply</button>
+          </div>
+        </div>
+
+        <!-- Tab: VLANs -->
+        <div id="tab-vlan" class="tab-content hidden">
+          <div id="vlan-content">
+            <p class="panel-note">VLANs apply to switches only.</p>
+          </div>
+        </div>
+
+        <!-- Tab: Advanced -->
+        <div id="tab-advanced" class="tab-content hidden">
+          <div class="adv-section">
+            <div class="section-label">DHCP Pool</div>
+            <label class="adv-label">Network</label>
+            <input id="dhcp-network" type="text" placeholder="192.168.1.0" class="route-input"/>
+            <label class="adv-label">Start IP</label>
+            <input id="dhcp-start" type="text" placeholder="192.168.1.10" class="route-input"/>
+            <label class="adv-label">End IP</label>
+            <input id="dhcp-end" type="text" placeholder="192.168.1.100" class="route-input"/>
+            <label class="adv-label">Mask</label>
+            <input id="dhcp-mask" type="text" placeholder="255.255.255.0" class="route-input"/>
+            <label class="adv-label">DNS Server</label>
+            <input id="dhcp-dns" type="text" placeholder="8.8.8.8" class="route-input"/>
+            <button id="btn-apply-dhcp" class="apply-btn">Apply DHCP Pool</button>
+          </div>
+          <div class="adv-section">
+            <div class="section-label">NAT</div>
+            <label class="adv-check">
+              <input type="checkbox" id="nat-enabled" /> Enable NAT/PAT
+            </label>
+            <label class="adv-label">Inside Interface</label>
+            <input id="nat-inside" type="text" placeholder="G0/0" class="route-input"/>
+            <label class="adv-label">Outside Interface</label>
+            <input id="nat-outside" type="text" placeholder="G0/1" class="route-input"/>
+          </div>
+        </div>
+
+        <button id="btn-delete-device" class="delete-device-btn">Delete Device</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOTTOM PANELS -->
+  <div id="bottom-panels">
+
+    <!-- Terminal -->
+    <div id="terminal-panel">
+      <div class="panel-tab-bar">
+        <span class="panel-tab-title">
+          <svg width="14" height="14" viewBox="0 0 24 24"><polyline points="4 17 10 11 4 5" stroke="currentColor" stroke-width="2" fill="none"/><line x1="12" y1="19" x2="20" y2="19" stroke="currentColor" stroke-width="2"/></svg>
+          Terminal (IOS-CLI)
+        </span>
+        <span id="term-device-label" class="term-device-label">No device selected</span>
+        <button id="term-clear-btn" class="panel-mini-btn">Clear</button>
+      </div>
+      <div id="terminal-output" class="terminal-output">
+        <div class="term-line sys">NetGame IOS-like CLI — Select a device and type commands below.</div>
+        <div class="term-line sys">Type <span class="term-cmd">help</span> for available commands.</div>
+      </div>
+      <div class="terminal-input-row">
+        <span id="term-prompt" class="term-prompt">Router&gt;</span>
+        <input id="terminal-input" class="terminal-input" type="text" placeholder="Type a command..." autocomplete="off" autocorrect="off" spellcheck="false" />
+      </div>
+    </div>
+
+    <!-- Packet Inspector -->
+    <div id="inspector-panel">
+      <div class="panel-tab-bar">
+        <span class="panel-tab-title">
+          <svg width="14" height="14" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2" fill="none"/><line x1="21" y1="21" x2="16.65" y2="16.65" stroke="currentColor" stroke-width="2"/></svg>
+          Packet Inspector
+        </span>
+        <button id="btn-send-packet" class="inspector-send-btn">▶ Send Packet</button>
+      </div>
+
+      <div id="inspector-send-form" class="inspector-send-form">
+        <select id="pkt-src" class="pkt-select"><option value="">Source Device</option></select>
+        <span class="pkt-arrow">→</span>
+        <input id="pkt-dst-ip" type="text" class="pkt-ip" placeholder="Destination IP" />
+        <select id="pkt-proto" class="pkt-select-sm">
+          <option value="icmp">ICMP (Ping)</option>
+          <option value="tcp">TCP</option>
+          <option value="udp">UDP</option>
+        </select>
+      </div>
+
+      <div id="inspector-layers" class="inspector-layers">
+        <div class="inspector-empty">No packet captured. Send a packet to inspect it.</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     SCREEN: STUDY REFERENCE
+════════════════════════════════════════════════════════════════════ -->
+<div id="screen-study" class="screen">
+  <div class="levels-header">
+    <button id="study-back" class="back-btn">&#8592; Menu</button>
+    <h2>CCNA Study Reference</h2>
+  </div>
+  <div class="study-content" id="study-content">
+    <!-- Populated by JS -->
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     OVERLAY: WIN / FAIL
+════════════════════════════════════════════════════════════════════ -->
+<div id="overlay-result" class="overlay hidden">
+  <div class="overlay-box">
+    <div id="result-icon" class="result-icon"></div>
+    <h2 id="result-title">Level Complete!</h2>
+    <p  id="result-msg"></p>
+    <div class="result-stats">
+      <div class="stat"><span class="stat-label">Score</span><span id="res-score" class="stat-val">0</span></div>
+      <div class="stat"><span class="stat-label">Time</span><span  id="res-time"  class="stat-val">00:00</span></div>
+    </div>
+    <div class="overlay-btns">
+      <button id="res-retry"  class="res-btn">↺ Retry</button>
+      <button id="res-next"   class="res-btn primary">Next Level →</button>
+      <button id="res-levels" class="res-btn">Level Select</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     OVERLAY: SUBNET CALCULATOR
+════════════════════════════════════════════════════════════════════ -->
+<div id="overlay-subnet" class="overlay hidden">
+  <div class="overlay-box wide">
+    <div class="overlay-header">
+      <h3>Subnet Calculator</h3>
+      <button id="subnet-close" class="overlay-close">✕</button>
+    </div>
+    <div class="subnet-calc">
+      <div class="subnet-input-row">
+        <input id="subnet-input" type="text" placeholder="e.g.  192.168.1.0/24  or  10.0.0.0/8" class="subnet-input-field"/>
+        <button id="subnet-calc-btn" class="apply-btn">Calculate</button>
+      </div>
+      <div id="subnet-result" class="subnet-result"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Floating subnet calc button -->
+<button id="btn-subnet-calc" class="floating-btn" title="Open Subnet Calculator">
+  ÷ Subnet Calc
+</button>
+
+<!-- Game scripts (ES Modules) -->
+<script type="module" src="src/main.js"></script>
+
+</body>
+</html>

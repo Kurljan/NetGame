@@ -1,0 +1,55 @@
+{
+  "id": 3,
+  "title": "Inter-VLAN Routing",
+  "topic": "VLANs / Router-on-a-Stick",
+  "description": "Configure two VLANs on the switch, assign PCs to VLANs, and use a Router-on-a-Stick configuration to allow inter-VLAN routing.",
+  "ccnaRef": "CCNA SRWE: Chapter 4 – Inter-VLAN Routing",
+  "sandboxMode": false,
+  "objectives": [
+    { "id": "obj1", "desc": "VLAN 10 (Sales) exists on SW1" },
+    { "id": "obj2", "desc": "VLAN 20 (HR) exists on SW1" },
+    { "id": "obj3", "desc": "PC1 (VLAN 10) can ping PC2 (VLAN 20) via R1" }
+  ],
+  "requirements": [
+    { "id": "obj1", "type": "vlan", "desc": "VLAN 10 on SW1", "hostname": "SW1", "vlanId": 10 },
+    { "id": "obj2", "type": "vlan", "desc": "VLAN 20 on SW1", "hostname": "SW1", "vlanId": 20 },
+    { "id": "obj3", "type": "ping", "desc": "PC1 → PC2 inter-VLAN ping", "srcDeviceId": "pc-7", "dstIp": "192.168.20.10" }
+  ],
+  "hints": [
+    "Configure VLAN 10 (Sales) and VLAN 20 (HR) on SW1 in the VLAN tab.",
+    "Set PC1's port (Fa0/0) as Access VLAN 10, PC2's port (Fa0/1) as Access VLAN 20.",
+    "Set the router port (Fa0/2) as Trunk.",
+    "On R1: add sub-interfaces for each VLAN with encapsulation 802.1Q.",
+    "R1 G0/0.10 → 192.168.10.1/24, R1 G0/0.20 → 192.168.20.1/24.",
+    "Set each PC's gateway to its respective VLAN gateway IP."
+  ],
+  "topology": {
+    "devices": [
+      { "id": "pc-7",  "type": "pc", "hostname": "PC1", "x": 160, "y": 240, "interfaces": [{ "name": "FastEthernet0", "shortName": "Fa0", "status": "up", "ipAddress": "192.168.10.10", "subnetMask": "255.255.255.0", "macAddress": "AA:BB:CC:03:00:01" }], "config": { "defaultGateway": "" } },
+      { "id": "pc-8",  "type": "pc", "hostname": "PC2", "x": 160, "y": 380, "interfaces": [{ "name": "FastEthernet0", "shortName": "Fa0", "status": "up", "ipAddress": "192.168.20.10", "subnetMask": "255.255.255.0", "macAddress": "AA:BB:CC:03:00:02" }], "config": { "defaultGateway": "" } },
+      {
+        "id": "sw-4", "type": "switch", "hostname": "SW1", "x": 460, "y": 310,
+        "interfaces": [
+          { "name": "FastEthernet0/0", "shortName": "Fa0/0", "status": "up", "vlanId": 10 },
+          { "name": "FastEthernet0/1", "shortName": "Fa0/1", "status": "up", "vlanId": 20 },
+          { "name": "GigabitEthernet0/1", "shortName": "G0/1", "status": "up", "trunkMode": true, "allowedVlans": [10, 20] }
+        ],
+        "vlans": [{ "id": 1, "name": "default" }],
+        "config": {}
+      },
+      {
+        "id": "r-1", "type": "router", "hostname": "R1", "x": 720, "y": 310,
+        "interfaces": [
+          { "name": "GigabitEthernet0/0", "shortName": "G0/0", "status": "up", "ipAddress": "", "subnetMask": "" },
+          { "name": "GigabitEthernet0/1", "shortName": "G0/1", "status": "down", "ipAddress": "", "subnetMask": "" }
+        ],
+        "config": {}
+      }
+    ],
+    "links": [
+      { "id": "l-10", "sourceDeviceId": "pc-7",  "sourceInterface": "FastEthernet0",       "destDeviceId": "sw-4", "destInterface": "FastEthernet0/0",   "type": "ethernet", "status": "up" },
+      { "id": "l-11", "sourceDeviceId": "pc-8",  "sourceInterface": "FastEthernet0",       "destDeviceId": "sw-4", "destInterface": "FastEthernet0/1",   "type": "ethernet", "status": "up" },
+      { "id": "l-12", "sourceDeviceId": "sw-4",  "sourceInterface": "GigabitEthernet0/1",  "destDeviceId": "r-1",  "destInterface": "GigabitEthernet0/0", "type": "ethernet", "status": "up" }
+    ]
+  }
+}

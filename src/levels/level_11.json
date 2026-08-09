@@ -1,0 +1,55 @@
+{
+  "id": 11,
+  "title": "VLSM Network Design",
+  "topic": "VLSM / Variable Length Subnet Masking",
+  "description": "You have been given 10.0.0.0/22 (1022 usable hosts). Design a VLSM scheme for 4 departments: Engineering (250 hosts), Sales (60 hosts), HR (28 hosts), and the WAN link (2 hosts). Assign the correct subnets to each router interface.",
+  "ccnaRef": "CCNA ITN: Module 11–12 – VLSM",
+  "sandboxMode": false,
+  "objectives": [
+    { "id": "obj1", "desc": "R1 G0/0 in Engineering subnet 10.0.0.0/24 (250 hosts)" },
+    { "id": "obj2", "desc": "R1 G0/1 in Sales subnet 10.0.1.0/26 (60 hosts)" },
+    { "id": "obj3", "desc": "R1 G0/2 in HR subnet 10.0.1.64/27 (28 hosts)" },
+    { "id": "obj4", "desc": "All department PCs can ping R1" }
+  ],
+  "requirements": [
+    { "id": "obj1", "type": "subnet", "desc": "R1 G0/0 in Engineering /24", "hostname": "R1", "interface": "G0/0", "expectedNetwork": "10.0.0.0", "expectedMask": "255.255.255.0" },
+    { "id": "obj2", "type": "subnet", "desc": "R1 G0/1 in Sales /26", "hostname": "R1", "interface": "G0/1", "expectedNetwork": "10.0.1.0", "expectedMask": "255.255.255.192" },
+    { "id": "obj3", "type": "subnet", "desc": "R1 G0/2 in HR /27", "hostname": "R1", "interface": "G0/2", "expectedNetwork": "10.0.1.64", "expectedMask": "255.255.255.224" },
+    { "id": "obj4", "type": "ping", "desc": "Eng-PC → R1 G0/0", "srcDeviceId": "pc-11a", "dstIp": "10.0.0.1" }
+  ],
+  "hints": [
+    "VLSM = allocate the LARGEST subnet first, then carve smaller ones from remaining space.",
+    "Engineering (250 hosts): need /24 → 10.0.0.0/24 (254 usable). Assign R1 G0/0 = 10.0.0.1/24",
+    "Sales (60 hosts): need /26 (62 usable) → 10.0.1.0/26. Assign R1 G0/1 = 10.0.1.1/26",
+    "HR (28 hosts): need /27 (30 usable) → 10.0.1.64/27. Assign R1 G0/2 = 10.0.1.65/27",
+    "WAN link (2 hosts): need /30 → 10.0.1.96/30.",
+    "Configure with: int g0/0 → ip address 10.0.0.1 255.255.255.0"
+  ],
+  "topology": {
+    "devices": [
+      {
+        "id": "r-11a", "type": "router", "hostname": "R1", "x": 540, "y": 310,
+        "interfaces": [
+          { "name": "GigabitEthernet0/0", "shortName": "G0/0", "status": "up", "ipAddress": "", "subnetMask": "" },
+          { "name": "GigabitEthernet0/1", "shortName": "G0/1", "status": "up", "ipAddress": "", "subnetMask": "" },
+          { "name": "GigabitEthernet0/2", "shortName": "G0/2", "status": "up", "ipAddress": "", "subnetMask": "" }
+        ],
+        "config": {}
+      },
+      { "id": "sw-11a", "type": "switch", "hostname": "SW-Eng", "x": 280, "y": 180, "interfaces": [{ "name": "FastEthernet0/0", "shortName": "Fa0/0", "status": "up", "vlanId": 1 }, { "name": "FastEthernet0/1", "shortName": "Fa0/1", "status": "up", "vlanId": 1 }], "vlans": [{ "id": 1, "name": "default" }], "config": {} },
+      { "id": "sw-11b", "type": "switch", "hostname": "SW-Sales", "x": 280, "y": 310, "interfaces": [{ "name": "FastEthernet0/0", "shortName": "Fa0/0", "status": "up", "vlanId": 1 }, { "name": "FastEthernet0/1", "shortName": "Fa0/1", "status": "up", "vlanId": 1 }], "vlans": [{ "id": 1, "name": "default" }], "config": {} },
+      { "id": "sw-11c", "type": "switch", "hostname": "SW-HR", "x": 280, "y": 440, "interfaces": [{ "name": "FastEthernet0/0", "shortName": "Fa0/0", "status": "up", "vlanId": 1 }, { "name": "FastEthernet0/1", "shortName": "Fa0/1", "status": "up", "vlanId": 1 }], "vlans": [{ "id": 1, "name": "default" }], "config": {} },
+      { "id": "pc-11a", "type": "pc", "hostname": "Eng-PC", "x": 80, "y": 180, "interfaces": [{ "name": "FastEthernet0", "shortName": "Fa0", "status": "up", "ipAddress": "10.0.0.10", "subnetMask": "255.255.255.0", "macAddress": "AA:BB:CC:0B:00:01" }], "config": { "defaultGateway": "10.0.0.1" } },
+      { "id": "pc-11b", "type": "pc", "hostname": "Sales-PC", "x": 80, "y": 310, "interfaces": [{ "name": "FastEthernet0", "shortName": "Fa0", "status": "up", "ipAddress": "10.0.1.10", "subnetMask": "255.255.255.192", "macAddress": "AA:BB:CC:0B:00:02" }], "config": { "defaultGateway": "10.0.1.1" } },
+      { "id": "pc-11c", "type": "pc", "hostname": "HR-PC", "x": 80, "y": 440, "interfaces": [{ "name": "FastEthernet0", "shortName": "Fa0", "status": "up", "ipAddress": "10.0.1.74", "subnetMask": "255.255.255.224", "macAddress": "AA:BB:CC:0B:00:03" }], "config": { "defaultGateway": "10.0.1.65" } }
+    ],
+    "links": [
+      { "id": "l11-1", "sourceDeviceId": "pc-11a", "sourceInterface": "FastEthernet0", "destDeviceId": "sw-11a", "destInterface": "FastEthernet0/0", "type": "ethernet", "status": "up" },
+      { "id": "l11-2", "sourceDeviceId": "sw-11a", "sourceInterface": "FastEthernet0/1", "destDeviceId": "r-11a", "destInterface": "GigabitEthernet0/0", "type": "ethernet", "status": "up" },
+      { "id": "l11-3", "sourceDeviceId": "pc-11b", "sourceInterface": "FastEthernet0", "destDeviceId": "sw-11b", "destInterface": "FastEthernet0/0", "type": "ethernet", "status": "up" },
+      { "id": "l11-4", "sourceDeviceId": "sw-11b", "sourceInterface": "FastEthernet0/1", "destDeviceId": "r-11a", "destInterface": "GigabitEthernet0/1", "type": "ethernet", "status": "up" },
+      { "id": "l11-5", "sourceDeviceId": "pc-11c", "sourceInterface": "FastEthernet0", "destDeviceId": "sw-11c", "destInterface": "FastEthernet0/0", "type": "ethernet", "status": "up" },
+      { "id": "l11-6", "sourceDeviceId": "sw-11c", "sourceInterface": "FastEthernet0/1", "destDeviceId": "r-11a", "destInterface": "GigabitEthernet0/2", "type": "ethernet", "status": "up" }
+    ]
+  }
+}
