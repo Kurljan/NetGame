@@ -12,12 +12,14 @@ import { PacketInspector }  from './ui/PacketInspector.js';
 import { HUD }              from './ui/HUD.js';
 import { LevelManager, LEVELS } from './levels/LevelManager.js';
 import { SubnetCalculator as SC } from './subnetting/SubnetCalculator.js';
+import { DeviceCommandGuide } from './ui/DeviceCommandGuide.js';
 
 // ──────────────────────────────────────────────────────────────
 //  Global game state
 // ──────────────────────────────────────────────────────────────
 const state = {
   currentScreen: 'menu',
+  previousScreen: 'menu',
   currentLevel:  null,
   isSandbox:     false,
 };
@@ -25,16 +27,17 @@ const state = {
 // ──────────────────────────────────────────────────────────────
 //  Initialize core systems
 // ──────────────────────────────────────────────────────────────
-const sim      = new NetworkSimulator();
-const canvasEl = document.getElementById('topology-canvas');
-const canvas   = new Canvas(canvasEl);
-const input    = new InputHandler(canvas);
-const builder  = new TopologyBuilder(sim, canvas);
-const panel    = new DevicePanel(sim);
-const terminal = new Terminal(sim);
-const inspector= new PacketInspector(sim, canvas);
-const hud      = new HUD(sim);
-const levels   = new LevelManager();
+const sim         = new NetworkSimulator();
+const canvasEl    = document.getElementById('topology-canvas');
+const canvas      = new Canvas(canvasEl);
+const input       = new InputHandler(canvas);
+const builder     = new TopologyBuilder(sim, canvas);
+const panel       = new DevicePanel(sim);
+const terminal    = new Terminal(sim);
+const inspector   = new PacketInspector(sim, canvas);
+const hud         = new HUD(sim);
+const levels      = new LevelManager();
+const deviceGuide = new DeviceCommandGuide(sim);
 
 canvas.setData(sim.devices, sim.links);
 canvas.startLoop();
@@ -58,6 +61,9 @@ if (window.electronAPI) {
 //  Screen management
 // ──────────────────────────────────────────────────────────────
 function showScreen(id) {
+  if (state.currentScreen !== id) {
+    state.previousScreen = state.currentScreen;
+  }
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(`screen-${id}`)?.classList.add('active');
   state.currentScreen = id;
@@ -87,14 +93,40 @@ document.getElementById('menu-sandbox')?.addEventListener('click',  () => {
   document.getElementById('hud-objectives').innerHTML   = '<div class="objective-chip">Free mode — no objectives</div>';
   showScreen('game');
 });
-document.getElementById('menu-study')?.addEventListener('click',    () => {
+document.getElementById('menu-device-guide')?.addEventListener('click', () => {
+  deviceGuide.openForDevice('router');
+  showScreen('device-guide');
+});
+document.getElementById('menu-study')?.addEventListener('click', () => {
   renderStudyGuide();
   showScreen('study');
 });
 
+// Quick access buttons during gameplay
+function openDeviceGuideFromGame() {
+  const devType = panel.device ? panel.device.type : 'router';
+  deviceGuide.openForDevice(devType);
+  showScreen('device-guide');
+}
+
+document.getElementById('hud-guide-btn')?.addEventListener('click', openDeviceGuideFromGame);
+document.getElementById('btn-device-guide')?.addEventListener('click', openDeviceGuideFromGame);
+document.getElementById('btn-floating-guide')?.addEventListener('click', openDeviceGuideFromGame);
+
 document.getElementById('levels-back')?.addEventListener('click', () => showScreen('menu'));
 document.getElementById('study-back')?.addEventListener('click',  () => showScreen('menu'));
+document.getElementById('guide-back')?.addEventListener('click',  () => {
+  showScreen(state.previousScreen === 'game' ? 'game' : 'menu');
+});
+
 eventBus.on('screen:menu', () => showScreen('menu'));
+eventBus.on('guide:openDevice', (type) => {
+  deviceGuide.openForDevice(type || (panel.device ? panel.device.type : 'router'));
+  showScreen('device-guide');
+});
+eventBus.on('guide:close', () => {
+  showScreen(state.previousScreen === 'game' ? 'game' : 'menu');
+});
 
 // ──────────────────────────────────────────────────────────────
 //  Level Select

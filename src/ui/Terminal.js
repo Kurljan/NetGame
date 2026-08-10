@@ -90,6 +90,17 @@ export class Terminal {
       this._updatePrompt();
       if (this._labelEl) this._labelEl.textContent = 'No device selected';
     });
+
+    eventBus.on('terminal:insertCommand', (cmdText) => {
+      if (!this._inputEl) return;
+      this._inputEl.value = cmdText;
+      this._inputEl.focus();
+      if (cmdText.includes('<') && cmdText.includes('>')) {
+        const start = cmdText.indexOf('<');
+        const end = cmdText.indexOf('>') + 1;
+        this._inputEl.setSelectionRange(start, end);
+      }
+    });
   }
 
   // ──────────────────────────────────────────────────────────
@@ -252,9 +263,85 @@ export class Terminal {
       return;
     }
 
+    // ── hostname ───────────────────────────────────────────
+    if (p0 === 'hostname' && parts[1]) {
+      if (this._mode !== 'config') { this._print('% Must be in config mode.', 'err'); return; }
+      this.device.hostname = parts[1];
+      this._updatePrompt();
+      const hostInput = document.getElementById('panel-hostname');
+      if (hostInput) hostInput.value = parts[1];
+      if (this._labelEl) this._labelEl.textContent = `${this.device.type.toUpperCase()} — ${this.device.hostname}`;
+      eventBus.emit('canvas:markDirty');
+      eventBus.emit('topology:changed');
+      this._print(`  Hostname set to "${parts[1]}"`, 'ok');
+      return;
+    }
+
+    // ── vlan <id> ───────────────────────────────────────────
+    if (p0 === 'vlan' && parts[1] && !isNaN(parts[1])) {
+      if (this._mode !== 'config') { this._print('% Must be in config mode.', 'err'); return; }
+      if (!this.device.vlans) { this.device.vlans = [{ id: 1, name: 'default' }]; }
+      const vid = parseInt(parts[1], 10);
+      let v = this.device.vlans.find(x => x.id === vid);
+      if (!v) {
+        v = { id: vid, name: `VLAN${vid}` };
+        this.device.vlans.push(v);
+        this.device.vlans.sort((a, b) => a.id - b.id);
+        this._print(`  Created VLAN ${vid}`, 'ok');
+      }
+      this._mode = 'config-vlan';
+      this._curVlanId = vid;
+      this._updatePrompt();
+      eventBus.emit('panel:showDevice', this.device);
+      return;
+    }
+
+    // ── name <vlan_name> ────────────────────────────────────
+    if (p0 === 'name' && parts[1] && this._mode === 'config-vlan') {
+      const v = this.device.vlans?.find(x => x.id === this._curVlanId);
+      if (v) {
+        v.name = parts.slice(1).join(' ');
+        this._print(`  VLAN ${this._curVlanId} renamed to "${v.name}"`, 'ok');
+        eventBus.emit('panel:showDevice', this.device);
+      }
+      return;
+    }
+
+    // ── switchport mode / access ───────────────────────────
+    if (p0 === 'switchport' && this._mode === 'iface') {
+      const iface = this._findIface(this._ifaceName);
+      if (iface) {
+        if (p1 === 'mode' && parts[2]?.toLowerCase() === 'trunk') {
+          iface.trunkMode = true;
+          this._print(`  Interface ${this._ifaceName} set to 802.1Q TRUNK mode`, 'ok');
+        } else if (p1 === 'mode' && parts[2]?.toLowerCase() === 'access') {
+          iface.trunkMode = false;
+          this._print(`  Interface ${this._ifaceName} set to ACCESS mode`, 'ok');
+        } else if (p1 === 'access' && parts[2]?.toLowerCase() === 'vlan' && parts[3]) {
+          iface.vlanId = parseInt(parts[3], 10);
+          this._print(`  Interface ${this._ifaceName} assigned to VLAN ${iface.vlanId}`, 'ok');
+        }
+        eventBus.emit('panel:showDevice', this.device);
+        eventBus.emit('topology:changed');
+      }
+      return;
+    }
+
+    // ── ipconfig (PC / Server) ─────────────────────────────
+    if (p0 === 'ipconfig') {
+      this._showIpConfig(parts[1] === '/all');
+      return;
+    }
+
+    // ── arp -a ─────────────────────────────────────────────
+    if (cmd === 'arp -a' || cmd === 'arp') {
+      this._showArpTable();
+      return;
+    }
+
     // ── exit / end ─────────────────────────────────────────
     if (cmd === 'exit' || cmd === 'end') {
-      if (this._mode === 'iface')  { this._mode = 'config'; this._ifaceName = ''; }
+      if (this._mode === 'iface' || this._mode === 'config-vlan')  { this._mode = 'config'; this._ifaceName = ''; }
       else if (this._mode === 'config') this._mode = 'enable';
       else if (this._mode === 'enable') this._mode = 'user';
       this._updatePrompt();
@@ -262,7 +349,7 @@ export class Terminal {
     }
 
     // ── unknown ────────────────────────────────────────────
-    this._print(`% Unrecognized command: "${parts[0]}". Type "help" for a list.`, 'err');
+    this._print(`% Unrecognized command: "${parts[0]}". Type "help" or click 📖 Device Guide for a list.`, 'err');
   }
 
   // ──────────────────────────────────────────────────────────
@@ -270,6 +357,24 @@ export class Terminal {
   // ──────────────────────────────────────────────────────────
   _doShow(args) {
     const a = args.join(' ');
+
+    // show version
+    if (a === 'version' || a === 'ver') {
+      this._showVersion();
+      return;
+    }
+
+    // show arp / show ip arp
+    if (a === 'arp' || a === 'ip arp') {
+      this._showArpTable();
+      return;
+    }
+
+    // show interfaces
+    if (a.startsWith('interfaces') || a.startsWith('int') && !a.startsWith('int br') && !a.startsWith('interface br')) {
+      this._showInterfaces();
+      return;
+    }
 
     // show ip route
     if (a === 'ip route' || a === 'ip ro' || a === 'ip r') {
@@ -314,7 +419,71 @@ export class Terminal {
       return;
     }
 
-    this._print(`% Unknown show command: "show ${a}". Type "help" for a list.`, 'err');
+    this._print(`% Unknown show command: "show ${a}". Type "help" or click 📖 Device Guide for a list.`, 'err');
+  }
+
+  _showVersion() {
+    const lines = [
+      `Cisco IOS Software, NetGame CCNA Simulator Engine, Version 15.7(3)M2`,
+      `Technical Support: NetGame CCNA Education Portal`,
+      `Device Model: ${this.device.model || this.device.type.toUpperCase()}`,
+      `System Uptime: 4 hours, 28 minutes`,
+      `Hardware: Processor running at 1.2 GHz, 512MB RAM, 256MB Flash`,
+      `Total Interfaces: ${this.device.interfaces.length}`,
+      `Configuration register is 0x2102`,
+    ];
+    this._print(lines.join('\n'), 'out');
+  }
+
+  _showInterfaces() {
+    for (const iface of this.device.interfaces) {
+      const status = iface.status === 'up' ? 'up' : 'administratively down';
+      const proto = iface.status === 'up' ? 'up' : 'down';
+      const lines = [
+        `${iface.name} is ${status}, line protocol is ${proto}`,
+        `  Hardware is Built-in RJ45, address is 0050.7966.${iface.shortName.replace(/[^0-9]/g,'').padStart(4,'0')}`,
+        iface.ipAddress ? `  Internet address is ${iface.ipAddress}/${SC.maskToCidr(iface.subnetMask || '255.255.255.0')}` : '  Internet protocol processing disabled',
+        `  MTU 1500 bytes, BW ${iface.speed || 1000}000 Kbit/sec, DLY 10 usec`,
+        `  Encapsulation ARPA, loopback not set`,
+        `  Full-duplex, ${iface.speed || '1000'}Mb/s, media type is copper`,
+      ];
+      this._print(lines.join('\n'), 'out');
+    }
+  }
+
+  _showArpTable() {
+    const lines = [
+      `Protocol  Address          Age (min)  Hardware Addr   Type   Interface`,
+      `----------------------------------------------------------------------`,
+    ];
+    for (const iface of this.device.interfaces) {
+      if (iface.ipAddress && iface.status === 'up') {
+        lines.push(`Internet  ${iface.ipAddress.padEnd(17)}-          0050.7966.6801  ARPA   ${iface.shortName}`);
+      }
+    }
+    this._print(lines.join('\n'), 'out');
+  }
+
+  _showIpConfig(all = false) {
+    const lines = [
+      `Windows IP Configuration / Host Adapter Settings`,
+      ``,
+    ];
+    for (const iface of this.device.interfaces) {
+      lines.push(`Ethernet adapter ${iface.name}:`);
+      if (all) {
+        lines.push(`   Physical Address. . . . . . . . . : 0050.7966.${iface.shortName.replace(/[^0-9]/g,'').padStart(4,'0')}`);
+        lines.push(`   DHCP Enabled. . . . . . . . . . . : ${this.device.dhcpEnabled ? 'Yes' : 'No'}`);
+      }
+      lines.push(`   IPv4 Address. . . . . . . . . . . : ${iface.ipAddress || '0.0.0.0'}`);
+      lines.push(`   Subnet Mask . . . . . . . . . . . : ${iface.subnetMask || '0.0.0.0'}`);
+      lines.push(`   Default Gateway . . . . . . . . . : ${this.device.defaultGateway || '0.0.0.0'}`);
+      if (all && this.device.dnsServer) {
+        lines.push(`   DNS Servers . . . . . . . . . . . : ${this.device.dnsServer}`);
+      }
+      lines.push(``);
+    }
+    this._print(lines.join('\n'), 'out');
   }
 
   _showIpIntBrief() {

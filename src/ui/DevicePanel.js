@@ -5,6 +5,7 @@ import { eventBus }      from '../engine/EventBus.js';
 import { SubnetCalculator as SC } from '../subnetting/SubnetCalculator.js';
 import { SubnetValidator }from '../subnetting/SubnetValidator.js';
 import { addStaticRoute, removeStaticRoute } from '../routing/StaticRoute.js';
+import { DeviceCommandGuide } from './DeviceCommandGuide.js';
 
 export class DevicePanel {
   /**
@@ -75,8 +76,9 @@ export class DevicePanel {
         tab.classList.add('active');
         const id = `tab-${tab.dataset.tab}`;
         document.getElementById(id)?.classList.remove('hidden');
-        if (tab.dataset.tab === 'routing') this._renderRoutingTab();
-        if (tab.dataset.tab === 'vlan')    this._renderVlanTab();
+        if (tab.dataset.tab === 'routing')  this._renderRoutingTab();
+        if (tab.dataset.tab === 'vlan')     this._renderVlanTab();
+        if (tab.dataset.tab === 'commands') this._renderCommandsTab();
       });
     });
   }
@@ -113,6 +115,7 @@ export class DevicePanel {
               import('../network/Device.js').then(({ Interface }) => {
                 device.interfaces = spec.interfaces.map(i => new Interface(i));
                 this._renderInterfacesTab();
+                this._renderCommandsTab();
                 eventBus.emit('topology:changed');
                 eventBus.emit('canvas:markDirty');
               });
@@ -139,6 +142,7 @@ export class DevicePanel {
     this._renderInterfacesTab();
     this._renderRoutingTab();
     this._renderVlanTab();
+    this._renderCommandsTab();
   }
 
   hide() {
@@ -443,4 +447,16 @@ export class DevicePanel {
     eventBus.emit('topology:changed');
     alert(`✓ DHCP pool added: ${pool.network} (${pool.start} – ${pool.end})`);
   }
+
+  // ──────────────────────────────────────────────────────────
+  //  Commands & Purpose tab
+  // ──────────────────────────────────────────────────────────
+  _renderCommandsTab() {
+    if (!this.device) return;
+    const container = document.getElementById('tab-commands');
+    if (container) {
+      DeviceCommandGuide.renderInPanel(this.device, container);
+    }
+  }
 }
+

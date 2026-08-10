@@ -71,12 +71,17 @@
       <button id="menu-campaign" class="menu-btn primary">
         <span class="btn-icon">🗺️</span>
         <span class="btn-text">Campaign</span>
-        <span class="btn-sub">10 CCNA-aligned levels</span>
+        <span class="btn-sub">13 CCNA-aligned levels</span>
       </button>
       <button id="menu-sandbox" class="menu-btn">
         <span class="btn-icon">🔧</span>
         <span class="btn-text">Sandbox Mode</span>
         <span class="btn-sub">Free-build any topology</span>
+      </button>
+      <button id="menu-device-guide" class="menu-btn primary">
+        <span class="btn-icon">💡</span>
+        <span class="btn-text">Device &amp; CLI Manual</span>
+        <span class="btn-sub">Uses of devices &amp; complete command reference</span>
       </button>
       <button id="menu-study" class="menu-btn">
         <span class="btn-icon">📖</span>
@@ -133,6 +138,7 @@
         <span class="hud-label">Time</span>
         <span id="hud-timer" class="hud-timer">00:00</span>
       </div>
+      <button id="hud-guide-btn" class="hud-btn guide-btn" title="Open Device & CLI Command Manual">💡 Device Manual</button>
     </div>
   </div>
 
@@ -357,6 +363,9 @@
 
       <div class="palette-divider"></div>
 
+      <button id="btn-device-guide" class="palette-action-btn guide">
+        💡 Device &amp; CLI Manual
+      </button>
       <button id="btn-test-all" class="palette-action-btn">
         ▶ Test All Connections
       </button>
@@ -403,6 +412,7 @@
           <button class="panel-tab active" data-tab="interfaces">Interfaces</button>
           <button class="panel-tab" data-tab="routing">Routing</button>
           <button class="panel-tab" data-tab="vlan">VLANs</button>
+          <button class="panel-tab" data-tab="commands">📖 Commands</button>
           <button class="panel-tab" data-tab="advanced">Advanced</button>
         </div>
 
@@ -443,6 +453,11 @@
           <div id="vlan-content">
             <p class="panel-note">VLANs apply to switches only.</p>
           </div>
+        </div>
+
+        <!-- Tab: Commands & Purpose -->
+        <div id="tab-commands" class="tab-content hidden">
+          <!-- Dynamically populated with device uses and commands -->
         </div>
 
         <!-- Tab: Advanced -->
@@ -544,6 +559,27 @@
 </div>
 
 <!-- ═══════════════════════════════════════════════════════════════
+     SCREEN: DEVICE & COMMAND MANUAL
+════════════════════════════════════════════════════════════════════ -->
+<div id="screen-device-guide" class="screen">
+  <div class="levels-header guide-screen-header">
+    <button id="guide-back" class="back-btn">&#8592; Back</button>
+    <div class="guide-title-wrap">
+      <h2>Device &amp; CLI Command Manual</h2>
+      <span class="guide-subtitle">Hardware roles, purposes in network design, and comprehensive Cisco IOS &amp; host commands</span>
+    </div>
+    <div class="guide-search-box">
+      <span class="guide-search-icon">🔍</span>
+      <input type="text" id="guide-search-input" placeholder="Search commands, syntax, or purpose..." autocomplete="off" />
+    </div>
+  </div>
+  <div class="device-guide-layout">
+    <aside id="device-guide-nav" class="device-guide-nav"></aside>
+    <main id="device-guide-content" class="device-guide-content"></main>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
      OVERLAY: WIN / FAIL
 ════════════════════════════════════════════════════════════════════ -->
 <div id="overlay-result" class="overlay hidden">
@@ -582,9 +618,12 @@
   </div>
 </div>
 
-<!-- Floating subnet calc button -->
+<!-- Floating buttons -->
 <button id="btn-subnet-calc" class="floating-btn" title="Open Subnet Calculator">
   ÷ Subnet Calc
+</button>
+<button id="btn-floating-guide" class="floating-btn guide-float" title="Open Device & CLI Command Manual">
+  💡 Device Manual
 </button>
 
 <!-- Game scripts (ES Modules) -->

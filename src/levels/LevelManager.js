@@ -2,23 +2,9 @@
 // Loads level JSON files and manages campaign progress.
 
 import { eventBus } from '../engine/EventBus.js';
+import { LEVELS } from './levelsData.js';
 
-// Static import of all level data
-import level01 from './level_01.json' assert { type: 'json' };
-import level02 from './level_02.json' assert { type: 'json' };
-import level03 from './level_03.json' assert { type: 'json' };
-import level04 from './level_04.json' assert { type: 'json' };
-import level05 from './level_05.json' assert { type: 'json' };
-import level06 from './level_06.json' assert { type: 'json' };
-import level07 from './level_07.json' assert { type: 'json' };
-import level08 from './level_08.json' assert { type: 'json' };
-import level09 from './level_09.json' assert { type: 'json' };
-import level10 from './level_10.json' assert { type: 'json' };
-
-export const LEVELS = [
-  level01, level02, level03, level04, level05,
-  level06, level07, level08, level09, level10,
-];
+export { LEVELS };
 
 const SAVE_KEY = 'netgame_progress';
 
