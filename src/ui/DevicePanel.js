@@ -203,7 +203,7 @@ export class DevicePanel {
           <span style="font-size:10px; color:#88aacc; margin-left:6px;">(${iface.speed} Mbps / ${iface.duplex})</span>
         </div>
         <div class="iface-field">
-          <span class="iface-label">IP Address</span>
+          <span class="iface-label">IP Address (IPv4)</span>
           <input class="iface-input" data-iface="${iface.name}" data-field="ipAddress"
                  type="text" value="${iface.ipAddress}" placeholder="e.g. 192.168.1.1"/>
         </div>
@@ -212,11 +212,24 @@ export class DevicePanel {
           <input class="iface-input" data-iface="${iface.name}" data-field="subnetMask"
                  type="text" value="${iface.subnetMask}" placeholder="e.g. 255.255.255.0"/>
         </div>
+        <div class="iface-field">
+          <span class="iface-label">IPv6 Address / Prefix</span>
+          <input class="iface-input" data-iface="${iface.name}" data-field="ipv6Address"
+                 type="text" value="${iface.ipv6Address ? `${iface.ipv6Address}/${iface.ipv6Prefix || 64}` : ''}" placeholder="e.g. 2001:db8:acad:1::10/64"/>
+        </div>
+        <div class="iface-field" style="font-size:10px; color:#6080a0; padding:2px 0;">
+          <span>LLA (Link-Local): <code style="color:#00d4ff">${iface.ipv6LinkLocal || 'fe80::1'}</code></span>
+        </div>
         ${this.device.type === 'pc' || this.device.type === 'server' ? `
         <div class="iface-field">
-          <span class="iface-label">Gateway</span>
+          <span class="iface-label">IPv4 Gateway</span>
           <input class="iface-input" data-iface="${iface.name}" data-field="gateway"
                  type="text" value="${this.device.defaultGateway || ''}" placeholder="e.g. 192.168.1.1"/>
+        </div>
+        <div class="iface-field">
+          <span class="iface-label">IPv6 Gateway</span>
+          <input class="iface-input" data-iface="${iface.name}" data-field="ipv6Gateway"
+                 type="text" value="${this.device.config?.defaultGatewayIPv6 || iface.ipv6Gateway || ''}" placeholder="e.g. 2001:db8:acad:1::1"/>
         </div>` : ''}
         <div class="iface-field" style="margin-top:4px;">
           <label style="font-size:11px; color:#a0bcd0; display:flex; align-items:center; gap:6px;">
@@ -247,8 +260,27 @@ export class DevicePanel {
 
       if (field === 'ipAddress')   iface.ipAddress   = val;
       if (field === 'subnetMask')  iface.subnetMask  = val;
+      if (field === 'ipv6Address') {
+        if (val) {
+          if (val.includes('/')) {
+            const [addr, pfx] = val.split('/');
+            iface.ipv6Address = addr.trim();
+            iface.ipv6Prefix  = parseInt(pfx.trim(), 10) || 64;
+          } else {
+            iface.ipv6Address = val;
+            iface.ipv6Prefix  = 64;
+          }
+        } else {
+          iface.ipv6Address = '';
+        }
+      }
       if (field === 'gateway' && (this.device.type === 'pc' || this.device.type === 'server')) {
         this.device.defaultGateway = val;
+      }
+      if (field === 'ipv6Gateway' && (this.device.type === 'pc' || this.device.type === 'server')) {
+        if (!this.device.config) this.device.config = {};
+        this.device.config.defaultGatewayIPv6 = val;
+        iface.ipv6Gateway = val;
       }
     });
 

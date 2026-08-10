@@ -73,12 +73,17 @@
         <span class="btn-text">Campaign</span>
         <span class="btn-sub">13 CCNA-aligned levels</span>
       </button>
+      <button id="menu-subnet-practice" class="menu-btn primary">
+        <span class="btn-icon">⚡</span>
+        <span class="btn-text">Subnetting &amp; VLSM Exercises</span>
+        <span class="btn-sub">Interactive VLSM tables, practice drills &amp; designer</span>
+      </button>
       <button id="menu-sandbox" class="menu-btn">
         <span class="btn-icon">🔧</span>
         <span class="btn-text">Sandbox Mode</span>
         <span class="btn-sub">Free-build any topology</span>
       </button>
-      <button id="menu-device-guide" class="menu-btn primary">
+      <button id="menu-device-guide" class="menu-btn">
         <span class="btn-icon">💡</span>
         <span class="btn-text">Device &amp; CLI Manual</span>
         <span class="btn-sub">Uses of devices &amp; complete command reference</span>
@@ -580,6 +585,46 @@
 </div>
 
 <!-- ═══════════════════════════════════════════════════════════════
+     SCREEN: SUBNETTING & VLSM PRACTICE CENTER
+════════════════════════════════════════════════════════════════════ -->
+<div id="screen-subnet-practice" class="screen">
+  <div class="levels-header guide-screen-header">
+    <button id="practice-back" class="back-btn">&#8592; Back</button>
+    <div class="guide-title-wrap">
+      <h2>Subnetting &amp; VLSM Practice Center</h2>
+      <span class="guide-subtitle">Hands-on Variable Length Subnet Masking scenarios, step-by-step math solver, speed drills &amp; visual designer</span>
+    </div>
+    <div class="subnet-tab-nav">
+      <button class="subnet-tab-btn active" data-tab="exercises">⚡ VLSM Exercises</button>
+      <button class="subnet-tab-btn" data-tab="designer">📐 VLSM Designer</button>
+      <button class="subnet-tab-btn" data-tab="drills">🎯 Speed Drills</button>
+      <button class="subnet-tab-btn" data-tab="calc">÷ Subnet Calc</button>
+    </div>
+  </div>
+
+  <div class="subnet-practice-body">
+    <div class="subnet-tab-pane active" data-pane="exercises">
+      <div id="vlsm-exercise-container"></div>
+    </div>
+    <div class="subnet-tab-pane" data-pane="designer">
+      <div id="vlsm-designer-container"></div>
+    </div>
+    <div class="subnet-tab-pane" data-pane="drills">
+      <div id="vlsm-drills-container"></div>
+    </div>
+    <div class="subnet-tab-pane" data-pane="calc">
+      <div class="calc-tab-wrapper">
+        <div class="subnet-input-row">
+          <input id="subnet-input" type="text" placeholder="e.g.  192.168.1.0/24  or  10.0.0.0/8" class="subnet-input-field"/>
+          <button id="subnet-calc-btn" class="apply-btn">Calculate</button>
+        </div>
+        <div id="subnet-result" class="subnet-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
      OVERLAY: WIN / FAIL
 ════════════════════════════════════════════════════════════════════ -->
 <div id="overlay-result" class="overlay hidden">
@@ -600,27 +645,48 @@
 </div>
 
 <!-- ═══════════════════════════════════════════════════════════════
-     OVERLAY: SUBNET CALCULATOR
+     OVERLAY: SUBNET CALCULATOR & VLSM MODAL
 ════════════════════════════════════════════════════════════════════ -->
 <div id="overlay-subnet" class="overlay hidden">
-  <div class="overlay-box wide">
+  <div class="overlay-box extra-wide">
     <div class="overlay-header">
-      <h3>Subnet Calculator</h3>
+      <div class="modal-header-tabs-wrap">
+        <h3>Subnetting &amp; VLSM Hub</h3>
+        <div class="modal-tab-nav">
+          <button class="subnet-tab-btn active" data-tab="exercises">⚡ VLSM Exercises</button>
+          <button class="subnet-tab-btn" data-tab="designer">📐 VLSM Designer</button>
+          <button class="subnet-tab-btn" data-tab="drills">🎯 Speed Drills</button>
+          <button class="subnet-tab-btn" data-tab="calc">÷ Standard Calc</button>
+        </div>
+      </div>
       <button id="subnet-close" class="overlay-close">✕</button>
     </div>
-    <div class="subnet-calc">
-      <div class="subnet-input-row">
-        <input id="subnet-input" type="text" placeholder="e.g.  192.168.1.0/24  or  10.0.0.0/8" class="subnet-input-field"/>
-        <button id="subnet-calc-btn" class="apply-btn">Calculate</button>
+    <div class="modal-tab-content">
+      <div class="subnet-tab-pane active" data-pane="exercises">
+        <div id="modal-vlsm-exercise-container"></div>
       </div>
-      <div id="subnet-result" class="subnet-result"></div>
+      <div class="subnet-tab-pane" data-pane="designer">
+        <div id="modal-vlsm-designer-container"></div>
+      </div>
+      <div class="subnet-tab-pane" data-pane="drills">
+        <div id="modal-vlsm-drills-container"></div>
+      </div>
+      <div class="subnet-tab-pane" data-pane="calc">
+        <div class="subnet-calc">
+          <div class="subnet-input-row">
+            <input id="modal-subnet-input" type="text" placeholder="e.g.  192.168.1.0/24  or  10.0.0.0/8" class="subnet-input-field"/>
+            <button id="modal-subnet-calc-btn" class="apply-btn">Calculate</button>
+          </div>
+          <div id="modal-subnet-result" class="subnet-result"></div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
 
 <!-- Floating buttons -->
-<button id="btn-subnet-calc" class="floating-btn" title="Open Subnet Calculator">
-  ÷ Subnet Calc
+<button id="btn-subnet-calc" class="floating-btn" title="Open Subnet & VLSM Practice Hub">
+  ÷ Subnet &amp; VLSM Hub
 </button>
 <button id="btn-floating-guide" class="floating-btn guide-float" title="Open Device & CLI Command Manual">
   💡 Device Manual

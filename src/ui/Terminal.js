@@ -4,6 +4,7 @@
 
 import { eventBus } from '../engine/EventBus.js';
 import { SubnetCalculator as SC } from '../subnetting/SubnetCalculator.js';
+import { IPv6Calculator } from '../subnetting/IPv6Calculator.js';
 import { addStaticRoute } from '../routing/StaticRoute.js';
 
 const HELP = `
@@ -11,18 +12,23 @@ Available Commands:
   enable / en                          Enter privileged mode
   configure terminal / conf t          Enter global config mode
   interface <name> / int <name>        Enter interface config mode
-  ip address <ip> <mask>               Set interface IP
+  ip address <ip> <mask>               Set interface IPv4
+  ipv6 address <ipv6>/<prefix>         Set interface IPv6 GUA / Subnet
+  ipv6 address <ipv6> eui-64           Set interface IPv6 using EUI-64
+  ipv6 address <fe80::x> link-local    Set interface IPv6 Link-Local
+  ipv6 unicast-routing                 Enable global IPv6 routing
   no shutdown / no shut                Bring interface up
   shutdown                             Shut down interface
   exit / end                           Exit config mode
-  ip route <net> <mask> <next-hop>     Add static route
-  no ip route <net> <mask>             Remove static route
-  show ip route / sh ip ro             Show routing table
-  show ip interface brief / sh ip int br  Show interfaces
+  ip route <net> <mask> <next-hop>     Add static IPv4 route
+  show ip route / sh ip ro             Show IPv4 routing table
+  show ipv6 route / sh ipv6 ro         Show IPv6 routing table
+  show ip interface brief / sh ip int br  Show IPv4 interfaces
+  show ipv6 interface brief            Show IPv6 interfaces & LLA
   show mac address-table               Show switch MAC table
   show vlan brief                      Show VLAN table
   show running-config / sh run         Show device config
-  ping <ip>                            Send ICMP ping
+  ping <ipv4-or-ipv6>                  Send ICMP / ICMPv6 ping
   traceroute <ip>                      Trace packet path
   clear                                Clear terminal output
   help / ?                             Show this help
@@ -128,7 +134,10 @@ export class Terminal {
     // ── ping ───────────────────────────────────────────────
     if (p0 === 'ping') {
       const ip = parts[1];
-      if (!ip || !SC.isValidIp(ip)) { this._print('% Usage: ping <ip-address>', 'err'); return; }
+      if (!ip || (!SC.isValidIp(ip) && !IPv6Calculator.isValidIPv6(ip))) {
+        this._print('% Usage: ping <ipv4-or-ipv6-address>', 'err');
+        return;
+      }
       this._doPing(ip);
       return;
     }
@@ -136,7 +145,10 @@ export class Terminal {
     // ── traceroute ─────────────────────────────────────────
     if (p0 === 'traceroute') {
       const ip = parts[1];
-      if (!ip || !SC.isValidIp(ip)) { this._print('% Usage: traceroute <ip>', 'err'); return; }
+      if (!ip || (!SC.isValidIp(ip) && !IPv6Calculator.isValidIPv6(ip))) {
+        this._print('% Usage: traceroute <ip>', 'err');
+        return;
+      }
       this._doTraceroute(ip);
       return;
     }
@@ -164,6 +176,15 @@ export class Terminal {
       return;
     }
 
+    // ── ipv6 unicast-routing ───────────────────────────────
+    if (p0 === 'ipv6' && p1 === 'unicast-routing') {
+      if (this._mode !== 'config') { this._print('% Must be in config mode.', 'err'); return; }
+      if (!this.device.config) this.device.config = {};
+      this.device.config.ipv6UnicastRouting = true;
+      this._print(`  IPv6 unicast routing globally enabled`, 'ok');
+      return;
+    }
+
     // ── interface ──────────────────────────────────────────
     if ((p0 === 'interface' || p0 === 'int') && parts[1]) {
       if (this._mode !== 'config') { this._print('% Must be in config mode.', 'err'); return; }
@@ -174,6 +195,49 @@ export class Terminal {
       this._mode      = 'iface';
       this._updatePrompt();
       this._print(`  Configuring ${iface.name}`, 'out');
+      return;
+    }
+
+    // ── ipv6 address ───────────────────────────────────────
+    if (p0 === 'ipv6' && p1 === 'address' && parts.length >= 3) {
+      if (this._mode !== 'iface') { this._print('% Must be in interface config mode.', 'err'); return; }
+      const iface = this._findIface(this._ifaceName);
+      if (!iface) return;
+
+      const rawAddr = parts[2];
+      const isEui64 = parts.includes('eui-64');
+      const isLinkLocal = parts.includes('link-local');
+
+      if (isLinkLocal) {
+        if (!IPv6Calculator.isValidIPv6(rawAddr)) { this._print(`% Invalid IPv6 link-local address: ${rawAddr}`, 'err'); return; }
+        iface.ipv6LinkLocal = IPv6Calculator.compress(rawAddr);
+        this._print(`  Interface ${this._ifaceName}: IPv6 link-local set to ${iface.ipv6LinkLocal}`, 'ok');
+      } else if (isEui64) {
+        try {
+          const eui = IPv6Calculator.generateEUI64(iface.macAddress, rawAddr);
+          iface.ipv6Address = eui.fullAddress;
+          iface.ipv6Prefix = 64;
+          this._print(`  Interface ${this._ifaceName}: IPv6 EUI-64 configured as ${iface.ipv6Address}/64`, 'ok');
+        } catch (e) {
+          this._print(`% EUI-64 error: ${e.message}`, 'err');
+          return;
+        }
+      } else {
+        if (rawAddr.includes('/')) {
+          const [addr, pfx] = rawAddr.split('/');
+          if (!IPv6Calculator.isValidIPv6(addr)) { this._print(`% Invalid IPv6 address: ${addr}`, 'err'); return; }
+          iface.ipv6Address = IPv6Calculator.compress(addr.trim());
+          iface.ipv6Prefix = parseInt(pfx.trim(), 10) || 64;
+        } else {
+          if (!IPv6Calculator.isValidIPv6(rawAddr)) { this._print(`% Invalid IPv6 address: ${rawAddr}`, 'err'); return; }
+          iface.ipv6Address = IPv6Calculator.compress(rawAddr.trim());
+          iface.ipv6Prefix = 64;
+        }
+        this._print(`  Interface ${this._ifaceName}: IPv6 address set to ${iface.ipv6Address}/${iface.ipv6Prefix}`, 'ok');
+      }
+
+      eventBus.emit('panel:showDevice', this.device);
+      eventBus.emit('topology:changed');
       return;
     }
 
@@ -389,6 +453,18 @@ export class Terminal {
       return;
     }
 
+    // show ipv6 interface brief
+    if (a.startsWith('ipv6 interface') || a.startsWith('ipv6 int')) {
+      this._showIpv6IntBrief();
+      return;
+    }
+
+    // show ipv6 route
+    if (a === 'ipv6 route' || a === 'ipv6 ro' || a === 'ipv6 r') {
+      this._showIpv6Route();
+      return;
+    }
+
     // show running-config
     if (a.startsWith('running') || a === 'run') {
       this._showRunningConfig();
@@ -496,6 +572,43 @@ export class Terminal {
       const status = iface.status === 'up' ? 'up' : 'down';
       const proto  = iface.status === 'up' && iface.ipAddress ? 'up' : 'down';
       lines.push(`${iface.name.padEnd(23)}${ip.padEnd(17)}${status.padEnd(9)}${proto}`);
+    }
+    this._print(lines.join('\n'), 'out');
+  }
+
+  _showIpv6IntBrief() {
+    const lines = [
+      `IPv6 Interface Status and Configuration:`,
+      `Interface              IPv6-Address[Prefix]                    Status   Protocol`,
+      `--------------------------------------------------------------------------------`,
+    ];
+    for (const iface of this.device.interfaces) {
+      const v6 = iface.ipv6Address ? `${iface.ipv6Address}/${iface.ipv6Prefix || 64}` : '[unassigned]';
+      const status = iface.status === 'up' ? 'up' : 'down';
+      const proto  = iface.status === 'up' ? 'up' : 'down';
+      lines.push(`${iface.name.padEnd(23)}${v6.padEnd(40)}${status.padEnd(9)}${proto}`);
+      if (iface.ipv6LinkLocal) {
+        lines.push(`  └─ Link-Local: ${iface.ipv6LinkLocal}`);
+      }
+    }
+    this._print(lines.join('\n'), 'out');
+  }
+
+  _showIpv6Route() {
+    if (!this.device.routingTable) { this._print('% Not a router.', 'err'); return; }
+    const lines = [
+      `IPv6 Routing Table - ${this.device.hostname}`,
+      `Codes: C - Connected, L - Local, S - Static`,
+      ``,
+    ];
+    for (const iface of this.device.interfaces) {
+      if (iface.status === 'up' && iface.ipv6Address) {
+        const netPrefix = IPv6Calculator.compress(iface.ipv6Address.split(':').slice(0, 4).join(':') + '::');
+        lines.push(`C   ${netPrefix}/${iface.ipv6Prefix || 64} [0/0]`);
+        lines.push(`     via ${iface.shortName}, directly connected`);
+        lines.push(`L   ${iface.ipv6Address}/128 [0/0]`);
+        lines.push(`     via ${iface.shortName}, receive`);
+      }
     }
     this._print(lines.join('\n'), 'out');
   }

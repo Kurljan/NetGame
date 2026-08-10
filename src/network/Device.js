@@ -119,6 +119,10 @@ export class Interface {
     this.shortName   = opts.shortName || this._abbreviate(opts.name || '');
     this.ipAddress   = opts.ipAddress   || '';
     this.subnetMask  = opts.subnetMask  || '';
+    this.ipv6Address = opts.ipv6Address || '';
+    this.ipv6Prefix  = opts.ipv6Prefix  ?? 64;
+    this.ipv6LinkLocal= opts.ipv6LinkLocal || this._generateLinkLocal(opts.macAddress);
+    this.ipv6Gateway = opts.ipv6Gateway || '';
     this.status      = opts.status      || 'down';    // 'up' | 'down'
     this.vlanId      = opts.vlanId      ?? null;      // for switch access ports
     this.trunkMode   = opts.trunkMode   ?? false;
@@ -133,6 +137,18 @@ export class Interface {
     this.duplex      = opts.duplex      || 'auto';     // 'auto'|'half'|'full'
     this.poe         = opts.poe         ?? false;      // Power over Ethernet
     this.ledStatus   = opts.ledStatus   || (this.status === 'up' ? 'green' : 'red'); // 'green'|'amber'|'red'|'off'|'blinking'
+  }
+
+  _generateLinkLocal(mac) {
+    if (!mac) return 'fe80::1';
+    try {
+      const clean = mac.replace(/[^0-9a-fA-F]/g, '').toLowerCase();
+      if (clean.length === 12) {
+        const b0 = (parseInt(clean.slice(0, 2), 16) ^ 0x02).toString(16).padStart(2, '0');
+        return `fe80::${b0}${clean.slice(2, 4)}:${clean.slice(4, 6)}ff:fe${clean.slice(6, 8)}:${clean.slice(8, 12)}`;
+      }
+    } catch { }
+    return 'fe80::1';
   }
 
   _abbreviate(name) {
@@ -152,12 +168,17 @@ export class Interface {
   }
 
   /** True if this interface has a valid IP and mask. */
-  get hasIp() { return this.ipAddress && this.subnetMask; }
+  get hasIp() { return !!(this.ipAddress && this.subnetMask); }
+
+  /** True if this interface has a valid IPv6 address. */
+  get hasIPv6() { return !!(this.ipv6Address && this.ipv6Prefix); }
 
   toJSON() {
     return {
       id: this.id, name: this.name, shortName: this.shortName,
       ipAddress: this.ipAddress, subnetMask: this.subnetMask,
+      ipv6Address: this.ipv6Address, ipv6Prefix: this.ipv6Prefix,
+      ipv6LinkLocal: this.ipv6LinkLocal, ipv6Gateway: this.ipv6Gateway,
       status: this.status, vlanId: this.vlanId,
       trunkMode: this.trunkMode, allowedVlans: this.allowedVlans,
       macAddress: this.macAddress, connectedTo: this.connectedTo,

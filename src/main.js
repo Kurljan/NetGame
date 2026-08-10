@@ -13,6 +13,7 @@ import { HUD }              from './ui/HUD.js';
 import { LevelManager, LEVELS } from './levels/LevelManager.js';
 import { SubnetCalculator as SC } from './subnetting/SubnetCalculator.js';
 import { DeviceCommandGuide } from './ui/DeviceCommandGuide.js';
+import { SubnetPracticeUI } from './ui/SubnetPracticeUI.js';
 
 // ──────────────────────────────────────────────────────────────
 //  Global game state
@@ -38,6 +39,7 @@ const inspector   = new PacketInspector(sim, canvas);
 const hud         = new HUD(sim);
 const levels      = new LevelManager();
 const deviceGuide = new DeviceCommandGuide(sim);
+const subnetUI    = new SubnetPracticeUI();
 
 canvas.setData(sim.devices, sim.links);
 canvas.startLoop();
@@ -93,6 +95,10 @@ document.getElementById('menu-sandbox')?.addEventListener('click',  () => {
   document.getElementById('hud-objectives').innerHTML   = '<div class="objective-chip">Free mode — no objectives</div>';
   showScreen('game');
 });
+document.getElementById('menu-subnet-practice')?.addEventListener('click', () => {
+  subnetUI.renderExerciseView('#vlsm-exercise-container');
+  showScreen('subnet-practice');
+});
 document.getElementById('menu-device-guide')?.addEventListener('click', () => {
   deviceGuide.openForDevice('router');
   showScreen('device-guide');
@@ -115,6 +121,9 @@ document.getElementById('btn-floating-guide')?.addEventListener('click', openDev
 
 document.getElementById('levels-back')?.addEventListener('click', () => showScreen('menu'));
 document.getElementById('study-back')?.addEventListener('click',  () => showScreen('menu'));
+document.getElementById('practice-back')?.addEventListener('click', () => {
+  showScreen(state.previousScreen === 'game' ? 'game' : 'menu');
+});
 document.getElementById('guide-back')?.addEventListener('click',  () => {
   showScreen(state.previousScreen === 'game' ? 'game' : 'menu');
 });
@@ -200,17 +209,22 @@ document.getElementById('res-levels')?.addEventListener('click', () => {
 });
 
 // ──────────────────────────────────────────────────────────────
-//  Subnet Calculator overlay
+//  Subnet Calculator & VLSM Hub overlay
 // ──────────────────────────────────────────────────────────────
 document.getElementById('btn-subnet-calc')?.addEventListener('click', () => {
+  subnetUI.renderExerciseView('#modal-vlsm-exercise-container');
+  subnetUI.renderDesigner('#modal-vlsm-designer-container');
+  subnetUI.startDrills('#modal-vlsm-drills-container');
   document.getElementById('overlay-subnet')?.classList.remove('hidden');
 });
 document.getElementById('subnet-close')?.addEventListener('click', () => {
   document.getElementById('overlay-subnet')?.classList.add('hidden');
 });
-document.getElementById('subnet-calc-btn')?.addEventListener('click', () => {
-  const input = document.getElementById('subnet-input')?.value.trim();
-  const result= document.getElementById('subnet-result');
+
+// Standard modal calc button & screen calc button
+function handleCalcInput(inputId, resultId) {
+  const input = document.getElementById(inputId)?.value.trim();
+  const result = document.getElementById(resultId);
   if (!input || !result) return;
   try {
     const info = SC.parse(input);
@@ -226,13 +240,18 @@ document.getElementById('subnet-calc-btn')?.addEventListener('click', () => {
       <div class="subnet-field"><div class="subnet-field-label">Private?</div><div class="subnet-field-value">${info.isPrivate ? 'Yes (RFC 1918)' : 'No (Public)'}</div></div>
     `;
   } catch (e) {
-    document.getElementById('subnet-result').innerHTML = `<div class="pkt-result failure">✗ ${e.message}</div>`;
+    result.innerHTML = `<div class="pkt-result failure">✗ ${e.message}</div>`;
   }
+}
+
+document.getElementById('subnet-calc-btn')?.addEventListener('click', () => handleCalcInput('subnet-input', 'subnet-result'));
+document.getElementById('subnet-input')?.addEventListener('keydown', e => {
+  if (e.key === 'Enter') handleCalcInput('subnet-input', 'subnet-result');
 });
 
-// Keyboard shortcut: Enter in subnet input
-document.getElementById('subnet-input')?.addEventListener('keydown', e => {
-  if (e.key === 'Enter') document.getElementById('subnet-calc-btn')?.click();
+document.getElementById('modal-subnet-calc-btn')?.addEventListener('click', () => handleCalcInput('modal-subnet-input', 'modal-subnet-result'));
+document.getElementById('modal-subnet-input')?.addEventListener('keydown', e => {
+  if (e.key === 'Enter') handleCalcInput('modal-subnet-input', 'modal-subnet-result');
 });
 
 // ──────────────────────────────────────────────────────────────
@@ -270,6 +289,22 @@ const STUDY_CARDS = [
       <li><strong>L2 Data Link</strong> — MAC addressing, VLANs, switching</li>
       <li><strong>L1 Physical</strong> — Cables, signals, bits</li>
     </ul>`,
+  },
+  {
+    title: '🔢 VLSM (Variable Length Subnet Masking) Deep Dive',
+    content: `
+      <div style="font-size:12px; line-height:1.6;">
+        <p><strong>What is VLSM?</strong> Subnetting a subnet. Allows allocating different prefix lengths (/24, /26, /30) from the same parent block to match exact host requirements without wasting IP addresses.</p>
+        <h4 style="color:#00d4ff; margin:8px 0 4px;">4-Step VLSM Algorithm:</h4>
+        <ol style="padding-left:18px;">
+          <li><strong>Step 1: Sort by size descending:</strong> Always allocate the largest department first to avoid fractured overlaps.</li>
+          <li><strong>Step 2: Calculate host bits (h):</strong> Use formula <code>2^h - 2 ≥ Hosts Needed</code>.</li>
+          <li><strong>Step 3: Determine CIDR prefix:</strong> <code>Prefix = 32 - h</code> (e.g. 50 hosts ➜ h=6 ➜ /26 mask 255.255.255.192).</li>
+          <li><strong>Step 4: Align next block:</strong> Next subnet begins at <code>Previous Broadcast + 1</code>.</li>
+        </ol>
+        <p style="margin-top:6px;"><strong>WAN Point-to-Point Links:</strong> Always use <strong>/30</strong> (2 usable hosts, mask 255.255.255.252).</p>
+      </div>
+    `,
   },
   {
     title: '🔢 Subnetting Quick Reference',

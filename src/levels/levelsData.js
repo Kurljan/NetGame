@@ -2245,6 +2245,7 @@ export const LEVELS = [
       "Sales (60 hosts): need /26 (62 usable) → 10.0.1.0/26. Assign R1 G0/1 = 10.0.1.1/26",
       "HR (28 hosts): need /27 (30 usable) → 10.0.1.64/27. Assign R1 G0/2 = 10.0.1.65/27",
       "WAN link (2 hosts): need /30 → 10.0.1.96/30.",
+      "Click the '÷ Subnet & VLSM Hub' button in the bottom right to practice VLSM scenario tables and verify subnets anytime!",
       "Configure with: int g0/0 → ip address 10.0.0.1 255.255.255.0"
     ],
     "topology": {

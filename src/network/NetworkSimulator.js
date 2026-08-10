@@ -1,4 +1,5 @@
 import { SubnetCalculator as SC } from '../subnetting/SubnetCalculator.js';
+import { IPv6Calculator } from '../subnetting/IPv6Calculator.js';
 import { Packet } from './Packet.js';
 import { Link }   from './Link.js';
 import './Hub.js';
@@ -119,7 +120,7 @@ export class NetworkSimulator {
   //  MAIN: Simulate sending a packet
   // ──────────────────────────────────────────────────────────
   /**
-   * Simulates sending an ICMP ping from srcDevice to dstIp.
+   * Simulates sending an ICMP / ICMPv6 ping from srcDevice to dstIp.
    * Returns a Packet object with the path and result filled in.
    *
    * @param {string} srcDeviceId
@@ -131,7 +132,37 @@ export class NetworkSimulator {
     const srcDevice = this.devices.get(srcDeviceId);
     if (!srcDevice) return { success: false, error: 'Source device not found.' };
 
-    // Find source IP
+    const isIPv6 = IPv6Calculator.isValidIPv6(dstIp);
+
+    // ── IPv6 simulation ──────────────────────────────────────
+    if (isIPv6) {
+      const srcIface = srcDevice.interfaces.find(i => i.status === 'up' && (i.ipv6Address || i.ipv6LinkLocal));
+      if (!srcIface) {
+        return { success: false, error: `${srcDevice.hostname} has no configured IPv6 address.` };
+      }
+
+      const pkt = new Packet({
+        protocol: 'ICMPv6',
+        srcIp: srcIface.ipv6Address || srcIface.ipv6LinkLocal,
+        dstIp,
+        srcMac: srcIface.macAddress,
+        dstMac: 'FF:FF:FF:FF:FF:FF',
+        srcDeviceId,
+      });
+
+      const dstDevice = this._findDeviceByIPv6(dstIp);
+      const sameSubnet = (srcIface.ipv6Address && IPv6Calculator.isSameSubnet(srcIface.ipv6Address, dstIp, srcIface.ipv6Prefix || 64)) ||
+                         dstIp.toLowerCase().startsWith('fe80:');
+
+      if (sameSubnet) {
+        return this._directDelivery(pkt, srcDevice, dstDevice, dstIp);
+      }
+
+      // Routed IPv6 delivery
+      return this._routedDeliveryIPv6(pkt, srcDevice, dstDevice, dstIp);
+    }
+
+    // ── Standard IPv4 simulation ─────────────────────────────
     const srcIface = srcDevice.interfaces.find(i => i.status === 'up' && i.ipAddress);
     if (!srcIface) {
       return { success: false, error: `${srcDevice.hostname} has no configured IP address. (interface is down or unconfigured)` };
@@ -157,6 +188,35 @@ export class NetworkSimulator {
 
     // Otherwise: needs routing (go to default gateway)
     return this._routedDelivery(pkt, srcDevice, dstDevice, dstIp);
+  }
+
+  _routedDeliveryIPv6(pkt, srcDevice, dstDevice, dstIp) {
+    const gw = srcDevice.config?.defaultGatewayIPv6 || srcDevice.interfaces.find(i => i.ipv6Gateway)?.ipv6Gateway || '';
+    if (!gw) {
+      pkt._result = 'failure';
+      pkt._errorReason = `${srcDevice.hostname} has no IPv6 default gateway configured.`;
+      return { packet: pkt, pathDeviceIds: [srcDevice.id], success: false, error: pkt._errorReason };
+    }
+
+    const gwDevice = this._findDeviceByIPv6(gw);
+    if (!gwDevice) {
+      pkt._result = 'failure';
+      pkt._errorReason = `IPv6 Gateway ${gw} is not reachable.`;
+      return { packet: pkt, pathDeviceIds: [srcDevice.id], success: false, error: pkt._errorReason };
+    }
+
+    const path = [srcDevice.id];
+    const toGw = this._bfsPath(srcDevice.id, gwDevice.id);
+    if (toGw) toGw.forEach(id => { if (!path.includes(id)) path.push(id); });
+
+    if (dstDevice) {
+      const fromGw = this._bfsPath(gwDevice.id, dstDevice.id);
+      if (fromGw) fromGw.forEach(id => { if (!path.includes(id)) path.push(id); });
+    }
+
+    pkt._result = 'success';
+    pkt._path = path;
+    return { packet: pkt, pathDeviceIds: path, success: true };
   }
 
   // ──────────────────────────────────────────────────────────
@@ -290,6 +350,29 @@ export class NetworkSimulator {
   _findDeviceByIp(ip) {
     for (const device of this.devices.values()) {
       if (device.interfaces?.some(i => i.ipAddress === ip)) return device;
+    }
+    return null;
+  }
+
+  _findDeviceByIPv6(ipv6) {
+    if (!ipv6) return null;
+    const clean = ipv6.toLowerCase().trim();
+    for (const device of this.devices.values()) {
+      for (const i of device.interfaces || []) {
+        if (i.ipv6Address) {
+          if (i.ipv6Address.toLowerCase() === clean) return device;
+          try {
+            if (IPv6Calculator.compress(i.ipv6Address) === IPv6Calculator.compress(clean)) return device;
+            if (IPv6Calculator.expand(i.ipv6Address) === IPv6Calculator.expand(clean)) return device;
+          } catch { }
+        }
+        if (i.ipv6LinkLocal) {
+          if (i.ipv6LinkLocal.toLowerCase() === clean) return device;
+          try {
+            if (IPv6Calculator.compress(i.ipv6LinkLocal) === IPv6Calculator.compress(clean)) return device;
+          } catch { }
+        }
+      }
     }
     return null;
   }

@@ -1,7 +1,5 @@
-// src/subnetting/SubnetValidator.js
-// Validates player subnet assignments against level requirements.
-
 import { SubnetCalculator as SC } from './SubnetCalculator.js';
+import { IPv6Calculator } from './IPv6Calculator.js';
 
 export class SubnetValidator {
   /**
@@ -69,8 +67,13 @@ export class SubnetValidator {
     return requirements.map(req => {
       try {
         switch (req.type) {
-          case 'ping': return this._checkPing(req, sim);
+          case 'ping':
+          case 'ipv6-ping':
+            return this._checkPing(req, sim);
           case 'subnet': return this._checkSubnet(req, devices);
+          case 'ipv6-address':
+          case 'ipv6-subnet':
+            return this._checkIPv6Subnet(req, devices);
           case 'route-exists': return this._checkRouteExists(req, devices);
           case 'vlan': return this._checkVlan(req, devices);
           default: return { id: req.id, desc: req.desc, pass: false, message: 'Unknown requirement type.' };
@@ -128,6 +131,38 @@ export class SubnetValidator {
     return {
       id: req.id, desc: req.desc, pass,
       message: pass ? `✓ VLAN ${req.vlanId} exists on ${device.hostname}.` : `✗ VLAN ${req.vlanId} not configured.`,
+    };
+  }
+
+  static _checkIPv6Subnet(req, devices) {
+    const device = [...devices.values()].find(d => d.hostname === req.hostname || d.id === req.deviceId);
+    if (!device) return { id: req.id, desc: req.desc, pass: false, message: `Device "${req.hostname}" not found.` };
+    const iface  = device.interfaces.find(i => i.name === req.interface || i.shortName === req.interface) || device.interfaces[0];
+    if (!iface) return { id: req.id, desc: req.desc, pass: false, message: `Interface not found.` };
+
+    const expected = req.expectedIPv6 || req.expectedAddress || req.expectedNetwork;
+    const actual   = iface.ipv6Address;
+
+    let pass = false;
+    if (actual && expected) {
+      try {
+        pass = (
+          actual.toLowerCase() === expected.toLowerCase() ||
+          IPv6Calculator.compress(actual) === IPv6Calculator.compress(expected) ||
+          IPv6Calculator.expand(actual) === IPv6Calculator.expand(expected)
+        );
+      } catch {
+        pass = actual.toLowerCase() === expected.toLowerCase();
+      }
+    }
+
+    return {
+      id: req.id,
+      desc: req.desc,
+      pass,
+      message: pass
+        ? `✓ ${device.hostname} ${iface.shortName} has IPv6 ${actual}.`
+        : `✗ Expected IPv6 ${expected}, got "${actual || 'unassigned'}".`
     };
   }
 }
