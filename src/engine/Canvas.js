@@ -344,21 +344,35 @@ export class Canvas {
       // Device icon
       this.deviceRenderer.draw(ctx, device, selected);
 
-      // Hostname label
-      if (this.scale > 0.3) {
-        ctx.fillStyle = selected ? '#00d4ff' : '#a0bcd0';
-        ctx.font      = `bold ${12 / this.scale}px Inter, sans-serif`;
+      // Packet Tracer style 2-line label: Model on top, Hostname underneath
+      if (this.scale > 0.25) {
+        let labelY = device.y + 26;
+
+        // Top line: Model Name
+        if (device.model) {
+          ctx.fillStyle = selected ? '#38bdf8' : '#7dd3fc';
+          ctx.font      = `bold ${11 / this.scale}px "JetBrains Mono", monospace, sans-serif`;
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'top';
+          ctx.fillText(device.model, device.x, labelY);
+          labelY += 13 / this.scale;
+        }
+
+        // Bottom line: Hostname / Instance Name
+        ctx.fillStyle = selected ? '#ffffff' : '#cbd5e1';
+        ctx.font      = `${11 / this.scale}px Inter, sans-serif`;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'top';
-        ctx.fillText(device.hostname, device.x, device.y + 34);
+        ctx.fillText(device.hostname, device.x, labelY);
+        labelY += 13 / this.scale;
 
-        // Show IP of first active interface
+        // Third line: Active IP address (if zoomed in)
         if (this.scale > 0.5) {
           const iface = device.interfaces?.find(i => i.ipAddress && i.status === 'up');
           if (iface) {
-            ctx.fillStyle = selected ? 'rgba(0,212,255,0.7)' : 'rgba(100,160,200,0.5)';
+            ctx.fillStyle = selected ? 'rgba(0,212,255,0.85)' : 'rgba(148,163,184,0.7)';
             ctx.font      = `${10 / this.scale}px "JetBrains Mono", monospace`;
-            ctx.fillText(iface.ipAddress, device.x, device.y + 34 + 14 / this.scale);
+            ctx.fillText(iface.ipAddress, device.x, labelY);
           }
         }
       }

@@ -1,17 +1,23 @@
 // src/network/Server.js
 import { Device, Interface } from './Device.js';
+import { getModelSpec } from './DeviceModels.js';
 
 export class Server extends Device {
   constructor(opts = {}) {
-    super('server', opts);
+    super(opts.type || 'server', opts);
     this.defaultGateway = opts.config?.defaultGateway || '';
     this.dhcpPools      = opts.config?.dhcpPools || [];
     this.dnsRecords     = opts.config?.dnsRecords || [];  // [{name, ip}]
 
     if (this.interfaces.length === 0) {
-      this.interfaces = [
-        new Interface({ name: 'FastEthernet0', shortName: 'Fa0', status: 'down' }),
-      ];
+      const spec = getModelSpec(this.model);
+      if (spec && spec.interfaces) {
+        this.interfaces = spec.interfaces.map(i => new Interface(i));
+      } else {
+        this.interfaces = [
+          new Interface({ name: 'FastEthernet0', shortName: 'Fa0', status: 'down' }),
+        ];
+      }
     }
   }
 
@@ -35,6 +41,31 @@ export class Server extends Device {
 }
 Device.registerType('server', Server);
 
+// ── Central Office Server ───────────────────────────────────────
+export class CentralOfficeServer extends Server {
+  constructor(opts = {}) {
+    super({
+      ...opts,
+      type: 'coserver',
+      model: opts.model || 'Central-Office-Server',
+    });
+    this.cellularGateway = opts.config?.cellularGateway || '10.0.0.1';
+    this.iotRegistration = opts.config?.iotRegistration ?? true;
+  }
+
+  toJSON() {
+    return {
+      ...super.toJSON(),
+      config: {
+        ...this.config,
+        cellularGateway: this.cellularGateway,
+        iotRegistration: this.iotRegistration,
+      }
+    };
+  }
+}
+Device.registerType('coserver', CentralOfficeServer);
+
 // ── Cloud (simulated Internet) ──────────────────────────────────
 export class Cloud extends Device {
   constructor(opts = {}) {
@@ -48,3 +79,4 @@ export class Cloud extends Device {
   }
 }
 Device.registerType('cloud', Cloud);
+

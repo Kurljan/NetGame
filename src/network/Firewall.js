@@ -1,12 +1,12 @@
 // src/network/Firewall.js
-// Cisco ASA Adaptive Security Appliance (ASA 5505, ASA 5506-X)
+// Cisco ASA Adaptive Security Appliance (ASA 5505, ASA 5506-X) & Meraki MX Security Appliance (Meraki-MX65W)
 import { Device, Interface } from './Device.js';
 import { RoutingTable } from '../routing/RoutingTable.js';
 import { getModelSpec } from './DeviceModels.js';
 
 export class Firewall extends Device {
   constructor(opts = {}) {
-    super('firewall', opts);
+    super(opts.type || 'firewall', opts);
     this.routingTable = new RoutingTable(opts.routingTable || []);
     this.securityZones = opts.config?.securityZones || {
       'inside': { securityLevel: 100 },
@@ -43,3 +43,32 @@ export class Firewall extends Device {
   }
 }
 Device.registerType('firewall', Firewall);
+
+export class SecurityAppliance extends Firewall {
+  constructor(opts = {}) {
+    super({
+      ...opts,
+      type: 'securityappliance',
+      model: opts.model || 'Meraki-MX65W',
+    });
+    this.cloudManaged = opts.config?.cloudManaged ?? true;
+    this.autoVpn     = opts.config?.autoVpn      ?? true;
+    this.ssid        = opts.config?.ssid         || 'Meraki-Corp-WiFi';
+    this.passphrase  = opts.config?.passphrase   || 'meraki123';
+  }
+
+  toJSON() {
+    return {
+      ...super.toJSON(),
+      config: {
+        ...this.config,
+        cloudManaged: this.cloudManaged,
+        autoVpn: this.autoVpn,
+        ssid: this.ssid,
+        passphrase: this.passphrase,
+      }
+    };
+  }
+}
+Device.registerType('securityappliance', SecurityAppliance);
+

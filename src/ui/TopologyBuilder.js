@@ -2,14 +2,14 @@ import { eventBus }         from '../engine/EventBus.js';
 import { Router }           from '../network/Router.js';
 import { Switch, L3Switch } from '../network/Switch.js';
 import { PC }               from '../network/PC.js';
-import { Server, Cloud }    from '../network/Server.js';
-import { AccessPoint }      from '../network/AccessPoint.js';
+import { Server, CentralOfficeServer, Cloud } from '../network/Server.js';
+import { AccessPoint, LightweightAccessPoint } from '../network/AccessPoint.js';
 import { Hub }              from '../network/Hub.js';
 import { Repeater }         from '../network/Repeater.js';
 import { CoAxialSplitter }  from '../network/CoAxialSplitter.js';
 import { Bridge }           from '../network/Bridge.js';
-import { Firewall }         from '../network/Firewall.js';
-import { WirelessRouter, WLC } from '../network/WirelessRouter.js';
+import { Firewall, SecurityAppliance } from '../network/Firewall.js';
+import { WirelessRouter, HomeGateway, WLC } from '../network/WirelessRouter.js';
 import { DSLModem, CableModem, CellTower } from '../network/Modem.js';
 import { Link }             from '../network/Link.js';
 import { Device }           from '../network/Device.js';
@@ -49,7 +49,8 @@ export class TopologyBuilder {
     const previews = document.querySelectorAll('.device-icon-preview[data-draw]');
     previews.forEach(canvas => {
       const { deviceRenderer } = this.canvas;
-      deviceRenderer.drawPreview(canvas, canvas.dataset.draw);
+      const model = canvas.closest('.palette-item')?.dataset.model || canvas.dataset.model || '';
+      deviceRenderer.drawPreview(canvas, canvas.dataset.draw, model);
     });
   }
 
@@ -104,26 +105,33 @@ export class TopologyBuilder {
   }
 
   _createDevice(type, opts = {}) {
+    const m = (opts.model || '').toUpperCase();
+    const t = (type || '').toLowerCase();
+
     const map = {
-      router:         () => new Router(opts),
-      switch:         () => new Switch(opts),
-      l3switch:       () => new L3Switch({ ...opts, type: 'l3switch' }),
-      pc:             () => new PC(opts),
-      server:         () => new Server(opts),
-      ap:             () => new AccessPoint(opts),
-      hub:            () => new Hub(opts),
-      repeater:       () => new Repeater(opts),
-      coaxialsplitter:() => new CoAxialSplitter(opts),
-      splitter:       () => new CoAxialSplitter(opts),
-      bridge:         () => new Bridge(opts),
-      firewall:       () => new Firewall(opts),
-      wirelessrouter: () => new WirelessRouter(opts),
-      wlc:            () => new WLC(opts),
-      modem:          () => new DSLModem(opts),
-      celltower:      () => new CellTower(opts),
-      cloud:          () => new Cloud(opts),
+      router:           () => new Router(opts),
+      switch:           () => new Switch(opts),
+      l3switch:         () => new L3Switch({ ...opts, type: 'l3switch' }),
+      pc:               () => new PC(opts),
+      server:           () => (m.includes('CENTRAL') || m.includes('CO-SERVER')) ? new CentralOfficeServer(opts) : new Server(opts),
+      coserver:         () => new CentralOfficeServer(opts),
+      ap:               () => (m.includes('LAP') || m.includes('3702')) ? new LightweightAccessPoint(opts) : new AccessPoint(opts),
+      lap:              () => new LightweightAccessPoint(opts),
+      hub:              () => new Hub(opts),
+      repeater:         () => new Repeater(opts),
+      coaxialsplitter:  () => new CoAxialSplitter(opts),
+      splitter:         () => new CoAxialSplitter(opts),
+      bridge:           () => new Bridge(opts),
+      firewall:         () => (m.includes('MERAKI') || m.includes('MX65')) ? new SecurityAppliance(opts) : new Firewall(opts),
+      securityappliance:() => new SecurityAppliance(opts),
+      wirelessrouter:   () => (m.includes('DLC') || m.includes('GATEWAY')) ? new HomeGateway(opts) : new WirelessRouter(opts),
+      homegateway:      () => new HomeGateway(opts),
+      wlc:              () => new WLC(opts),
+      modem:            () => new DSLModem(opts),
+      celltower:        () => new CellTower(opts),
+      cloud:            () => new Cloud(opts),
     };
-    return (map[type] || map.pc)();
+    return (map[t] || map.pc)();
   }
 
   // ──────────────────────────────────────────────────────────

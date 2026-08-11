@@ -528,48 +528,223 @@ export const DEVICE_MODELS = {
     ]
   },
 
-  // ── WIRELESS INTERMEDIARY DEVICES ──────────────────────────────
+  // ── WIRELESS ACCESS POINTS (AUTONOMOUS & LIGHTWEIGHT) ───────────
+  'AccessPoint-PT': {
+    family: 'ap',
+    category: 'Wireless Access Points',
+    series: 'Generic Simulation AP',
+    name: 'AccessPoint-PT',
+    description: 'Generic 802.11b/g Wireless Access Point with 1 GigabitEthernet uplink port.',
+    functions: 'Standard autonomous Layer 2 wireless access point bridging 802.11b/g wireless clients to a wired Ethernet LAN network.',
+    slots: '1 GigabitEthernet RJ-45 port, 2.4GHz internal antenna',
+    interfaces: [
+      { name: 'Port0', shortName: 'G0', speed: '1000', duplex: 'auto', autoMdix: true },
+      { name: 'Port1', shortName: 'WiFi', speed: '54', duplex: 'half', autoMdix: false }
+    ]
+  },
   'AP-PT': {
     family: 'ap',
+    category: 'Wireless Access Points',
+    series: 'Generic Simulation AP',
     name: 'AccessPoint-PT',
-    description: 'Generic Wireless Access Point with 1 GE uplink',
+    description: 'Generic 802.11b/g Wireless Access Point with 1 GigabitEthernet uplink port.',
+    functions: 'Standard autonomous Layer 2 wireless access point bridging 802.11b/g wireless clients to a wired Ethernet LAN network.',
+    slots: '1 GigabitEthernet RJ-45 port, 2.4GHz internal antenna',
     interfaces: [
-      { name: 'GigabitEthernet0', shortName: 'G0', speed: '1000', duplex: 'auto', autoMdix: true },
-      { name: 'Dot11Radio0', shortName: 'WiFi', speed: '54', duplex: 'half', autoMdix: false }
+      { name: 'Port0', shortName: 'G0', speed: '1000', duplex: 'auto', autoMdix: true },
+      { name: 'Port1', shortName: 'WiFi', speed: '54', duplex: 'half', autoMdix: false }
+    ]
+  },
+  'AccessPoint-PT-A': {
+    family: 'ap',
+    category: 'Wireless Access Points',
+    series: 'Generic Simulation AP',
+    name: 'AccessPoint-PT-A',
+    description: '802.11a 5GHz Wireless Access Point with 1 GigabitEthernet uplink port.',
+    functions: 'Autonomous Layer 2 wireless access point operating in the 5GHz frequency band for high-density, low-interference wireless LAN connectivity.',
+    slots: '1 GigabitEthernet RJ-45 port, 5GHz internal antenna',
+    interfaces: [
+      { name: 'Port0', shortName: 'G0', speed: '1000', duplex: 'auto', autoMdix: true },
+      { name: 'Port1', shortName: 'WiFi-5G', speed: '54', duplex: 'half', autoMdix: false }
+    ]
+  },
+  'AP-PT-A': {
+    family: 'ap',
+    category: 'Wireless Access Points',
+    series: 'Generic Simulation AP',
+    name: 'AccessPoint-PT-A',
+    description: '802.11a 5GHz Wireless Access Point with 1 GigabitEthernet uplink port.',
+    functions: 'Autonomous Layer 2 wireless access point operating in the 5GHz frequency band for high-density, low-interference wireless LAN connectivity.',
+    slots: '1 GigabitEthernet RJ-45 port, 5GHz internal antenna',
+    interfaces: [
+      { name: 'Port0', shortName: 'G0', speed: '1000', duplex: 'auto', autoMdix: true },
+      { name: 'Port1', shortName: 'WiFi-5G', speed: '54', duplex: 'half', autoMdix: false }
+    ]
+  },
+  'AccessPoint-PT-N': {
+    family: 'ap',
+    category: 'Wireless Access Points',
+    series: 'Generic Simulation AP',
+    name: 'AccessPoint-PT-N',
+    description: '802.11n 2.4GHz Wireless Access Point with 1 GigabitEthernet uplink port.',
+    functions: 'High-speed autonomous Layer 2 wireless access point utilizing 802.11n MIMO technology for improved coverage and up to 300 Mbps bandwidth.',
+    slots: '1 GigabitEthernet RJ-45 port, 2.4GHz MIMO antennas',
+    interfaces: [
+      { name: 'Port0', shortName: 'G0', speed: '1000', duplex: 'auto', autoMdix: true },
+      { name: 'Port1', shortName: 'WiFi-N', speed: '300', duplex: 'half', autoMdix: false }
+    ]
+  },
+  'AP-PT-N': {
+    family: 'ap',
+    category: 'Wireless Access Points',
+    series: 'Generic Simulation AP',
+    name: 'AccessPoint-PT-N',
+    description: '802.11n 2.4GHz Wireless Access Point with 1 GigabitEthernet uplink port.',
+    functions: 'High-speed autonomous Layer 2 wireless access point utilizing 802.11n MIMO technology for improved coverage and up to 300 Mbps bandwidth.',
+    slots: '1 GigabitEthernet RJ-45 port, 2.4GHz MIMO antennas',
+    interfaces: [
+      { name: 'Port0', shortName: 'G0', speed: '1000', duplex: 'auto', autoMdix: true },
+      { name: 'Port1', shortName: 'WiFi-N', speed: '300', duplex: 'half', autoMdix: false }
+    ]
+  },
+  'AccessPoint-PT-AC': {
+    family: 'ap',
+    category: 'Wireless Access Points',
+    series: 'Generic Simulation AP',
+    name: 'AccessPoint-PT-AC',
+    description: 'Dual-Band 802.11ac Gigabit Wireless Access Point with concurrent 2.4GHz & 5GHz radios.',
+    functions: 'High-performance dual-band wireless access point supporting 802.11ac Wave 2 gigabit wireless speeds and beamforming across concurrent frequencies.',
+    slots: '1 GigabitEthernet RJ-45 port, dual-band internal antennas',
+    interfaces: [
+      { name: 'Port0', shortName: 'G0', speed: '1000', duplex: 'auto', autoMdix: true },
+      { name: 'Port1', shortName: 'WiFi-2.4G', speed: '300', duplex: 'half', autoMdix: false },
+      { name: 'Port2', shortName: 'WiFi-5G', speed: '867', duplex: 'half', autoMdix: false }
+    ]
+  },
+  'AP-PT-AC': {
+    family: 'ap',
+    category: 'Wireless Access Points',
+    series: 'Generic Simulation AP',
+    name: 'AccessPoint-PT-AC',
+    description: 'Dual-Band 802.11ac Gigabit Wireless Access Point with concurrent 2.4GHz & 5GHz radios.',
+    functions: 'High-performance dual-band wireless access point supporting 802.11ac Wave 2 gigabit wireless speeds and beamforming across concurrent frequencies.',
+    slots: '1 GigabitEthernet RJ-45 port, dual-band internal antennas',
+    interfaces: [
+      { name: 'Port0', shortName: 'G0', speed: '1000', duplex: 'auto', autoMdix: true },
+      { name: 'Port1', shortName: 'WiFi-2.4G', speed: '300', duplex: 'half', autoMdix: false },
+      { name: 'Port2', shortName: 'WiFi-5G', speed: '867', duplex: 'half', autoMdix: false }
     ]
   },
   'AP-AC-N': {
     family: 'ap',
-    name: 'AccessPoint-AC-N',
-    description: 'Dual-Band 802.11ac Wireless Access Point',
+    category: 'Wireless Access Points',
+    series: 'Generic Simulation AP',
+    name: 'AccessPoint-PT-AC',
+    description: 'Dual-Band 802.11ac Gigabit Wireless Access Point',
     interfaces: [
-      { name: 'GigabitEthernet0', shortName: 'G0', speed: '1000', duplex: 'auto', autoMdix: true },
-      { name: 'Dot11Radio0', shortName: 'WiFi-2.4G', speed: '150', duplex: 'half', autoMdix: false },
-      { name: 'Dot11Radio1', shortName: 'WiFi-5G', speed: '867', duplex: 'half', autoMdix: false }
+      { name: 'Port0', shortName: 'G0', speed: '1000', duplex: 'auto', autoMdix: true },
+      { name: 'Port1', shortName: 'WiFi-2.4G', speed: '300', duplex: 'half', autoMdix: false },
+      { name: 'Port2', shortName: 'WiFi-5G', speed: '867', duplex: 'half', autoMdix: false }
     ]
   },
-  'LAP-1130AG': {
+  'LAP-PT': {
     family: 'ap',
-    name: 'Cisco LAP-1130AG',
-    description: 'Autonomous/Lightweight Access Point',
+    category: 'Lightweight Access Points (LAP)',
+    series: 'Cisco Lightweight Wireless',
+    name: 'LAP-PT',
+    description: 'Generic Lightweight Access Point for Cisco Wireless LAN Controller (WLC) integration.',
+    functions: 'Lightweight Access Point (LAP) operating in split-MAC architecture. Automatically establishes secure CAPWAP/LWAPP tunnels to a Cisco WLC for centralized RF management, authentication, and roaming.',
+    slots: '1 GigabitEthernet RJ-45 PoE port, integrated antenna array',
     interfaces: [
-      { name: 'GigabitEthernet0', shortName: 'G0', speed: '1000', duplex: 'auto', autoMdix: true },
-      { name: 'Dot11Radio0', shortName: 'WiFi', speed: '54', duplex: 'half', autoMdix: false }
+      { name: 'GigabitEthernet0', shortName: 'G0', speed: '1000', duplex: 'auto', autoMdix: true, poe: true },
+      { name: 'Dot11Radio0', shortName: 'WiFi', speed: '450', duplex: 'half', autoMdix: false }
+    ]
+  },
+  '3702i': {
+    family: 'ap',
+    category: 'Lightweight Access Points (LAP)',
+    series: 'Cisco Aironet 3700 Series',
+    name: 'Cisco Aironet 3702i',
+    description: 'Enterprise 802.11ac Wave 1 Lightweight AP with 4x4 MIMO and Cisco CleanAir.',
+    functions: 'Enterprise-grade lightweight 802.11ac access point featuring 4x4 MIMO with 3 spatial streams, Cisco CleanAir proactive spectrum intelligence, and ClientLink 3.0 beamforming. Managed exclusively via Cisco WLC controllers.',
+    slots: '1 GigabitEthernet PoE+ uplink, 1 Management Console port, dual-band CleanAir radios',
+    interfaces: [
+      { name: 'GigabitEthernet0', shortName: 'G0', speed: '1000', duplex: 'auto', autoMdix: true, poe: true },
+      { name: 'Dot11Radio0', shortName: 'WiFi-2.4G', speed: '450', duplex: 'half', autoMdix: false },
+      { name: 'Dot11Radio1', shortName: 'WiFi-5G', speed: '1300', duplex: 'half', autoMdix: false }
     ]
   },
   'LAP-3702i': {
     family: 'ap',
+    category: 'Lightweight Access Points (LAP)',
+    series: 'Cisco Aironet 3700 Series',
     name: 'Cisco Aironet 3702i',
-    description: 'High-Performance 802.11ac Lightweight AP',
+    description: 'Enterprise 802.11ac Wave 1 Lightweight AP with 4x4 MIMO and Cisco CleanAir.',
+    functions: 'Enterprise-grade lightweight 802.11ac access point featuring 4x4 MIMO with 3 spatial streams, Cisco CleanAir proactive spectrum intelligence, and ClientLink 3.0 beamforming.',
+    slots: '1 GigabitEthernet PoE+ uplink, dual-band CleanAir radios',
     interfaces: [
-      { name: 'GigabitEthernet0', shortName: 'G0', speed: '1000', duplex: 'auto', autoMdix: true },
-      { name: 'Dot11Radio0', shortName: 'WiFi', speed: '1300', duplex: 'half', autoMdix: false }
+      { name: 'GigabitEthernet0', shortName: 'G0', speed: '1000', duplex: 'auto', autoMdix: true, poe: true },
+      { name: 'Dot11Radio0', shortName: 'WiFi-2.4G', speed: '450', duplex: 'half', autoMdix: false },
+      { name: 'Dot11Radio1', shortName: 'WiFi-5G', speed: '1300', duplex: 'half', autoMdix: false }
+    ]
+  },
+  'LAP-1130AG': {
+    family: 'ap',
+    category: 'Lightweight Access Points (LAP)',
+    series: 'Cisco Aironet 1130 Series',
+    name: 'Cisco LAP-1130AG',
+    description: 'Autonomous/Lightweight Access Point with dual 802.11a/g radios.',
+    functions: 'Legacy enterprise wireless access point supporting autonomous or lightweight CAPWAP operation.',
+    slots: '1 FastEthernet PoE port',
+    interfaces: [
+      { name: 'FastEthernet0', shortName: 'Fa0', speed: '100', duplex: 'auto', autoMdix: true },
+      { name: 'Dot11Radio0', shortName: 'WiFi', speed: '54', duplex: 'half', autoMdix: false }
+    ]
+  },
+
+  // ── WIRELESS ROUTERS & HOME GATEWAYS ───────────────────────────
+  'HomeRouter-PT-AC': {
+    family: 'wirelessrouter',
+    category: 'Wireless Routers & Home Gateways',
+    series: 'Cisco Home Routers',
+    name: 'HomeRouter-PT-AC',
+    description: 'Dual-Band 802.11ac Wireless Home Router with 1 Gigabit WAN, 4 Gigabit LAN ports, and NAT/DHCP.',
+    functions: 'Consumer and SOHO integrated router combining an 802.11ac dual-band wireless access point, 4-port Gigabit Ethernet switch, DHCP server, SPI firewall, and NAT router to connect local homes and small offices to broadband ISPs.',
+    slots: '1 GE Internet WAN port, 4 GE LAN switch ports, 2.4GHz & 5GHz Wi-Fi radios',
+    interfaces: [
+      { name: 'Internet', shortName: 'WAN', speed: '1000', duplex: 'auto', autoMdix: true },
+      { name: 'Ethernet1', shortName: 'LAN1', speed: '1000', duplex: 'auto', autoMdix: true },
+      { name: 'Ethernet2', shortName: 'LAN2', speed: '1000', duplex: 'auto', autoMdix: true },
+      { name: 'Ethernet3', shortName: 'LAN3', speed: '1000', duplex: 'auto', autoMdix: true },
+      { name: 'Ethernet4', shortName: 'LAN4', speed: '1000', duplex: 'auto', autoMdix: true },
+      { name: 'Wireless 2.4GHz', shortName: 'WiFi-2.4G', speed: '450', duplex: 'half', autoMdix: false },
+      { name: 'Wireless 5GHz', shortName: 'WiFi-5G', speed: '1300', duplex: 'half', autoMdix: false }
+    ]
+  },
+  'HomeRouter': {
+    family: 'wirelessrouter',
+    category: 'Wireless Routers & Home Gateways',
+    series: 'Cisco Home Routers',
+    name: 'HomeRouter-PT-AC',
+    description: 'Dual-Band 802.11ac Wireless Home Router',
+    interfaces: [
+      { name: 'Internet', shortName: 'WAN', speed: '1000', duplex: 'auto', autoMdix: true },
+      { name: 'Ethernet1', shortName: 'LAN1', speed: '1000', duplex: 'auto', autoMdix: true },
+      { name: 'Ethernet2', shortName: 'LAN2', speed: '1000', duplex: 'auto', autoMdix: true },
+      { name: 'Ethernet3', shortName: 'LAN3', speed: '1000', duplex: 'auto', autoMdix: true },
+      { name: 'Ethernet4', shortName: 'LAN4', speed: '1000', duplex: 'auto', autoMdix: true },
+      { name: 'Wireless 2.4GHz', shortName: 'WiFi-2.4G', speed: '450', duplex: 'half', autoMdix: false },
+      { name: 'Wireless 5GHz', shortName: 'WiFi-5G', speed: '1300', duplex: 'half', autoMdix: false }
     ]
   },
   'WRT300N': {
     family: 'wirelessrouter',
+    category: 'Wireless Routers & Home Gateways',
+    series: 'Linksys Wireless Series',
     name: 'Linksys WRT300N',
-    description: 'Wireless Router with 1 WAN port, 4 LAN ports, and Wireless AP',
+    description: 'Wireless-N Broadband Router with 1 WAN port, 4 FastEthernet LAN ports, and 2.4GHz Wi-Fi.',
+    functions: 'Classic SOHO wireless broadband router integrating an 802.11n Wi-Fi access point, 4 FastEthernet switch ports, NAT translation, DHCP server, and stateful packet inspection firewall.',
+    slots: '1 FE Internet WAN port, 4 FE LAN ports, 2.4GHz 802.11n radio',
     interfaces: [
       { name: 'Internet', shortName: 'WAN', speed: '100', duplex: 'auto', autoMdix: true },
       { name: 'Ethernet1', shortName: 'LAN1', speed: '100', duplex: 'auto', autoMdix: true },
@@ -579,46 +754,234 @@ export const DEVICE_MODELS = {
       { name: 'Wireless',  shortName: 'WiFi', speed: '300', duplex: 'half', autoMdix: false }
     ]
   },
-  'WLC-2504': {
+  'DLC100': {
+    family: 'wirelessrouter',
+    category: 'Wireless Routers & Home Gateways',
+    series: 'Cisco Home Gateway Series',
+    name: 'DLC100 Home Gateway',
+    description: 'Smart IoT Home Gateway Router with 4 LAN ports, 1 WAN port, Wi-Fi, and integrated IoT Server.',
+    functions: 'Specialized Smart Home & IoT Gateway router. In addition to standard wireless broadband routing, it hosts an embedded IoT Registration Server allowing smart devices (sensors, smart lamps, fans, doors) to register, report telemetry, and be automated.',
+    slots: '1 FE/GE Internet port, 4 LAN ports, 2.4/5GHz Wi-Fi, ZigBee/BLE IoT antenna',
+    interfaces: [
+      { name: 'Internet', shortName: 'WAN', speed: '100', duplex: 'auto', autoMdix: true },
+      { name: 'Ethernet1', shortName: 'LAN1', speed: '100', duplex: 'auto', autoMdix: true },
+      { name: 'Ethernet2', shortName: 'LAN2', speed: '100', duplex: 'auto', autoMdix: true },
+      { name: 'Ethernet3', shortName: 'LAN3', speed: '100', duplex: 'auto', autoMdix: true },
+      { name: 'Ethernet4', shortName: 'LAN4', speed: '100', duplex: 'auto', autoMdix: true },
+      { name: 'Wireless',  shortName: 'WiFi', speed: '300', duplex: 'half', autoMdix: false },
+      { name: 'IoTRadio',  shortName: 'IoT',  speed: '10',  duplex: 'half', autoMdix: false }
+    ]
+  },
+  'HomeGateway-PT': {
+    family: 'wirelessrouter',
+    category: 'Wireless Routers & Home Gateways',
+    series: 'Cisco Home Gateway Series',
+    name: 'DLC100 Home Gateway',
+    description: 'Smart IoT Home Gateway Router',
+    interfaces: [
+      { name: 'Internet', shortName: 'WAN', speed: '100', duplex: 'auto', autoMdix: true },
+      { name: 'Ethernet1', shortName: 'LAN1', speed: '100', duplex: 'auto', autoMdix: true },
+      { name: 'Ethernet2', shortName: 'LAN2', speed: '100', duplex: 'auto', autoMdix: true },
+      { name: 'Ethernet3', shortName: 'LAN3', speed: '100', duplex: 'auto', autoMdix: true },
+      { name: 'Ethernet4', shortName: 'LAN4', speed: '100', duplex: 'auto', autoMdix: true },
+      { name: 'Wireless',  shortName: 'WiFi', speed: '300', duplex: 'half', autoMdix: false },
+      { name: 'IoTRadio',  shortName: 'IoT',  speed: '10',  duplex: 'half', autoMdix: false }
+    ]
+  },
+
+  // ── WIRELESS LAN CONTROLLERS (WLC) ─────────────────────────────
+  'WLC-PT': {
     family: 'wlc',
-    name: 'Cisco 2504 Wireless Controller',
-    description: 'Centralized Wireless LAN Controller with 4 GE ports',
-    interfaces: Array.from({ length: 4 }, (_, i) => ({
-      name: `GigabitEthernet0/${i + 1}`, shortName: `G0/${i + 1}`, speed: '1000', duplex: 'auto', autoMdix: true
-    }))
+    category: 'Wireless LAN Controllers (WLC)',
+    series: 'Generic Simulation WLC',
+    name: 'WLC-PT (Generic)',
+    description: 'Generic centralized Wireless LAN Controller with Gigabit Ethernet distribution & management ports.',
+    functions: 'Centralized network appliance responsible for orchestrating Lightweight Access Points (LAPs). Handles CAPWAP tunneling, dynamic RF power/channel assignment, 802.11 WLAN policies, RADIUS/802.1X authentication, and guest portals.',
+    slots: '1 Gigabit Management port, 2 Gigabit Distribution ports, 1 Console port',
+    interfaces: [
+      { name: 'Management0', shortName: 'Mgmt0', speed: '1000', duplex: 'auto', autoMdix: true },
+      { name: 'GigabitEthernet0/1', shortName: 'G0/1', speed: '1000', duplex: 'auto', autoMdix: true },
+      { name: 'GigabitEthernet0/2', shortName: 'G0/2', speed: '1000', duplex: 'auto', autoMdix: true }
+    ]
   },
   'WLC-3504': {
     family: 'wlc',
+    category: 'Wireless LAN Controllers (WLC)',
+    series: 'Cisco 3504 Series',
     name: 'Cisco 3504 Wireless Controller',
-    description: 'Enterprise Wireless Controller with 4 GE ports',
+    description: 'Enterprise high-density Wireless Controller supporting up to 150 APs, 4 GE ports, and 1 Multigigabit port.',
+    functions: 'Compact, high-density enterprise controller supporting Cisco DNA Spaces, 802.11ac Wave 2 and Wi-Fi 6 AP orchestration, sub-second failover, and hardware-rate 4 Gbps data throughput.',
+    slots: '1 Multigigabit Ethernet (mGig) port, 4 GigabitEthernet RJ-45 ports, 1 SFP fiber slot, 1 Service port',
+    interfaces: [
+      { name: 'GigabitEthernet0/1', shortName: 'G0/1', speed: '1000', duplex: 'auto', autoMdix: true },
+      { name: 'GigabitEthernet0/2', shortName: 'G0/2', speed: '1000', duplex: 'auto', autoMdix: true },
+      { name: 'GigabitEthernet0/3', shortName: 'G0/3', speed: '1000', duplex: 'auto', autoMdix: true },
+      { name: 'GigabitEthernet0/4', shortName: 'G0/4', speed: '1000', duplex: 'auto', autoMdix: true },
+      { name: 'Management', shortName: 'Mgmt', speed: '1000', duplex: 'auto', autoMdix: true }
+    ]
+  },
+  'WLC-2504': {
+    family: 'wlc',
+    category: 'Wireless LAN Controllers (WLC)',
+    series: 'Cisco 2504 Series',
+    name: 'Cisco 2504 Wireless Controller',
+    description: 'Branch-office Wireless LAN Controller with 4 GigabitEthernet ports (2 PoE).',
+    functions: 'Cost-effective centralized controller for small to mid-sized branch deployments, managing up to 75 Lightweight Access Points with centralized security, rogue AP detection, and CleanAir RF monitoring.',
+    slots: '4 GigabitEthernet RJ-45 ports (2 PoE), 1 Console port',
     interfaces: Array.from({ length: 4 }, (_, i) => ({
-      name: `GigabitEthernet0/${i + 1}`, shortName: `G0/${i + 1}`, speed: '1000', duplex: 'auto', autoMdix: true
+      name: `GigabitEthernet0/${i + 1}`, shortName: `G0/${i + 1}`, speed: '1000', duplex: 'auto', autoMdix: true, poe: i < 2
     }))
   },
 
-  // ── SECURITY APPLIANCES (FIREWALLS) ────────────────────────────
-  'ASA-5505': {
+  // ── SECURITY APPLIANCES & FIREWALLS ────────────────────────────
+  'Meraki-MX65W': {
     family: 'firewall',
-    name: 'Cisco ASA 5505 Firewall',
-    description: 'Adaptive Security Appliance with 8 FastEthernet ports',
-    interfaces: Array.from({ length: 8 }, (_, i) => ({
-      name: `Ethernet0/${i}`, shortName: `Fa0/${i}`, speed: '100', duplex: 'auto', autoMdix: true, vlanId: 1
-    }))
+    category: 'Cloud-Managed Security Appliances',
+    series: 'Cisco Meraki MX Series',
+    name: 'Cisco Meraki MX65W Security Appliance',
+    description: 'Cloud-Managed 100% centralized Security & SD-WAN Appliance with integrated 802.11ac Wi-Fi & PoE+.',
+    functions: 'Enterprise cloud-managed security appliance offering Next-Generation Layer 7 application firewalling, Auto VPN SD-WAN interconnectivity, Content Filtering, Snort-based Intrusion Detection (IDS/IPS), and dual-band 802.11ac Wi-Fi.',
+    slots: '2 Dedicated GbE WAN uplinks, 8 GbE LAN switch ports (2 PoE+), integrated 802.11ac antennas',
+    interfaces: [
+      { name: 'Internet1', shortName: 'WAN1', speed: '1000', duplex: 'auto', autoMdix: true },
+      { name: 'Internet2', shortName: 'WAN2', speed: '1000', duplex: 'auto', autoMdix: true },
+      { name: 'LAN1', shortName: 'LAN1', speed: '1000', duplex: 'auto', autoMdix: true, poe: true },
+      { name: 'LAN2', shortName: 'LAN2', speed: '1000', duplex: 'auto', autoMdix: true, poe: true },
+      { name: 'LAN3', shortName: 'LAN3', speed: '1000', duplex: 'auto', autoMdix: true },
+      { name: 'LAN4', shortName: 'LAN4', speed: '1000', duplex: 'auto', autoMdix: true },
+      { name: 'LAN5', shortName: 'LAN5', speed: '1000', duplex: 'auto', autoMdix: true },
+      { name: 'LAN6', shortName: 'LAN6', speed: '1000', duplex: 'auto', autoMdix: true },
+      { name: 'LAN7', shortName: 'LAN7', speed: '1000', duplex: 'auto', autoMdix: true },
+      { name: 'LAN8', shortName: 'LAN8', speed: '1000', duplex: 'auto', autoMdix: true },
+      { name: 'Wireless2.4GHz', shortName: 'WiFi-2.4G', speed: '300', duplex: 'half', autoMdix: false },
+      { name: 'Wireless5GHz', shortName: 'WiFi-5G', speed: '867', duplex: 'half', autoMdix: false }
+    ]
+  },
+  'MX65W': {
+    family: 'firewall',
+    category: 'Cloud-Managed Security Appliances',
+    series: 'Cisco Meraki MX Series',
+    name: 'Cisco Meraki MX65W Security Appliance',
+    description: 'Cloud-Managed 100% centralized Security & SD-WAN Appliance with integrated 802.11ac Wi-Fi & PoE+.',
+    functions: 'Enterprise cloud-managed security appliance offering Next-Gen Layer 7 firewalling, Auto VPN, and dual-band Wi-Fi.',
+    slots: '2 GbE WAN, 8 GbE LAN (2 PoE+), 802.11ac Wi-Fi',
+    interfaces: [
+      { name: 'Internet1', shortName: 'WAN1', speed: '1000', duplex: 'auto', autoMdix: true },
+      { name: 'Internet2', shortName: 'WAN2', speed: '1000', duplex: 'auto', autoMdix: true },
+      { name: 'LAN1', shortName: 'LAN1', speed: '1000', duplex: 'auto', autoMdix: true, poe: true },
+      { name: 'LAN2', shortName: 'LAN2', speed: '1000', duplex: 'auto', autoMdix: true, poe: true },
+      { name: 'LAN3', shortName: 'LAN3', speed: '1000', duplex: 'auto', autoMdix: true },
+      { name: 'LAN4', shortName: 'LAN4', speed: '1000', duplex: 'auto', autoMdix: true },
+      { name: 'LAN5', shortName: 'LAN5', speed: '1000', duplex: 'auto', autoMdix: true },
+      { name: 'LAN6', shortName: 'LAN6', speed: '1000', duplex: 'auto', autoMdix: true },
+      { name: 'LAN7', shortName: 'LAN7', speed: '1000', duplex: 'auto', autoMdix: true },
+      { name: 'LAN8', shortName: 'LAN8', speed: '1000', duplex: 'auto', autoMdix: true },
+      { name: 'Wireless2.4GHz', shortName: 'WiFi-2.4G', speed: '300', duplex: 'half', autoMdix: false },
+      { name: 'Wireless5GHz', shortName: 'WiFi-5G', speed: '867', duplex: 'half', autoMdix: false }
+    ]
   },
   'ASA-5506-X': {
     family: 'firewall',
+    category: 'Enterprise Security Firewalls',
+    series: 'Cisco ASA 5500-X Series',
     name: 'Cisco ASA 5506-X Firewall',
-    description: 'Next-Gen Firewall with 8 GigabitEthernet ports',
+    description: 'Next-Gen Firewall with 8 GigabitEthernet ports and Cisco FirePOWER services.',
+    functions: 'Next-generation adaptive security appliance delivering stateful inspection, hardware-accelerated IPsec/SSL VPNs, Advanced Malware Protection (AMP), and Next-Gen IPS for small to mid-sized businesses.',
+    slots: '8 GigabitEthernet ports, 1 Management port, 1 Console port',
     interfaces: Array.from({ length: 8 }, (_, i) => ({
       name: `GigabitEthernet1/${i + 1}`, shortName: `G1/${i + 1}`, speed: '1000', duplex: 'auto', autoMdix: true
     }))
   },
+  'ASA-5505': {
+    family: 'firewall',
+    category: 'Enterprise Security Firewalls',
+    series: 'Cisco ASA 5500 Series',
+    name: 'Cisco ASA 5505 Firewall',
+    description: 'Adaptive Security Appliance with 8 FastEthernet switch ports (2 PoE).',
+    functions: 'Classic modular security appliance for small business and teleworker environments with integrated 8-port 10/100 switch, hardware VPN acceleration, and stateful security zones.',
+    slots: '8 FastEthernet ports (ports 6 & 7 provide PoE), 1 Console port',
+    interfaces: Array.from({ length: 8 }, (_, i) => ({
+      name: `Ethernet0/${i}`, shortName: `Fa0/${i}`, speed: '100', duplex: 'auto', autoMdix: true, vlanId: 1
+    }))
+  },
 
-  // ── WAN INFRASTRUCTURE & MODEMS ────────────────────────────────
+  // ── SERVERS & CELLULAR INFRASTRUCTURE ──────────────────────────
+  'Central-Office-Server': {
+    family: 'server',
+    category: 'Telecom & Central Office Infrastructure',
+    series: 'Cisco Telecom Infrastructure',
+    name: 'Central-Office-Server',
+    description: 'Central Office Server for cellular base station backhaul, IoT registration, DNS, DHCP, and core WAN routing.',
+    functions: 'Carrier-grade Central Office Server that acts as the core gateway for cellular infrastructure (Cell Towers), connecting wireless mobile subscribers to telecom backbone networks, providing central IoT device registration, DNS resolution, and automated IP addressing.',
+    slots: '1 Gigabit LAN port, 1 High-speed Backbone uplink, 1 Coaxial interface, Cellular Gateway services',
+    interfaces: [
+      { name: 'GigabitEthernet0/1', shortName: 'G0/1', speed: '1000', duplex: 'auto', autoMdix: true },
+      { name: 'Backbone0', shortName: 'Backbone', speed: '10000', duplex: 'full', autoMdix: true },
+      { name: 'Coaxial0',  shortName: 'Coax',     speed: '100',  duplex: 'half', autoMdix: false },
+      { name: 'FastEthernet0', shortName: 'Fa0', speed: '100', duplex: 'auto', autoMdix: true }
+    ]
+  },
+  'CO-Server': {
+    family: 'server',
+    category: 'Telecom & Central Office Infrastructure',
+    series: 'Cisco Telecom Infrastructure',
+    name: 'Central-Office-Server',
+    description: 'Central Office Server for cellular base station backhaul and IoT registration.',
+    interfaces: [
+      { name: 'GigabitEthernet0/1', shortName: 'G0/1', speed: '1000', duplex: 'auto', autoMdix: true },
+      { name: 'Backbone0', shortName: 'Backbone', speed: '10000', duplex: 'full', autoMdix: true },
+      { name: 'Coaxial0',  shortName: 'Coax',     speed: '100',  duplex: 'half', autoMdix: false },
+      { name: 'FastEthernet0', shortName: 'Fa0', speed: '100', duplex: 'auto', autoMdix: true }
+    ]
+  },
+  'Server-PT': {
+    family: 'server',
+    category: 'Enterprise Servers',
+    series: 'Generic Simulation Devices',
+    name: 'Server-PT (Generic)',
+    description: 'Multi-service server supporting DHCP, DNS, HTTP, FTP, and Syslog services.',
+    functions: 'Host network server simulating enterprise application services including dynamic DHCP IP pooling, DNS record resolution, and web services.',
+    slots: '1 FastEthernet/Gigabit port',
+    interfaces: [
+      { name: 'FastEthernet0', shortName: 'Fa0', speed: '100', duplex: 'auto', autoMdix: true }
+    ]
+  },
+  'Cell-Tower': {
+    family: 'celltower',
+    category: 'Telecom & Cellular Infrastructure',
+    series: 'Cisco Cellular Infrastructure',
+    name: 'Cell-Tower',
+    description: '4G LTE / 5G Cellular Base Transceiver Station (eNodeB) with high-speed fiber backhaul.',
+    functions: 'Wireless telecommunications tower that bridges mobile cellular handsets and industrial cellular routers to the Central Office core network over high-speed backbone fiber or coaxial links.',
+    slots: '1 High-speed Backbone connection, 1 Coaxial connection, 4G/5G Cellular transceiver antenna',
+    interfaces: [
+      { name: 'Backbone0', shortName: 'Backbone', speed: '1000', duplex: 'full', autoMdix: true },
+      { name: 'Cellular0', shortName: 'Cell',     speed: '100', duplex: 'full', autoMdix: false },
+      { name: 'Coaxial0',  shortName: 'Coax',     speed: '100', duplex: 'half', autoMdix: false }
+    ]
+  },
+  'CellTower': {
+    family: 'celltower',
+    category: 'Telecom & Cellular Infrastructure',
+    series: 'Cisco Cellular Infrastructure',
+    name: 'Cell-Tower',
+    description: '4G LTE / 5G Cellular Base Station',
+    interfaces: [
+      { name: 'Backbone0', shortName: 'Backbone', speed: '1000', duplex: 'full', autoMdix: true },
+      { name: 'Cellular0', shortName: 'Cell',     speed: '100', duplex: 'full', autoMdix: false },
+      { name: 'Coaxial0',  shortName: 'Coax',     speed: '100', duplex: 'half', autoMdix: false }
+    ]
+  },
+
+  // ── WAN INFRASTRUCTURE & BROADBAND MODEMS ──────────────────────
   'Cloud-PT': {
     family: 'cloud',
+    category: 'WAN Infrastructure',
+    series: 'Generic WAN Emulation',
     name: 'Cloud-PT (Generic WAN)',
-    description: 'Generic Multi-port WAN Emulation Cloud',
+    description: 'Generic Multi-port WAN Emulation Cloud simulating ISP switching fabrics.',
+    functions: 'Multi-interface WAN cloud for simulating Frame Relay, ATM, DSLAM, and Internet ISP routing networks.',
+    slots: 'Ethernet, Serial, Modem RJ-11, and Coaxial interfaces',
     interfaces: [
       { name: 'Ethernet0', shortName: 'Eth0', speed: '100', duplex: 'auto', autoMdix: true },
       { name: 'Serial0',   shortName: 'Se0',  speed: '1.544', duplex: 'full', autoMdix: false },
@@ -628,8 +991,12 @@ export const DEVICE_MODELS = {
   },
   'DSL-Modem': {
     family: 'modem',
+    category: 'Broadband Modems',
+    series: 'Generic Physical Devices',
     name: 'DSL Modem-PT',
-    description: 'Digital Subscriber Line Modem (Ethernet to Phone RJ11)',
+    description: 'Digital Subscriber Line Broadband Modem (RJ-45 Ethernet to RJ-11 Phone Line).',
+    functions: 'Modulates digital Ethernet packets into high-frequency analog signals over copper telephone subscriber lines to connect to ISP DSLAMs.',
+    slots: '1 RJ-45 Ethernet port, 1 RJ-11 Telephone port',
     interfaces: [
       { name: 'Ethernet0', shortName: 'Eth0', speed: '100', duplex: 'auto', autoMdix: true },
       { name: 'Port1',     shortName: 'Phone', speed: '10', duplex: 'full', autoMdix: false }
@@ -637,20 +1004,15 @@ export const DEVICE_MODELS = {
   },
   'Cable-Modem': {
     family: 'modem',
+    category: 'Broadband Modems',
+    series: 'Generic Physical Devices',
     name: 'Cable Modem-PT',
-    description: 'Broadband Cable Modem (Ethernet to Coaxial)',
+    description: 'DOCSIS Broadband Cable Modem (RJ-45 Ethernet to Coaxial F-Type/BNC).',
+    functions: 'Modulates digital Ethernet frames over broadband coaxial cable TV frequencies (DOCSIS) to connect to ISP CMTS systems.',
+    slots: '1 RJ-45 Ethernet port, 1 Coaxial F-connector',
     interfaces: [
       { name: 'Ethernet0', shortName: 'Eth0', speed: '100', duplex: 'auto', autoMdix: true },
       { name: 'Coaxial0',  shortName: 'Coax', speed: '10', duplex: 'half', autoMdix: false }
-    ]
-  },
-  'Cell-Tower': {
-    family: 'celltower',
-    name: 'Cellular Base Station',
-    description: '4G LTE Cellular Transceiver Station',
-    interfaces: [
-      { name: 'Backbone0', shortName: 'Backbone', speed: '1000', duplex: 'full', autoMdix: true },
-      { name: 'Cellular0', shortName: 'Cell',     speed: '100', duplex: 'full', autoMdix: false }
     ]
   },
 
@@ -743,10 +1105,25 @@ export function getModelSpec(modelId) {
 
 /** Get list of unique models for a device family */
 export function getModelsByFamily(family) {
+  const f = (family || '').toLowerCase();
+  const familyMap = {
+    securityappliance: ['firewall', 'securityappliance'],
+    firewall: ['firewall', 'securityappliance'],
+    homegateway: ['wirelessrouter', 'homegateway'],
+    wirelessrouter: ['wirelessrouter', 'homegateway'],
+    lap: ['ap', 'lap'],
+    ap: ['ap', 'lap'],
+    coserver: ['server', 'coserver'],
+    server: ['server', 'coserver'],
+    celltower: ['celltower', 'modem'],
+    modem: ['modem', 'celltower'],
+  };
+  const targetFamilies = familyMap[f] || [f];
+
   const seen = new Set();
   const results = [];
   for (const [id, spec] of Object.entries(DEVICE_MODELS)) {
-    if (spec.family === family) {
+    if (targetFamilies.includes(spec.family)) {
       if (!seen.has(spec.name)) {
         seen.add(spec.name);
         results.push({ id, ...spec });

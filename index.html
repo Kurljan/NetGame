@@ -308,42 +308,114 @@
       </div>
 
       <div class="palette-section">
-        <div class="palette-label">WIRELESS &amp; FIREWALL</div>
-        <div class="palette-item" data-type="wirelessrouter" data-model="WRT300N" draggable="true" title="Linksys WRT300N Wireless Router">
-          <canvas class="device-icon-preview" width="48" height="48" data-draw="wirelessrouter"></canvas>
-          <span>WRT300N</span>
+        <div class="palette-label">WIRELESS ACCESS POINTS &amp; LAPS</div>
+        <div class="palette-item" data-type="ap" data-model="AccessPoint-PT" draggable="true" title="AccessPoint-PT (Generic 802.11b/g AP, 1 GE Uplink)">
+          <canvas class="device-icon-preview" width="48" height="48" data-draw="ap" data-model="AccessPoint-PT"></canvas>
+          <span>AccessPoint-PT</span>
         </div>
-        <div class="palette-item" data-type="ap" data-model="AP-PT" draggable="true" title="Access Point">
-          <canvas class="device-icon-preview" width="48" height="48" data-draw="ap"></canvas>
-          <span>Access Point</span>
+        <div class="palette-item" data-type="ap" data-model="AccessPoint-PT-A" draggable="true" title="AccessPoint-PT-A (802.11a 5GHz AP, 1 GE Uplink)">
+          <canvas class="device-icon-preview" width="48" height="48" data-draw="ap" data-model="AccessPoint-PT-A"></canvas>
+          <span>AccessPoint-PT-A</span>
         </div>
-        <div class="palette-item" data-type="firewall" data-model="ASA-5506-X" draggable="true" title="Cisco ASA 5506-X Firewall">
-          <canvas class="device-icon-preview" width="48" height="48" data-draw="firewall"></canvas>
-          <span>ASA 5506-X</span>
+        <div class="palette-item" data-type="ap" data-model="AccessPoint-PT-N" draggable="true" title="AccessPoint-PT-N (802.11n 2.4GHz MIMO AP, 1 GE Uplink)">
+          <canvas class="device-icon-preview" width="48" height="48" data-draw="ap" data-model="AccessPoint-PT-N"></canvas>
+          <span>AccessPoint-PT-N</span>
         </div>
-        <div class="palette-item" data-type="wlc" data-model="WLC-2504" draggable="true" title="Cisco 2504 Wireless Controller">
-          <canvas class="device-icon-preview" width="48" height="48" data-draw="wlc"></canvas>
-          <span>WLC-2504</span>
+        <div class="palette-item" data-type="ap" data-model="AccessPoint-PT-AC" draggable="true" title="AccessPoint-PT-AC (Dual-Band 802.11ac Gigabit AP)">
+          <canvas class="device-icon-preview" width="48" height="48" data-draw="ap" data-model="AccessPoint-PT-AC"></canvas>
+          <span>AccessPoint-PT-AC</span>
+        </div>
+        <div class="palette-item" data-type="lap" data-model="LAP-PT" draggable="true" title="LAP-PT (Generic Lightweight AP for WLC Integration)">
+          <canvas class="device-icon-preview" width="48" height="48" data-draw="lap" data-model="LAP-PT"></canvas>
+          <span>LAP-PT</span>
+        </div>
+        <div class="palette-item" data-type="lap" data-model="3702i" draggable="true" title="Cisco Aironet 3702i (Enterprise 802.11ac 4x4 MIMO CleanAir Lightweight AP)">
+          <canvas class="device-icon-preview" width="48" height="48" data-draw="lap" data-model="3702i"></canvas>
+          <span>Cisco 3702i</span>
         </div>
       </div>
 
       <div class="palette-section">
-        <div class="palette-label">WAN &amp; END DEVICES</div>
-        <div class="palette-item" data-type="pc" draggable="true" title="PC / Host">
-          <canvas class="device-icon-preview" width="48" height="48" data-draw="pc"></canvas>
-          <span>PC / Host</span>
+        <div class="palette-label">WIRELESS ROUTERS &amp; GATEWAYS</div>
+        <div class="palette-item" data-type="wirelessrouter" data-model="HomeRouter-PT-AC" draggable="true" title="HomeRouter-PT-AC (Dual-Band 802.11ac Wireless Home Router, 4 GE LAN, 1 GE WAN)">
+          <canvas class="device-icon-preview" width="48" height="48" data-draw="wirelessrouter" data-model="HomeRouter-PT-AC"></canvas>
+          <span>HomeRouter-PT-AC</span>
         </div>
-        <div class="palette-item" data-type="server" draggable="true" title="Server (DHCP/DNS)">
-          <canvas class="device-icon-preview" width="48" height="48" data-draw="server"></canvas>
-          <span>Server</span>
+        <div class="palette-item" data-type="wirelessrouter" data-model="WRT300N" draggable="true" title="Linksys WRT300N (Wireless-N Router, 4 FE LAN, 1 FE WAN)">
+          <canvas class="device-icon-preview" width="48" height="48" data-draw="wirelessrouter" data-model="WRT300N"></canvas>
+          <span>Linksys WRT300N</span>
         </div>
-        <div class="palette-item" data-type="modem" data-model="DSL-Modem" draggable="true" title="DSL Modem">
-          <canvas class="device-icon-preview" width="48" height="48" data-draw="modem"></canvas>
+        <div class="palette-item" data-type="homegateway" data-model="DLC100" draggable="true" title="DLC100 Home Gateway (Smart IoT Home Gateway with Embedded Registration Server)">
+          <canvas class="device-icon-preview" width="48" height="48" data-draw="homegateway" data-model="DLC100"></canvas>
+          <span>DLC100 Home Gateway</span>
+        </div>
+      </div>
+
+      <div class="palette-section">
+        <div class="palette-label">WIRELESS CONTROLLERS (WLC)</div>
+        <div class="palette-item" data-type="wlc" data-model="WLC-PT" draggable="true" title="WLC-PT Generic Wireless LAN Controller (CAPWAP Tunneling & Centralized RF)">
+          <canvas class="device-icon-preview" width="48" height="48" data-draw="wlc" data-model="WLC-PT"></canvas>
+          <span>WLC-PT (Generic)</span>
+        </div>
+        <div class="palette-item" data-type="wlc" data-model="WLC-3504" draggable="true" title="Cisco 3504 Wireless Controller (Enterprise High-Density, 4 GE, 1 mGig)">
+          <canvas class="device-icon-preview" width="48" height="48" data-draw="wlc" data-model="WLC-3504"></canvas>
+          <span>Cisco WLC-3504</span>
+        </div>
+        <div class="palette-item" data-type="wlc" data-model="WLC-2504" draggable="true" title="Cisco 2504 Wireless Controller (Branch WLC, 4 GE PoE)">
+          <canvas class="device-icon-preview" width="48" height="48" data-draw="wlc" data-model="WLC-2504"></canvas>
+          <span>Cisco WLC-2504</span>
+        </div>
+      </div>
+
+      <div class="palette-section">
+        <div class="palette-label">SECURITY &amp; FIREWALL APPLIANCES</div>
+        <div class="palette-item" data-type="securityappliance" data-model="Meraki-MX65W" draggable="true" title="Cisco Meraki MX65W (Cloud-Managed Security & SD-WAN Appliance, 802.11ac Wi-Fi, 8 GE PoE+)">
+          <canvas class="device-icon-preview" width="48" height="48" data-draw="securityappliance" data-model="Meraki-MX65W"></canvas>
+          <span>Meraki-MX65W</span>
+        </div>
+        <div class="palette-item" data-type="firewall" data-model="ASA-5506-X" draggable="true" title="Cisco ASA 5506-X Next-Gen Firewall (8 GE Ports, FirePOWER Services)">
+          <canvas class="device-icon-preview" width="48" height="48" data-draw="firewall" data-model="ASA-5506-X"></canvas>
+          <span>ASA 5506-X</span>
+        </div>
+        <div class="palette-item" data-type="firewall" data-model="ASA-5505" draggable="true" title="Cisco ASA 5505 Security Appliance (8 FE Ports, IPsec VPN)">
+          <canvas class="device-icon-preview" width="48" height="48" data-draw="firewall" data-model="ASA-5505"></canvas>
+          <span>ASA 5505</span>
+        </div>
+      </div>
+
+      <div class="palette-section">
+        <div class="palette-label">SERVERS &amp; CELLULAR INFRASTRUCTURE</div>
+        <div class="palette-item" data-type="coserver" data-model="Central-Office-Server" draggable="true" title="Central-Office-Server (Cellular Backhaul Core Gateway, IoT Registration, DNS/DHCP)">
+          <canvas class="device-icon-preview" width="48" height="48" data-draw="coserver" data-model="Central-Office-Server"></canvas>
+          <span>Central-Office-Server</span>
+        </div>
+        <div class="palette-item" data-type="celltower" data-model="Cell-Tower" draggable="true" title="Cell-Tower (4G LTE / 5G Cellular Base Station Transceiver)">
+          <canvas class="device-icon-preview" width="48" height="48" data-draw="celltower" data-model="Cell-Tower"></canvas>
+          <span>Cell-Tower</span>
+        </div>
+        <div class="palette-item" data-type="server" data-model="Server-PT" draggable="true" title="Server-PT (Enterprise DHCP/DNS/Web Server)">
+          <canvas class="device-icon-preview" width="48" height="48" data-draw="server" data-model="Server-PT"></canvas>
+          <span>Server-PT</span>
+        </div>
+        <div class="palette-item" data-type="modem" data-model="DSL-Modem" draggable="true" title="DSL Modem-PT (Ethernet to RJ-11 Phone)">
+          <canvas class="device-icon-preview" width="48" height="48" data-draw="modem" data-model="DSL-Modem"></canvas>
           <span>DSL Modem</span>
         </div>
-        <div class="palette-item" data-type="cloud" data-model="Cloud-PT" draggable="true" title="Cloud / Internet">
-          <canvas class="device-icon-preview" width="48" height="48" data-draw="cloud"></canvas>
-          <span>Internet</span>
+        <div class="palette-item" data-type="modem" data-model="Cable-Modem" draggable="true" title="Cable Modem-PT (Ethernet to Coaxial DOCSIS)">
+          <canvas class="device-icon-preview" width="48" height="48" data-draw="modem" data-model="Cable-Modem"></canvas>
+          <span>Cable Modem</span>
+        </div>
+        <div class="palette-item" data-type="cloud" data-model="Cloud-PT" draggable="true" title="Cloud-PT (Generic WAN & ISP Internet)">
+          <canvas class="device-icon-preview" width="48" height="48" data-draw="cloud" data-model="Cloud-PT"></canvas>
+          <span>Internet Cloud</span>
+        </div>
+      </div>
+
+      <div class="palette-section">
+        <div class="palette-label">END DEVICES</div>
+        <div class="palette-item" data-type="pc" draggable="true" title="PC / Host Computer">
+          <canvas class="device-icon-preview" width="48" height="48" data-draw="pc"></canvas>
+          <span>PC / Host</span>
         </div>
       </div>
 

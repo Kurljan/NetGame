@@ -664,33 +664,35 @@ export const DEVICE_PROFILES = {
   },
 
   // ────────────────────────────────────────────────────────────
-  //  4. SECURITY FIREWALLS
+  //  4. SECURITY FIREWALLS & APPLIANCES
   // ────────────────────────────────────────────────────────────
   firewall: {
     type: 'firewall',
     category: 'security',
-    title: 'Cisco ASA Adaptive Security Appliances & Firewalls',
+    title: 'Cisco ASA Firewalls & Meraki Security Appliances',
     osiLayer: 'Layer 3 to Layer 7 — Network to Application',
     iconType: 'firewall',
     badgeColor: '#ff4466',
     models: [
+      { id: 'Meraki-MX65W', name: 'Cisco Meraki MX65W', ports: '2 Dedicated GbE WAN, 8 GbE LAN (2 PoE+), Dual-Band 802.11ac Wi-Fi, SD-WAN' },
       { id: 'ASA-5506-X', name: 'Cisco ASA 5506-X', ports: '8 GigabitEthernet ports, FirePOWER Services, Stateful Inspection' },
       { id: 'ASA-5505', name: 'Cisco ASA 5505 Legacy', ports: '8 FastEthernet switch ports (2 PoE), IPsec VPN' },
     ],
     overview: {
-      role: 'Perimeter network defense, stateful packet inspection, security zones, and Network Address Translation (NAT).',
-      purpose: 'Firewalls protect private networks from unauthorized external access. Unlike standard routers, Cisco ASA firewalls operate on a Security Zone hierarchy (security level 0 to 100). Traffic initiated from high-security zones (Inside = 100) toward low-security zones (Outside = 0) is permitted automatically and return traffic is statefully allowed. Traffic initiated from low to high is blocked by default unless explicitly permitted by an Access Control List (ACL).',
+      role: 'Perimeter network defense, stateful packet inspection, security zones, SD-WAN auto-VPN, and Network Address Translation (NAT).',
+      purpose: 'Firewalls and Cloud-Managed Security Appliances protect enterprise and branch networks from unauthorized external access. Cisco ASA firewalls enforce a Security Zone hierarchy (Inside 100, DMZ 50, Outside 0). Cisco Meraki MX appliances deliver 100% centralized cloud management, Auto VPN mesh SD-WAN interconnectivity, Next-Gen Layer 7 application filtering, and integrated dual-band 802.11ac wireless.',
       whenToUse: [
         'Deploying at the network edge between private enterprise LAN and the public Internet.',
         'Isolating public-facing servers in a Demilitarized Zone (DMZ security level 50).',
+        'Deploying Meraki MX65W for branch SD-WAN with integrated PoE+ switchports and Wi-Fi.',
         'Enforcing Stateful Packet Inspection (SPI) for TCP, UDP, and ICMP protocols.',
         'Hiding private internal IP addresses with Port Address Translation (PAT / NAT Overload).'
       ],
       keyFeatures: [
         'Stateful Packet Inspection: Tracks TCP handshakes and sequence numbers in connection tables',
-        'Security Levels (Inside 100, DMZ 50, Outside 0)',
+        'Security Levels (Inside 100, DMZ 50, Outside 0) and Cisco Meraki Cloud Dashboard policies',
         'Access Control Lists (ACLs) with implicit deny all at the bottom',
-        'Dynamic NAT/PAT translation engine'
+        'Dynamic NAT/PAT translation engine & Auto-VPN SD-WAN mesh'
       ]
     },
     commands: [
@@ -754,34 +756,44 @@ export const DEVICE_PROFILES = {
   },
 
   // ────────────────────────────────────────────────────────────
-  //  5. WIRELESS ROUTERS, WLCS & ACCESS POINTS
+  //  5. WIRELESS ROUTERS, GATEWAYS, WLCS & ACCESS POINTS
   // ────────────────────────────────────────────────────────────
   wirelessrouter: {
     type: 'wirelessrouter',
     category: 'wireless',
-    title: 'Wireless Routers, Controllers (WLC) & Access Points',
+    title: 'Wireless Routers, IoT Gateways, WLCs & APs',
     osiLayer: 'Layer 1 & Layer 2 — Physical & Data Link',
     iconType: 'wirelessrouter',
     badgeColor: '#a855f7',
     models: [
-      { id: 'WRT300N', name: 'Linksys WRT300N Wireless-N', ports: '1 WAN port, 4 LAN Ethernet ports, 802.11b/g/n 2.4 GHz' },
-      { id: 'AP-PT', name: 'Access Point (AP-PT)', ports: '1 Ethernet port, 1 802.11ac Wi-Fi radio' },
-      { id: 'WLC-2504', name: 'Cisco 2504 Wireless Controller', ports: '4 GigabitEthernet ports, CAPWAP tunnel management' },
+      { id: 'HomeRouter-PT-AC', name: 'HomeRouter-PT-AC', ports: '1 GE WAN, 4 GE LAN, Concurrent 2.4GHz & 5GHz 802.11ac Wi-Fi' },
+      { id: 'WRT300N', name: 'Linksys WRT300N Wireless-N', ports: '1 FE WAN, 4 FE LAN, 802.11b/g/n 2.4GHz' },
+      { id: 'DLC100', name: 'DLC100 Home Gateway', ports: '1 WAN, 4 LAN, 2.4/5GHz Wi-Fi, IoT Server & ZigBee/BLE Radio' },
+      { id: 'AccessPoint-PT-AC', name: 'AccessPoint-PT-AC', ports: '1 GE Uplink, Concurrent 2.4GHz & 5GHz 802.11ac Radios' },
+      { id: 'AccessPoint-PT-N', name: 'AccessPoint-PT-N', ports: '1 GE Uplink, 802.11n 2.4GHz MIMO Radio' },
+      { id: 'AccessPoint-PT-A', name: 'AccessPoint-PT-A', ports: '1 GE Uplink, 802.11a 5GHz Radio' },
+      { id: 'AccessPoint-PT', name: 'AccessPoint-PT', ports: '1 GE Uplink, 802.11b/g 2.4GHz Radio' },
+      { id: 'LAP-PT', name: 'LAP-PT Lightweight AP', ports: '1 GE PoE Uplink, CAPWAP Tunneling to WLC' },
+      { id: '3702i', name: 'Cisco Aironet 3702i LAP', ports: '1 GE PoE+ Uplink, 4x4 MIMO, CleanAir Spectrum, 802.11ac Wave 1' },
+      { id: 'WLC-3504', name: 'Cisco 3504 Wireless Controller', ports: '4 GE ports, 1 mGig port, up to 150 APs' },
+      { id: 'WLC-2504', name: 'Cisco 2504 Wireless Controller', ports: '4 GE ports (2 PoE), up to 75 APs' },
+      { id: 'WLC-PT', name: 'WLC-PT Generic Controller', ports: '1 Management GE, 2 Distribution GE ports' },
     ],
     overview: {
-      role: 'Wireless local area network (WLAN) host association, RF transmission, wireless security encryption, and bridging.',
-      purpose: 'Wireless devices allow mobile hosts (smartphones, laptops, tablets) to connect to wired networks using radio frequencies (2.4 GHz and 5 GHz bands). Wireless Routers (e.g. WRT300N) combine an AP, 4-port switch, and NAT router in a single unit. In enterprise setups, lightweight Access Points connect back to a centralized Wireless LAN Controller (WLC) via CAPWAP tunnels for centralized security and roaming.',
+      role: 'Wireless LAN host association, RF transmission, IoT registration, and centralized WLC controller orchestration.',
+      purpose: 'Wireless infrastructure bridges mobile endpoints (laptops, smartphones, IoT sensors) to enterprise networks. Home Routers (HomeRouter-PT-AC, WRT300N) integrate an AP, switch, and NAT router. Smart Home Gateways (DLC100) host embedded IoT servers for automating smart appliances. Enterprise Lightweight APs (LAP-PT, 3702i) establish CAPWAP tunnels to Wireless LAN Controllers (WLC-PT, 2504, 3504) for centralized security, RF CleanAir spectrum management, and seamless client roaming.',
       whenToUse: [
-        'Providing Wi-Fi access for mobile endpoints and guest devices.',
+        'Providing high-speed 802.11ac Wi-Fi access for mobile endpoints and guest networks.',
         'Connecting SOHO branch offices to the Internet with integrated DHCP and NAT.',
-        'Securing wireless transmissions using WPA2/WPA3-Personal (AES-CCMP) or Enterprise (802.1X/RADIUS).',
-        'Managing multiple enterprise APs through a centralized Wireless LAN Controller.'
+        'Connecting and automating smart home IoT sensors via DLC100 Home Gateway.',
+        'Managing enterprise-scale campus APs centrally through Cisco 2504 or 3504 Wireless Controllers.',
+        'Securing wireless transmissions using WPA2/WPA3-Personal (AES) or Enterprise (802.1X/RADIUS).'
       ],
       keyFeatures: [
-        'IEEE 802.11a/b/g/n/ac/ax wireless standards',
-        'SSID (Service Set Identifier) broadcast and channel management (Channels 1, 6, 11 on 2.4GHz)',
-        'WPA2-PSK (AES) encryption for authentication',
-        'Integrated DHCP server delivering dynamic IPs to wireless clients'
+        'IEEE 802.11a/b/g/n/ac dual-band frequency management (2.4 GHz & 5 GHz)',
+        'CAPWAP/LWAPP tunneling between Lightweight APs and WLC controllers',
+        'Embedded IoT Registration Server (DLC100 Home Gateway)',
+        'WPA2/WPA3 AES-CCMP encryption and dynamic guest portals'
       ]
     },
     commands: [
@@ -824,6 +836,14 @@ export const DEVICE_PROFILES = {
         purpose: 'Displays active wireless status, broadcast SSID, security encryption mode, and connected wireless client stations.',
         example: 'WRT300N# show wireless',
         tip: 'Verifies radio broadcast status and client associations.'
+      },
+      {
+        command: 'show ap summary',
+        mode: 'WLC#',
+        category: 'show',
+        purpose: 'Displays all Lightweight Access Points (LAPs) currently registered and joined to the Wireless LAN Controller.',
+        example: 'WLC# show ap summary\nAP Name          Slots  AP Model        Ethernet MAC      IP Address\n---------------  -----  --------------  ----------------  --------------\nLAP-Floor1       2      AIR-CAP3702I    0014.6a55.1001    192.168.1.50',
+        tip: 'Verifies CAPWAP tunnel establishment between AP and controller.'
       },
       {
         command: 'ping <ip>',
@@ -918,27 +938,30 @@ export const DEVICE_PROFILES = {
   },
 
   // ────────────────────────────────────────────────────────────
-  //  7. SERVERS (DHCP, DNS, WEB)
+  //  7. SERVERS (DHCP, DNS, WEB, CENTRAL OFFICE)
   // ────────────────────────────────────────────────────────────
   server: {
     type: 'server',
     category: 'hosts',
-    title: 'Enterprise Network Servers (DHCP, DNS, Web)',
+    title: 'Enterprise Network & Central Office Servers',
     osiLayer: 'Layer 7 — Application Layer',
     iconType: 'server',
     badgeColor: '#00ff88',
     models: [
+      { id: 'Central-Office-Server', name: 'Central-Office-Server', ports: '1 GE LAN, 1 Backbone Uplink, 1 Coaxial Port, Cellular Gateway, IoT Registration' },
       { id: 'Server-PT', name: 'Server-PT Generic', ports: '1 FastEthernet / GigabitEthernet NIC' },
     ],
     overview: {
-      role: 'Hosting centralized network services including DHCP dynamic addressing, DNS domain resolution, and Web/HTTP content.',
-      purpose: 'Servers provide critical application and network services to clients. A DHCP server manages IP pools and dynamically assigns IP addresses, subnet masks, default gateways, and DNS servers to client workstations (using the DORA process: Discover, Offer, Request, Acknowledge). A DNS server translates human-readable domain names (e.g. example.com) into 32-bit IPv4 addresses.',
+      role: 'Hosting centralized network services including Cellular Backhaul Gateway, IoT registration, DHCP, DNS, and Web.',
+      purpose: 'Servers provide critical application and infrastructure services. The Central Office Server acts as the core telecommunications gateway for cellular Cell Towers, handling mobile subscriber data, central IoT device registration, DNS domain resolution, and dynamic DHCP IP pools.',
       whenToUse: [
-        'Deploying automated DHCP address distribution for large enterprise LANs.',
-        'Providing Domain Name System (DNS) host resolution for internal and external web resources.',
-        'Simulating Web (HTTP/HTTPS) and FTP file servers in level objectives.'
+        'Connecting Cell Towers to carrier core backbones via Central Office Server.',
+        'Deploying automated DHCP address distribution for enterprise and branch LANs.',
+        'Providing Domain Name System (DNS) host resolution for internal and external resources.',
+        'Hosting centralized IoT device registration and telemetry control.'
       ],
       keyFeatures: [
+        'Central Office cellular base station backbone routing & IoT registration',
         'DHCP Scope & Pool Management (Address range, lease, gateway, DNS options)',
         'DNS \'A\' Record database management',
         'HTTP Web Server hosting test web pages'
@@ -1070,8 +1093,11 @@ export function getDeviceProfile(type) {
   if (!type) return DEVICE_PROFILES.router;
   const t = type.toLowerCase();
   if (DEVICE_PROFILES[t]) return DEVICE_PROFILES[t];
-  if (t === 'ap' || t === 'wlc') return DEVICE_PROFILES.wirelessrouter;
+  if (t === 'ap' || t === 'lap' || t === 'wlc' || t === 'wirelessrouter' || t === 'homegateway') return DEVICE_PROFILES.wirelessrouter;
+  if (t === 'securityappliance' || t === 'firewall') return DEVICE_PROFILES.firewall;
+  if (t === 'coserver' || t === 'server') return DEVICE_PROFILES.server;
   if (t === 'repeater' || t === 'coaxialsplitter' || t === 'splitter' || t === 'bridge') return DEVICE_PROFILES.hub;
   if (t === 'celltower' || t === 'cloud') return DEVICE_PROFILES.modem;
   return DEVICE_PROFILES.router;
 }
+

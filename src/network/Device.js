@@ -12,7 +12,7 @@ export class Device {
     this.id         = opts.id || `${type}-${_idCounter++}`;
     this.type       = type;
     this.model      = opts.model || Device.defaultModel(type);
-    this.hostname   = opts.hostname || Device.defaultHostname(type, this.id);
+    this.hostname   = opts.hostname || Device.defaultHostname(type, this.id, this.model);
     this.x          = opts.x ?? 300;
     this.y          = opts.y ?? 200;
 
@@ -31,15 +31,19 @@ export class Device {
       l3switch:        '3560-24PS',
       pc:              'PC-PT',
       server:          'Server-PT',
-      ap:              'AP-PT',
+      coserver:        'Central-Office-Server',
+      ap:              'AccessPoint-PT',
+      lap:             'LAP-PT',
       hub:             'Hub-PT',
       repeater:        'Repeater-PT',
       coaxialsplitter: 'CoAxialSplitter-PT',
       splitter:        'CoAxialSplitter-PT',
       bridge:          'PT-Bridge',
       firewall:        'ASA-5506-X',
-      wirelessrouter:  'WRT300N',
-      wlc:             'WLC-2504',
+      securityappliance:'Meraki-MX65W',
+      wirelessrouter:  'HomeRouter-PT-AC',
+      homegateway:     'DLC100',
+      wlc:             'WLC-PT',
       modem:           'DSL-Modem',
       celltower:       'Cell-Tower',
       cloud:           'Cloud-PT',
@@ -47,28 +51,58 @@ export class Device {
     return map[type] || type;
   }
 
-  static defaultHostname(type, id) {
+  static defaultHostname(type, id, model = '') {
+    const num = Math.max(0, parseInt(id.split('-').pop() || '1', 10) - 1);
+    const m = (model || '').toUpperCase();
+
+    if (m.includes('MERAKI') || m.includes('MX65') || type === 'securityappliance') {
+      return `Security Appliance${num}`;
+    }
+    if (m.includes('HOMEROUTER') || m.includes('WRT300N') || (type === 'wirelessrouter' && !m.includes('DLC') && !m.includes('GATEWAY'))) {
+      return `Wireless Router${num}`;
+    }
+    if (m.includes('DLC') || m.includes('GATEWAY') || type === 'homegateway') {
+      return `Home Gateway${num}`;
+    }
+    if (m.includes('CENTRAL') || m.includes('CO-SERVER') || type === 'coserver') {
+      return `Central Office Server${num}`;
+    }
+    if (m.includes('LAP') || m.includes('3702') || m.includes('1130') || type === 'lap') {
+      return `Light Weight Access Point${num}`;
+    }
+    if (m.includes('ACCESSPOINT') || m.includes('AP-') || type === 'ap') {
+      return `Access Point${num}`;
+    }
+    if (m.includes('WLC') || type === 'wlc') {
+      return `Wireless LAN Controller${num}`;
+    }
+    if (m.includes('CELL-TOWER') || m.includes('CELLTOWER') || type === 'celltower') {
+      return `Cell Tower${num}`;
+    }
+    if (type === 'firewall' || m.includes('ASA')) {
+      return `Firewall${num}`;
+    }
+
     const map = {
       router:          'Router',
       switch:          'Switch',
-      l3switch:        'L3-SW',
+      l3switch:        'Multilayer Switch',
       pc:              'PC',
       server:          'Server',
-      ap:              'AP',
+      ap:              'Access Point',
       hub:             'Hub',
       repeater:        'Repeater',
       coaxialsplitter: 'Coaxial Splitter',
       splitter:        'Coaxial Splitter',
       bridge:          'Bridge',
       firewall:        'ASA',
-      wirelessrouter:  'WirelessRouter',
-      wlc:             'WLC',
+      wirelessrouter:  'Wireless Router',
+      wlc:             'Wireless LAN Controller',
       modem:           'Modem',
-      celltower:       'CellTower',
+      celltower:       'Cell Tower',
       cloud:           'Internet',
     };
     const base = map[type] || type;
-    const num  = id.split('-').pop();
     return `${base}${num}`;
   }
 
