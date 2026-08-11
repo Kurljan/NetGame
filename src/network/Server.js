@@ -66,17 +66,108 @@ export class CentralOfficeServer extends Server {
 }
 Device.registerType('coserver', CentralOfficeServer);
 
-// ── Cloud (simulated Internet) ──────────────────────────────────
+// ── CyberObserver Platform (Continuous Posture & Telemetry) ────
+export class CyberObserver extends Server {
+  constructor(opts = {}) {
+    super({
+      ...opts,
+      type: opts.type || 'cyberobserver',
+      model: opts.model || 'CyberObserver',
+    });
+    this.postureScore    = opts.config?.postureScore    ?? 94;
+    this.complianceMode  = opts.config?.complianceMode  || 'NIST CSF / ISO 27001 / CIS';
+    this.telemetrySensor = opts.config?.telemetrySensor ?? true;
+    this.monitoredDevices= opts.config?.monitoredDevices|| [];
+  }
+
+  toJSON() {
+    return {
+      ...super.toJSON(),
+      config: {
+        ...this.config,
+        postureScore: this.postureScore,
+        complianceMode: this.complianceMode,
+        telemetrySensor: this.telemetrySensor,
+        monitoredDevices: this.monitoredDevices,
+      }
+    };
+  }
+}
+Device.registerType('cyberobserver', CyberObserver);
+
+// ── Cloud (simulated Internet & WAN) ────────────────────────────
 export class Cloud extends Device {
   constructor(opts = {}) {
-    super('cloud', opts);
-    this.hostname = opts.hostname || 'Internet';
+    super('cloud', {
+      ...opts,
+      model: opts.model || 'Cloud-PT',
+    });
     if (this.interfaces.length === 0) {
-      this.interfaces = [
-        new Interface({ name: 'ISP-Link', shortName: 'ISP', status: 'up', ipAddress: '203.0.113.1', subnetMask: '255.255.255.0' }),
-      ];
+      const spec = getModelSpec(this.model);
+      if (spec && spec.interfaces) {
+        this.interfaces = spec.interfaces.map(i => new Interface(i));
+      } else if (this.model && this.model.includes('Empty')) {
+        this.interfaces = [];
+      } else {
+        this.interfaces = [
+          new Interface({ name: 'Ethernet6', shortName: 'Eth6', status: 'down' }),
+          new Interface({ name: 'Serial0',   shortName: 'Se0',  status: 'down' }),
+          new Interface({ name: 'Serial1',   shortName: 'Se1',  status: 'down' }),
+          new Interface({ name: 'Modem4',    shortName: 'Mod4', status: 'down' }),
+          new Interface({ name: 'Modem5',    shortName: 'Mod5', status: 'down' }),
+          new Interface({ name: 'Coaxial7',  shortName: 'Coax7', status: 'down' }),
+        ];
+      }
     }
   }
 }
 Device.registerType('cloud', Cloud);
+
+// ── Meraki Cloud Dashboard Server ───────────────────────────────
+export class MerakiServer extends Server {
+  constructor(opts = {}) {
+    super({
+      ...opts,
+      type: 'server',
+      model: opts.model || 'Meraki-Server',
+    });
+    this.dashboardOrg = opts.config?.dashboardOrg || 'Enterprise Organization';
+    this.autoVpn = opts.config?.autoVpn ?? true;
+  }
+
+  toJSON() {
+    return {
+      ...super.toJSON(),
+      config: {
+        ...this.config,
+        dashboardOrg: this.dashboardOrg,
+        autoVpn: this.autoVpn,
+      }
+    };
+  }
+}
+
+// ── Cisco DNA / Network Controller (SDN Controller) ─────────────
+export class NetworkController extends Server {
+  constructor(opts = {}) {
+    super({
+      ...opts,
+      type: 'server',
+      model: opts.model || 'NetworkController',
+    });
+    this.restApiEnabled = opts.config?.restApiEnabled ?? true;
+    this.controllerStatus = opts.config?.controllerStatus || 'active';
+  }
+
+  toJSON() {
+    return {
+      ...super.toJSON(),
+      config: {
+        ...this.config,
+        restApiEnabled: this.restApiEnabled,
+        controllerStatus: this.controllerStatus,
+      }
+    };
+  }
+}
 

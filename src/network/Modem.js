@@ -23,14 +23,14 @@ export class Modem extends Device {
 
 export class DSLModem extends Modem {
   constructor(opts = {}) {
-    super('modem', { ...opts, model: opts.model || 'DSL-Modem' });
+    super('modem', { ...opts, model: opts.model || 'DSL-Modem-PT' });
   }
 }
 Device.registerType('modem', DSLModem);
 
 export class CableModem extends Modem {
   constructor(opts = {}) {
-    super('modem', { ...opts, model: opts.model || 'Cable-Modem' });
+    super('modem', { ...opts, model: opts.model || 'Cable-Modem-PT' });
   }
 }
 

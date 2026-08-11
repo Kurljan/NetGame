@@ -39,8 +39,9 @@ export class Device {
       coaxialsplitter: 'CoAxialSplitter-PT',
       splitter:        'CoAxialSplitter-PT',
       bridge:          'PT-Bridge',
-      firewall:        'ASA-5506-X',
+      firewall:        '5506-X',
       securityappliance:'Meraki-MX65W',
+      cyberobserver:   'CyberObserver',
       wirelessrouter:  'HomeRouter-PT-AC',
       homegateway:     'DLC100',
       wlc:             'WLC-PT',
@@ -55,8 +56,62 @@ export class Device {
     const num = Math.max(0, parseInt(id.split('-').pop() || '1', 10) - 1);
     const m = (model || '').toUpperCase();
 
+    if (m.includes('MERAKI-SERVER') || m.includes('MERAKISERVER')) {
+      return `Meraki Server${num}`;
+    }
+    if (m.includes('CONTROLLER') || m.includes('NETWORKCONTROLLER')) {
+      return `PT-Controller${num}`;
+    }
+    if (m.includes('WIRELESSENDDEVICE') || m.includes('WIRELESS-ENDDEVICE')) {
+      return `Wireless End Device${num}`;
+    }
+    if (m.includes('WIREDENDDEVICE') || m.includes('WIRED-ENDDEVICE')) {
+      return `Wired End Device${num}`;
+    }
+    if (m.includes('TABLET')) {
+      return `Tablet PC${num}`;
+    }
+    if (m.includes('SMARTPHONE')) {
+      return `Smartphone${num}`;
+    }
+    if (m.includes('7960') || m.includes('IP-PHONE') || m.includes('IPPHONE')) {
+      return `IP Phone${num}`;
+    }
+    if (m.includes('HOME-VOIP') || m.includes('HOMEVOIP')) {
+      return `Home VoIP${num}`;
+    }
+    if (m.includes('ANALOG-PHONE') || m.includes('ANALOGPHONE')) {
+      return `Analog Phone${num}`;
+    }
+    if (m.includes('PRINTER')) {
+      return `Printer${num}`;
+    }
+    if (m.includes('TV')) {
+      return `TV${num}`;
+    }
+    if (m.includes('LAPTOP')) {
+      return `Laptop${num}`;
+    }
+    if (m.includes('SNIFFER')) {
+      return `Sniffer${num}`;
+    }
+    if (m.includes('PC')) {
+      return `PC${num}`;
+    }
+    if (m.includes('SERVER-PT') || (type === 'server' && !m.includes('CENTRAL') && !m.includes('CO-') && !m.includes('MERAKI') && !m.includes('CONTROLLER') && !m.includes('CYBER'))) {
+      return `Server${num}`;
+    }
     if (m.includes('MERAKI') || m.includes('MX65') || type === 'securityappliance') {
       return `Security Appliance${num}`;
+    }
+    if (m.includes('ISA')) {
+      return `ISA${num}`;
+    }
+    if (m.includes('5506') || m.includes('5505') || m.includes('ASA') || type === 'firewall') {
+      return `ASA${num}`;
+    }
+    if (m.includes('CYBER') || type === 'cyberobserver') {
+      return `PT-CyberObserver${num}`;
     }
     if (m.includes('HOMEROUTER') || m.includes('WRT300N') || (type === 'wirelessrouter' && !m.includes('DLC') && !m.includes('GATEWAY'))) {
       return `Wireless Router${num}`;
@@ -79,8 +134,14 @@ export class Device {
     if (m.includes('CELL-TOWER') || m.includes('CELLTOWER') || type === 'celltower') {
       return `Cell Tower${num}`;
     }
-    if (type === 'firewall' || m.includes('ASA')) {
-      return `Firewall${num}`;
+    if (m.includes('CABLE') && (m.includes('MODEM') || type === 'modem')) {
+      return `Cable Modem${num}`;
+    }
+    if (m.includes('DSL') && (m.includes('MODEM') || type === 'modem')) {
+      return `DSL Modem${num}`;
+    }
+    if (m.includes('CLOUD') || type === 'cloud') {
+      return `Cloud${num}`;
     }
 
     const map = {
@@ -96,11 +157,12 @@ export class Device {
       splitter:        'Coaxial Splitter',
       bridge:          'Bridge',
       firewall:        'ASA',
+      cyberobserver:   'PT-CyberObserver',
       wirelessrouter:  'Wireless Router',
       wlc:             'Wireless LAN Controller',
-      modem:           'Modem',
+      modem:           'DSL Modem',
       celltower:       'Cell Tower',
-      cloud:           'Internet',
+      cloud:           'Cloud',
     };
     const base = map[type] || type;
     return `${base}${num}`;

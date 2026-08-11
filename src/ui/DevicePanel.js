@@ -129,7 +129,7 @@ export class DevicePanel {
     const iconCanvas = document.getElementById('panel-device-icon');
     if (iconCanvas) {
       import('./DeviceRenderer.js').then(({ DeviceRenderer }) => {
-        new DeviceRenderer().drawPreview(iconCanvas, device.type);
+        new DeviceRenderer().drawPreview(iconCanvas, device.type, device.model);
       });
     }
 

@@ -669,18 +669,19 @@ export const DEVICE_PROFILES = {
   firewall: {
     type: 'firewall',
     category: 'security',
-    title: 'Cisco ASA Firewalls & Meraki Security Appliances',
+    title: 'Cisco ASA Firewalls, ISA-3000 & Security Appliances',
     osiLayer: 'Layer 3 to Layer 7 — Network to Application',
     iconType: 'firewall',
     badgeColor: '#ff4466',
     models: [
-      { id: 'Meraki-MX65W', name: 'Cisco Meraki MX65W', ports: '2 Dedicated GbE WAN, 8 GbE LAN (2 PoE+), Dual-Band 802.11ac Wi-Fi, SD-WAN' },
-      { id: 'ASA-5506-X', name: 'Cisco ASA 5506-X', ports: '8 GigabitEthernet ports, FirePOWER Services, Stateful Inspection' },
-      { id: 'ASA-5505', name: 'Cisco ASA 5505 Legacy', ports: '8 FastEthernet switch ports (2 PoE), IPsec VPN' },
+      { id: 'ISA-3000', name: 'Cisco ISA 3000 Industrial Appliance', ports: '4 GigabitEthernet ports (copper/fiber), 1 Mgmt, DIN-rail, OT/ICS DPI' },
+      { id: '5506-X', name: 'Cisco ASA 5506-X Next-Gen Firewall', ports: '8 GigabitEthernet ports, 1 Mgmt, FirePOWER Services, Stateful Inspection' },
+      { id: '5505', name: 'Cisco ASA 5505 Security Appliance', ports: '8 FastEthernet switch ports (2 PoE), IPsec VPN acceleration' },
+      { id: 'Meraki-MX65W', name: 'Cisco Meraki MX65W Security Appliance', ports: '2 Dedicated GbE WAN, 8 GbE LAN (2 PoE+), Dual-Band 802.11ac Wi-Fi, SD-WAN' },
     ],
     overview: {
       role: 'Perimeter network defense, stateful packet inspection, security zones, SD-WAN auto-VPN, and Network Address Translation (NAT).',
-      purpose: 'Firewalls and Cloud-Managed Security Appliances protect enterprise and branch networks from unauthorized external access. Cisco ASA firewalls enforce a Security Zone hierarchy (Inside 100, DMZ 50, Outside 0). Cisco Meraki MX appliances deliver 100% centralized cloud management, Auto VPN mesh SD-WAN interconnectivity, Next-Gen Layer 7 application filtering, and integrated dual-band 802.11ac wireless.',
+      purpose: 'Firewalls and Industrial/Cloud-Managed Security Appliances protect enterprise and industrial networks from unauthorized external access. Cisco ASA and ISA-3000 appliances enforce a Security Zone hierarchy (Inside 100, DMZ 50, Outside 0) and OT/ICS protocol inspection. Cisco Meraki MX appliances deliver 100% centralized cloud management, Auto VPN mesh SD-WAN interconnectivity, Next-Gen Layer 7 application filtering, and integrated dual-band 802.11ac wireless.',
       whenToUse: [
         'Deploying at the network edge between private enterprise LAN and the public Internet.',
         'Isolating public-facing servers in a Demilitarized Zone (DMZ security level 50).',
@@ -751,6 +752,62 @@ export const DEVICE_PROFILES = {
         purpose: 'Tests network reachability from the firewall.',
         example: 'ciscoasa# ping 8.8.8.8',
         tip: 'Verifies external WAN connectivity.'
+      }
+    ]
+  },
+
+  // ────────────────────────────────────────────────────────────
+  //  4b. CYBERSECURITY POSTURE & TELEMETRY PLATFORMS
+  // ────────────────────────────────────────────────────────────
+  cyberobserver: {
+    type: 'cyberobserver',
+    category: 'security',
+    title: 'CyberObserver Continuous Security & Telemetry Platform',
+    osiLayer: 'Layer 7 — Application & Cybersecurity Analytics',
+    iconType: 'cyberobserver',
+    badgeColor: '#00ffff',
+    models: [
+      { id: 'CyberObserver', name: 'CyberObserver Security Platform', ports: '2 GigabitEthernet monitoring / sensor ports, 1 FastEthernet management port' },
+      { id: 'PT-CyberObserver', name: 'PT-CyberObserver Generic', ports: '2 GE sensor ports, 1 FE management port' }
+    ],
+    overview: {
+      role: 'Continuous Security Posture Management (CSPM), network security compliance auditing, and real-time threat telemetry sensor.',
+      purpose: 'CyberObserver is a cybersecurity management and telemetry sensor platform. It continuously connects to firewalls, switches, routers, and host servers across enterprise topologies to measure cybersecurity controls, verify NIST CSF / ISO 27001 compliance, track real-time security posture scores, and aggregate network telemetry.',
+      whenToUse: [
+        'Auditing network security compliance and firewall policy alignment.',
+        'Continuous monitoring of enterprise network devices and infrastructure telemetry.',
+        'Connecting to SPAN / Mirror ports on switches to analyze security traffic.'
+      ],
+      keyFeatures: [
+        'Continuous Security Posture Score (0–100%) measurement',
+        'Compliance tracking for NIST CSF, ISO 27001, CIS Critical Security Controls',
+        'Real-time network security sensor & telemetry engine'
+      ]
+    },
+    commands: [
+      {
+        command: 'show posture summary',
+        mode: 'CyberObserver#',
+        category: 'show',
+        purpose: 'Displays overall security posture compliance score and health across all monitored network devices.',
+        example: 'CyberObserver# show posture summary\nOverall Posture Score: 94%\nCompliance: NIST CSF (Compliant), ISO 27001 (Audited)\nActive Sensors: 3 Devices Monitored',
+        tip: 'Identifies misconfigured access rules or unencrypted management sessions.'
+      },
+      {
+        command: 'show telemetry sensors',
+        mode: 'CyberObserver#',
+        category: 'show',
+        purpose: 'Lists active real-time telemetry sensor streams collected from firewalls and routers.',
+        example: 'CyberObserver# show telemetry sensors\nSensor ID    Source IP        Protocol    Status\n---------    ---------------  --------    ------\nSENSOR-01    192.168.1.1      ASA-SYSLOG  ACTIVE\nSENSOR-02    192.168.10.1     NETFLOW     ACTIVE',
+        tip: 'Verifies live sensor telemetry feed.'
+      },
+      {
+        command: 'ping <ip>',
+        mode: 'CyberObserver#',
+        category: 'diagnostics',
+        purpose: 'Tests Layer 3 IP reachability from the CyberObserver platform to network devices.',
+        example: 'CyberObserver# ping 192.168.1.1',
+        tip: 'Ensures management connectivity to supervised firewalls and switches.'
       }
     ]
   },
@@ -867,8 +924,18 @@ export const DEVICE_PROFILES = {
     iconType: 'pc',
     badgeColor: '#00d4ff',
     models: [
-      { id: 'PC-PT', name: 'PC / Host Workstation', ports: '1 FastEthernet/GigabitEthernet NIC (or Wi-Fi module)' },
-      { id: 'Laptop-PT', name: 'Laptop Computer', ports: '1 FastEthernet NIC, integrated Wi-Fi' },
+      { id: 'PC-PT', name: 'PC-PT (Host Workstation)', ports: '1 FastEthernet/Gigabit NIC' },
+      { id: 'Laptop-PT', name: 'Laptop-PT (Laptop Computer)', ports: '1 FastEthernet NIC, integrated Wi-Fi' },
+      { id: 'Printer-PT', name: 'Printer-PT (Network Printer)', ports: '1 FastEthernet NIC' },
+      { id: '7960', name: '7960 (Cisco Unified IP Phone)', ports: '1 FastEthernet SW (PoE), 1 FastEthernet PC pass-through' },
+      { id: 'Home-VoIP-PT', name: 'Home-VoIP-PT (Analog Telephone Adapter)', ports: '1 Ethernet Internet WAN, 1 RJ-11 Phone' },
+      { id: 'Analog-Phone-PT', name: 'Analog-Phone-PT (Desk Phone)', ports: '1 RJ-11 Telephone Line' },
+      { id: 'TV-PT', name: 'TV-PT (Smart TV Display)', ports: '1 FastEthernet NIC, integrated Wi-Fi' },
+      { id: 'TabletPC-PT', name: 'TabletPC-PT (Tablet Computer)', ports: '1 802.11ac Wi-Fi transceiver' },
+      { id: 'SMARTPHONE-PT', name: 'SMARTPHONE-PT (Cellular & Wi-Fi)', ports: '1 Wi-Fi, 1 4G/5G Cellular transceiver' },
+      { id: 'WirelessEndDevice-PT', name: 'WirelessEndDevice-PT', ports: '1 802.11 Wi-Fi radio' },
+      { id: 'WiredEndDevice-PT', name: 'WiredEndDevice-PT', ports: '1 FastEthernet NIC' },
+      { id: 'Sniffer', name: 'Sniffer (Protocol Analyzer)', ports: '2 FastEthernet / Gigabit capture ports (Port0, Port1)' },
     ],
     overview: {
       role: 'End-user client generating application requests (Web, DNS, Email, ICMP) and receiving responses.',
@@ -938,18 +1005,21 @@ export const DEVICE_PROFILES = {
   },
 
   // ────────────────────────────────────────────────────────────
-  //  7. SERVERS (DHCP, DNS, WEB, CENTRAL OFFICE)
+  //  7. SERVERS (DHCP, DNS, WEB, MERAKI, CONTROLLER)
   // ────────────────────────────────────────────────────────────
   server: {
     type: 'server',
     category: 'hosts',
-    title: 'Enterprise Network & Central Office Servers',
+    title: 'Enterprise Network, Meraki & SDN Controller Servers',
     osiLayer: 'Layer 7 — Application Layer',
     iconType: 'server',
     badgeColor: '#00ff88',
     models: [
+      { id: 'Server-PT', name: 'Server-PT (Generic Multi-Service)', ports: '1 FastEthernet / GigabitEthernet NIC' },
+      { id: 'Meraki-Server', name: 'Meraki-Server (Cloud Dashboard)', ports: '2 GigabitEthernet network interfaces' },
+      { id: 'NetworkController', name: 'NetworkController (SDN Controller)', ports: '2 GigabitEthernet network interfaces' },
       { id: 'Central-Office-Server', name: 'Central-Office-Server', ports: '1 GE LAN, 1 Backbone Uplink, 1 Coaxial Port, Cellular Gateway, IoT Registration' },
-      { id: 'Server-PT', name: 'Server-PT Generic', ports: '1 FastEthernet / GigabitEthernet NIC' },
+      { id: 'CyberObserver', name: 'CyberObserver (Continuous Posture Platform)', ports: '2 GE sensor ports, 1 FE management port' },
     ],
     overview: {
       role: 'Hosting centralized network services including Cellular Backhaul Gateway, IoT registration, DHCP, DNS, and Web.',
@@ -1056,10 +1126,11 @@ export const DEVICE_PROFILES = {
     iconType: 'modem',
     badgeColor: '#00d4ff',
     models: [
-      { id: 'DSL-Modem', name: 'DSL Broadband Modem', ports: '1 RJ-11 Phone Line port, 1 RJ-45 Ethernet port' },
-      { id: 'Cable-Modem', name: 'DOCSIS Cable Modem', ports: '1 Coaxial BNC port, 1 RJ-45 Ethernet port' },
+      { id: 'Cloud-PT', name: 'Cloud-PT (Generic WAN Cloud)', ports: 'Ethernet, Serial, Modem RJ-11, and Coaxial interfaces' },
+      { id: 'Cloud-PT-Empty', name: 'Cloud-PT-Empty (Modular WAN)', ports: '10 Empty Expansion Bays for Custom ISP Modules' },
+      { id: 'Cable-Modem-PT', name: 'Cable-Modem-PT (DOCSIS)', ports: '1 Coaxial BNC port, 1 RJ-45 Ethernet port' },
+      { id: 'DSL-Modem-PT', name: 'DSL-Modem-PT (Broadband DSL)', ports: '1 RJ-11 Phone Line port, 1 RJ-45 Ethernet port' },
       { id: 'Cell-Tower', name: 'Cellular 4G/5G Base Station', ports: '1 Coaxial/Fiber backhaul, Wireless LTE RF' },
-      { id: 'Cloud-PT', name: 'Internet Cloud (ISP Gateway)', ports: 'WAN Serial, Ethernet & DSL ISP uplinks' },
     ],
     overview: {
       role: 'Modulating digital Ethernet signals into analog telephone/cable/RF carrier signals for WAN transport.',

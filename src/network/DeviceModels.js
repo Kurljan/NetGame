@@ -880,6 +880,53 @@ export const DEVICE_MODELS = {
       { name: 'Wireless5GHz', shortName: 'WiFi-5G', speed: '867', duplex: 'half', autoMdix: false }
     ]
   },
+  'ISA-3000': {
+    family: 'firewall',
+    category: 'Industrial Security Appliances',
+    series: 'Cisco ISA 3000 Series',
+    name: 'Cisco ISA 3000 Industrial Security Appliance',
+    description: 'DIN-rail mounted Industrial Security Appliance with 4 GigabitEthernet ports, stateful firewall, and OT/ICS deep packet inspection.',
+    functions: 'Ruggedized industrial security appliance built for harsh environments (manufacturing plants, power substations, oil & gas facilities, IoT/ICS). Delivers hardware-accelerated VPN, stateful firewall inspection, Next-Gen IPS, and industrial automation protocol security (Modbus, CIP, PROFINET, DNP3, IEC 61850).',
+    slots: '4 GigabitEthernet ports (copper/fiber SFP), 1 Management port, 1 Console port, Dual DC power inputs, DIN rail mount',
+    interfaces: [
+      { name: 'GigabitEthernet1/1', shortName: 'G1/1', speed: '1000', duplex: 'auto', autoMdix: true },
+      { name: 'GigabitEthernet1/2', shortName: 'G1/2', speed: '1000', duplex: 'auto', autoMdix: true },
+      { name: 'GigabitEthernet1/3', shortName: 'G1/3', speed: '1000', duplex: 'auto', autoMdix: true },
+      { name: 'GigabitEthernet1/4', shortName: 'G1/4', speed: '1000', duplex: 'auto', autoMdix: true },
+      { name: 'Management1/1',     shortName: 'Mgmt1/1', speed: '1000', duplex: 'auto', autoMdix: true }
+    ]
+  },
+  'ISA3000': {
+    family: 'firewall',
+    category: 'Industrial Security Appliances',
+    series: 'Cisco ISA 3000 Series',
+    name: 'Cisco ISA 3000 Industrial Security Appliance',
+    description: 'DIN-rail mounted Industrial Security Appliance with 4 GigabitEthernet ports, stateful firewall, and OT/ICS deep packet inspection.',
+    functions: 'Ruggedized industrial security appliance built for harsh environments (manufacturing plants, power substations, oil & gas facilities, IoT/ICS). Delivers hardware-accelerated VPN, stateful firewall inspection, Next-Gen IPS, and industrial automation protocol security (Modbus, CIP, PROFINET, DNP3, IEC 61850).',
+    slots: '4 GigabitEthernet ports (copper/fiber SFP), 1 Management port, 1 Console port, Dual DC power inputs, DIN rail mount',
+    interfaces: [
+      { name: 'GigabitEthernet1/1', shortName: 'G1/1', speed: '1000', duplex: 'auto', autoMdix: true },
+      { name: 'GigabitEthernet1/2', shortName: 'G1/2', speed: '1000', duplex: 'auto', autoMdix: true },
+      { name: 'GigabitEthernet1/3', shortName: 'G1/3', speed: '1000', duplex: 'auto', autoMdix: true },
+      { name: 'GigabitEthernet1/4', shortName: 'G1/4', speed: '1000', duplex: 'auto', autoMdix: true },
+      { name: 'Management1/1',     shortName: 'Mgmt1/1', speed: '1000', duplex: 'auto', autoMdix: true }
+    ]
+  },
+  '5506-X': {
+    family: 'firewall',
+    category: 'Enterprise Security Firewalls',
+    series: 'Cisco ASA 5500-X Series',
+    name: 'Cisco ASA 5506-X Firewall',
+    description: 'Next-Gen Firewall with 8 GigabitEthernet ports and Cisco FirePOWER services.',
+    functions: 'Next-generation adaptive security appliance delivering stateful inspection, hardware-accelerated IPsec/SSL VPNs, Advanced Malware Protection (AMP), and Next-Gen IPS for small to mid-sized businesses.',
+    slots: '8 GigabitEthernet ports, 1 Management port, 1 Console port',
+    interfaces: [
+      ...Array.from({ length: 8 }, (_, i) => ({
+        name: `GigabitEthernet1/${i + 1}`, shortName: `G1/${i + 1}`, speed: '1000', duplex: 'auto', autoMdix: true
+      })),
+      { name: 'Management1/1', shortName: 'Mgmt1/1', speed: '1000', duplex: 'auto', autoMdix: true }
+    ]
+  },
   'ASA-5506-X': {
     family: 'firewall',
     category: 'Enterprise Security Firewalls',
@@ -888,8 +935,38 @@ export const DEVICE_MODELS = {
     description: 'Next-Gen Firewall with 8 GigabitEthernet ports and Cisco FirePOWER services.',
     functions: 'Next-generation adaptive security appliance delivering stateful inspection, hardware-accelerated IPsec/SSL VPNs, Advanced Malware Protection (AMP), and Next-Gen IPS for small to mid-sized businesses.',
     slots: '8 GigabitEthernet ports, 1 Management port, 1 Console port',
+    interfaces: [
+      ...Array.from({ length: 8 }, (_, i) => ({
+        name: `GigabitEthernet1/${i + 1}`, shortName: `G1/${i + 1}`, speed: '1000', duplex: 'auto', autoMdix: true
+      })),
+      { name: 'Management1/1', shortName: 'Mgmt1/1', speed: '1000', duplex: 'auto', autoMdix: true }
+    ]
+  },
+  'ASA5506-X': {
+    family: 'firewall',
+    category: 'Enterprise Security Firewalls',
+    series: 'Cisco ASA 5500-X Series',
+    name: 'Cisco ASA 5506-X Firewall',
+    description: 'Next-Gen Firewall with 8 GigabitEthernet ports and Cisco FirePOWER services.',
+    functions: 'Next-generation adaptive security appliance delivering stateful inspection, hardware-accelerated IPsec/SSL VPNs, Advanced Malware Protection (AMP), and Next-Gen IPS for small to mid-sized businesses.',
+    slots: '8 GigabitEthernet ports, 1 Management port, 1 Console port',
+    interfaces: [
+      ...Array.from({ length: 8 }, (_, i) => ({
+        name: `GigabitEthernet1/${i + 1}`, shortName: `G1/${i + 1}`, speed: '1000', duplex: 'auto', autoMdix: true
+      })),
+      { name: 'Management1/1', shortName: 'Mgmt1/1', speed: '1000', duplex: 'auto', autoMdix: true }
+    ]
+  },
+  '5505': {
+    family: 'firewall',
+    category: 'Enterprise Security Firewalls',
+    series: 'Cisco ASA 5500 Series',
+    name: 'Cisco ASA 5505 Firewall',
+    description: 'Adaptive Security Appliance with 8 FastEthernet switch ports (2 PoE).',
+    functions: 'Classic modular security appliance for small business and teleworker environments with integrated 8-port 10/100 switch, hardware VPN acceleration, and stateful security zones.',
+    slots: '8 FastEthernet ports (ports 6 & 7 provide PoE), 1 Console port',
     interfaces: Array.from({ length: 8 }, (_, i) => ({
-      name: `GigabitEthernet1/${i + 1}`, shortName: `G1/${i + 1}`, speed: '1000', duplex: 'auto', autoMdix: true
+      name: `Ethernet0/${i}`, shortName: `Fa0/${i}`, speed: '100', duplex: 'auto', autoMdix: true, vlanId: 1
     }))
   },
   'ASA-5505': {
@@ -903,6 +980,60 @@ export const DEVICE_MODELS = {
     interfaces: Array.from({ length: 8 }, (_, i) => ({
       name: `Ethernet0/${i}`, shortName: `Fa0/${i}`, speed: '100', duplex: 'auto', autoMdix: true, vlanId: 1
     }))
+  },
+  'ASA5505': {
+    family: 'firewall',
+    category: 'Enterprise Security Firewalls',
+    series: 'Cisco ASA 5500 Series',
+    name: 'Cisco ASA 5505 Firewall',
+    description: 'Adaptive Security Appliance with 8 FastEthernet switch ports (2 PoE).',
+    functions: 'Classic modular security appliance for small business and teleworker environments with integrated 8-port 10/100 switch, hardware VPN acceleration, and stateful security zones.',
+    slots: '8 FastEthernet ports (ports 6 & 7 provide PoE), 1 Console port',
+    interfaces: Array.from({ length: 8 }, (_, i) => ({
+      name: `Ethernet0/${i}`, shortName: `Fa0/${i}`, speed: '100', duplex: 'auto', autoMdix: true, vlanId: 1
+    }))
+  },
+  'CyberObserver': {
+    family: 'server',
+    category: 'Cybersecurity Analytics & Continuous Posture Monitoring',
+    series: 'CyberObserver Analytics Platform',
+    name: 'CyberObserver Security Platform (PT-CyberObserver)',
+    description: 'Continuous cybersecurity posture management, real-time security telemetry, and network risk observability sensor.',
+    functions: 'Continuous Security Posture Management (CSPM) and Cybersecurity Observability platform. Gathers real-time telemetry from firewalls, switches, routers, and endpoints to measure security controls, identify misconfigurations, audit compliance standards (NIST CSF, ISO 27001, CIS Controls), and visualize cyber risk analytics.',
+    slots: '2 GigabitEthernet network monitoring / sensor ports, 1 FastEthernet management port, Security Analytics processing engine',
+    interfaces: [
+      { name: 'GigabitEthernet0/1', shortName: 'G0/1', speed: '1000', duplex: 'auto', autoMdix: true },
+      { name: 'GigabitEthernet0/2', shortName: 'G0/2', speed: '1000', duplex: 'auto', autoMdix: true },
+      { name: 'FastEthernet0',      shortName: 'Fa0',  speed: '100',  duplex: 'auto', autoMdix: true }
+    ]
+  },
+  'PT-CyberObserver': {
+    family: 'server',
+    category: 'Cybersecurity Analytics & Continuous Posture Monitoring',
+    series: 'CyberObserver Analytics Platform',
+    name: 'CyberObserver Security Platform (PT-CyberObserver)',
+    description: 'Continuous cybersecurity posture management, real-time security telemetry, and network risk observability sensor.',
+    functions: 'Continuous Security Posture Management (CSPM) and Cybersecurity Observability platform. Gathers real-time telemetry from firewalls, switches, routers, and endpoints to measure security controls, identify misconfigurations, audit compliance standards (NIST CSF, ISO 27001, CIS Controls), and visualize cyber risk analytics.',
+    slots: '2 GigabitEthernet network monitoring / sensor ports, 1 FastEthernet management port, Security Analytics processing engine',
+    interfaces: [
+      { name: 'GigabitEthernet0/1', shortName: 'G0/1', speed: '1000', duplex: 'auto', autoMdix: true },
+      { name: 'GigabitEthernet0/2', shortName: 'G0/2', speed: '1000', duplex: 'auto', autoMdix: true },
+      { name: 'FastEthernet0',      shortName: 'Fa0',  speed: '100',  duplex: 'auto', autoMdix: true }
+    ]
+  },
+  'CyberObserver-PT': {
+    family: 'server',
+    category: 'Cybersecurity Analytics & Continuous Posture Monitoring',
+    series: 'CyberObserver Analytics Platform',
+    name: 'CyberObserver Security Platform (PT-CyberObserver)',
+    description: 'Continuous cybersecurity posture management, real-time security telemetry, and network risk observability sensor.',
+    functions: 'Continuous Security Posture Management (CSPM) and Cybersecurity Observability platform. Gathers real-time telemetry from firewalls, switches, routers, and endpoints to measure security controls, identify misconfigurations, audit compliance standards (NIST CSF, ISO 27001, CIS Controls), and visualize cyber risk analytics.',
+    slots: '2 GigabitEthernet network monitoring / sensor ports, 1 FastEthernet management port, Security Analytics processing engine',
+    interfaces: [
+      { name: 'GigabitEthernet0/1', shortName: 'G0/1', speed: '1000', duplex: 'auto', autoMdix: true },
+      { name: 'GigabitEthernet0/2', shortName: 'G0/2', speed: '1000', duplex: 'auto', autoMdix: true },
+      { name: 'FastEthernet0',      shortName: 'Fa0',  speed: '100',  duplex: 'auto', autoMdix: true }
+    ]
   },
 
   // ── SERVERS & CELLULAR INFRASTRUCTURE ──────────────────────────
@@ -939,11 +1070,258 @@ export const DEVICE_MODELS = {
     category: 'Enterprise Servers',
     series: 'Generic Simulation Devices',
     name: 'Server-PT (Generic)',
+    description: 'Multi-service server supporting DHCP, DNS, HTTP, FTP, TFTP, NTP, and Syslog services.',
+    functions: 'Host network server simulating enterprise application services including dynamic DHCP IP pooling, DNS record resolution, and web services.',
+    slots: '1 FastEthernet/Gigabit port',
+    interfaces: [
+      { name: 'FastEthernet0', shortName: 'Fa0', speed: '100', duplex: 'auto', autoMdix: true }
+    ]
+  },
+  'Server': {
+    family: 'server',
+    category: 'Enterprise Servers',
+    series: 'Generic Simulation Devices',
+    name: 'Server-PT (Generic)',
     description: 'Multi-service server supporting DHCP, DNS, HTTP, FTP, and Syslog services.',
     functions: 'Host network server simulating enterprise application services including dynamic DHCP IP pooling, DNS record resolution, and web services.',
     slots: '1 FastEthernet/Gigabit port',
     interfaces: [
       { name: 'FastEthernet0', shortName: 'Fa0', speed: '100', duplex: 'auto', autoMdix: true }
+    ]
+  },
+  'Meraki-Server': {
+    family: 'server',
+    category: 'Cloud Management & Orchestration',
+    series: 'Cisco Meraki Cloud Platform',
+    name: 'Meraki-Server (Cloud Dashboard)',
+    description: 'Centralized Cisco Meraki Cloud Dashboard server for managing Meraki MX, MR, and MS appliances.',
+    functions: 'Cloud management controller for zero-touch Meraki network provisioning, Auto VPN SD-WAN orchestrations, SSID radio profiles, and unified switch telemetry.',
+    slots: '2 GigabitEthernet network interfaces',
+    interfaces: [
+      { name: 'GigabitEthernet0/1', shortName: 'G0/1', speed: '1000', duplex: 'auto', autoMdix: true },
+      { name: 'GigabitEthernet0/2', shortName: 'G0/2', speed: '1000', duplex: 'auto', autoMdix: true }
+    ]
+  },
+  'MerakiServer': {
+    family: 'server',
+    category: 'Cloud Management & Orchestration',
+    series: 'Cisco Meraki Cloud Platform',
+    name: 'Meraki-Server (Cloud Dashboard)',
+    description: 'Centralized Cisco Meraki Cloud Dashboard server for managing Meraki MX, MR, and MS appliances.',
+    functions: 'Cloud management controller for zero-touch Meraki network provisioning, Auto VPN SD-WAN orchestrations, SSID radio profiles, and unified switch telemetry.',
+    slots: '2 GigabitEthernet network interfaces',
+    interfaces: [
+      { name: 'GigabitEthernet0/1', shortName: 'G0/1', speed: '1000', duplex: 'auto', autoMdix: true },
+      { name: 'GigabitEthernet0/2', shortName: 'G0/2', speed: '1000', duplex: 'auto', autoMdix: true }
+    ]
+  },
+  'NetworkController': {
+    family: 'server',
+    category: 'Cloud Management & Orchestration',
+    series: 'Cisco DNA / Network Controller',
+    name: 'NetworkController (PT-Controller)',
+    description: 'Software-Defined Networking (SDN) controller supporting REST APIs, intent-based network automation, and telemetry assurance.',
+    functions: 'Centralized SDN controller providing network discovery, automated device provisioning, topology mapping, policy deployment, and REST API programmability.',
+    slots: '2 GigabitEthernet network interfaces',
+    interfaces: [
+      { name: 'GigabitEthernet0/1', shortName: 'G0/1', speed: '1000', duplex: 'auto', autoMdix: true },
+      { name: 'GigabitEthernet0/2', shortName: 'G0/2', speed: '1000', duplex: 'auto', autoMdix: true }
+    ]
+  },
+  'PT-Controller': {
+    family: 'server',
+    category: 'Cloud Management & Orchestration',
+    series: 'Cisco DNA / Network Controller',
+    name: 'NetworkController (PT-Controller)',
+    description: 'Software-Defined Networking (SDN) controller supporting REST APIs, intent-based network automation, and telemetry assurance.',
+    functions: 'Centralized SDN controller providing network discovery, automated device provisioning, topology mapping, policy deployment, and REST API programmability.',
+    slots: '2 GigabitEthernet network interfaces',
+    interfaces: [
+      { name: 'GigabitEthernet0/1', shortName: 'G0/1', speed: '1000', duplex: 'auto', autoMdix: true },
+      { name: 'GigabitEthernet0/2', shortName: 'G0/2', speed: '1000', duplex: 'auto', autoMdix: true }
+    ]
+  },
+
+  // ── END DEVICES, SMARTPHONES, VOIP & DIAGNOSTICS ─────────────────
+  'PC-PT': {
+    family: 'pc',
+    category: 'End Devices & Workstations',
+    series: 'Generic End Devices',
+    name: 'PC-PT (Host Workstation)',
+    description: 'Standard desktop PC workstation with FastEthernet/Gigabit NIC, IPv4/IPv6 networking, DHCP client, and web browser / terminal utilities.',
+    functions: 'Client workstation for generating application requests (HTTP, DNS, Email, ICMP ping) and communicating across enterprise networks.',
+    slots: '1 FastEthernet/Gigabit NIC slot',
+    interfaces: [
+      { name: 'FastEthernet0', shortName: 'Fa0', speed: '100', duplex: 'auto', autoMdix: true }
+    ]
+  },
+  'PC': {
+    family: 'pc',
+    category: 'End Devices & Workstations',
+    series: 'Generic End Devices',
+    name: 'PC-PT (Host Workstation)',
+    description: 'Standard desktop PC workstation with FastEthernet/Gigabit NIC.',
+    slots: '1 FastEthernet/Gigabit NIC slot',
+    interfaces: [
+      { name: 'FastEthernet0', shortName: 'Fa0', speed: '100', duplex: 'auto', autoMdix: true }
+    ]
+  },
+  'Laptop-PT': {
+    family: 'pc',
+    category: 'End Devices & Workstations',
+    series: 'Generic End Devices',
+    name: 'Laptop-PT (Laptop Computer)',
+    description: 'Portable laptop computer with integrated FastEthernet NIC and dual-band wireless Wi-Fi module.',
+    functions: 'Mobile client computer supporting wireless roaming, DHCP IP configuration, and IP connectivity tests.',
+    slots: '1 FastEthernet NIC / Wi-Fi module bay',
+    interfaces: [
+      { name: 'FastEthernet0', shortName: 'Fa0', speed: '100', duplex: 'auto', autoMdix: true }
+    ]
+  },
+  'Laptop': {
+    family: 'pc',
+    category: 'End Devices & Workstations',
+    series: 'Generic End Devices',
+    name: 'Laptop-PT (Laptop Computer)',
+    description: 'Portable laptop computer with integrated FastEthernet NIC.',
+    slots: '1 FastEthernet NIC / Wi-Fi module bay',
+    interfaces: [
+      { name: 'FastEthernet0', shortName: 'Fa0', speed: '100', duplex: 'auto', autoMdix: true }
+    ]
+  },
+  'Printer-PT': {
+    family: 'pc',
+    category: 'End Devices & Workstations',
+    series: 'Generic End Devices',
+    name: 'Printer-PT (Network Printer)',
+    description: 'Networked office printer with Ethernet interface and print queue spooling.',
+    functions: 'Network peripheral host accepting print jobs over LPD/IPP protocols.',
+    slots: '1 FastEthernet port',
+    interfaces: [
+      { name: 'FastEthernet0', shortName: 'Fa0', speed: '100', duplex: 'auto', autoMdix: true }
+    ]
+  },
+  'Printer': {
+    family: 'pc',
+    category: 'End Devices & Workstations',
+    series: 'Generic End Devices',
+    name: 'Printer-PT (Network Printer)',
+    description: 'Networked office printer with Ethernet interface.',
+    slots: '1 FastEthernet port',
+    interfaces: [
+      { name: 'FastEthernet0', shortName: 'Fa0', speed: '100', duplex: 'auto', autoMdix: true }
+    ]
+  },
+  '7960': {
+    family: 'pc',
+    category: 'Voice over IP (VoIP)',
+    series: 'Cisco IP Phone 7900 Series',
+    name: '7960 (Cisco IP Phone)',
+    description: 'Enterprise Cisco 7960 Unified IP Phone with dual-port 10/100 Ethernet switch, PoE support, and SCCP/SIP voice protocols.',
+    functions: 'Voice over IP endpoint for voice calling, supporting Voice VLAN tagging (802.1Q), Cisco Unified Communications Manager registration, and PC daisy-chaining.',
+    slots: '1 FastEthernet SW port (to switch with PoE), 1 FastEthernet PC port (pass-through)',
+    interfaces: [
+      { name: 'FastEthernet0', shortName: 'SW', speed: '100', duplex: 'auto', autoMdix: true, poe: true },
+      { name: 'PC',           shortName: 'PC', speed: '100', duplex: 'auto', autoMdix: true }
+    ]
+  },
+  'Home-VoIP-PT': {
+    family: 'pc',
+    category: 'Voice over IP (VoIP)',
+    series: 'Generic VoIP Devices',
+    name: 'Home-VoIP-PT (Analog Telephone Adapter)',
+    description: 'Analog Telephone Adapter (ATA) converting analog voice signals from standard telephone sets into SIP/VoIP packets over Ethernet.',
+    functions: 'VoIP gateway for home and SOHO environments. Connects analog phones to broadband IP routers.',
+    slots: '1 Ethernet Internet WAN port, 1 RJ-11 Phone port',
+    interfaces: [
+      { name: 'Internet', shortName: 'WAN',   speed: '100', duplex: 'auto', autoMdix: true },
+      { name: 'Phone',    shortName: 'Phone', speed: '10',  duplex: 'full', autoMdix: false }
+    ]
+  },
+  'Analog-Phone-PT': {
+    family: 'pc',
+    category: 'Voice over IP (VoIP)',
+    series: 'Generic Physical Devices',
+    name: 'Analog-Phone-PT (Desk Phone)',
+    description: 'Standard analog telephone handset connecting to VoIP ATAs, Home VoIP gateways, or router FXS ports.',
+    functions: 'Traditional analog telephone handset for voice calls.',
+    slots: '1 RJ-11 telephone line port',
+    interfaces: [
+      { name: 'Port1', shortName: 'Line', speed: '10', duplex: 'full', autoMdix: false }
+    ]
+  },
+  'TV-PT': {
+    family: 'pc',
+    category: 'Smart Devices & Multimedia',
+    series: 'Generic Smart Devices',
+    name: 'TV-PT (Smart TV)',
+    description: 'Smart television display with Ethernet & Wi-Fi connectivity for multimedia streaming.',
+    functions: 'Connected smart multimedia screen for streaming and display.',
+    slots: '1 FastEthernet port, 1 Wi-Fi interface',
+    interfaces: [
+      { name: 'FastEthernet0', shortName: 'Fa0', speed: '100', duplex: 'auto', autoMdix: true }
+    ]
+  },
+  'TabletPC-PT': {
+    family: 'pc',
+    category: 'Mobile & Wireless Devices',
+    series: 'Generic Mobile Devices',
+    name: 'TabletPC-PT (Tablet Computer)',
+    description: 'Wireless touch tablet computer with 802.11ac Wi-Fi interface.',
+    functions: 'Touchscreen mobile client device connecting to wireless APs and home gateways.',
+    slots: '1 802.11ac Wi-Fi transceiver',
+    interfaces: [
+      { name: 'Wireless0', shortName: 'WiFi0', speed: '867', duplex: 'half', autoMdix: false }
+    ]
+  },
+  'SMARTPHONE-PT': {
+    family: 'pc',
+    category: 'Mobile & Wireless Devices',
+    series: 'Generic Mobile Devices',
+    name: 'SMARTPHONE-PT (Cellular & Wi-Fi Smartphone)',
+    description: 'Mobile smartphone with dual Wi-Fi (802.11ac) and 4G/5G Cellular data transceivers.',
+    functions: 'Handheld mobile subscriber device supporting automatic cellular tower handoff and Wi-Fi data connectivity.',
+    slots: '1 802.11ac Wi-Fi radio, 1 4G/5G Cellular transceiver',
+    interfaces: [
+      { name: 'Wireless0', shortName: 'WiFi0', speed: '867', duplex: 'half', autoMdix: false },
+      { name: 'Cellular0', shortName: 'Cell0', speed: '100', duplex: 'full', autoMdix: false }
+    ]
+  },
+  'WirelessEndDevice-PT': {
+    family: 'pc',
+    category: 'Mobile & Wireless Devices',
+    series: 'Generic IoT & Wireless Devices',
+    name: 'WirelessEndDevice-PT',
+    description: 'Generic wireless IoT sensor / client module connecting to wireless access points.',
+    functions: 'Wi-Fi enabled IoT sensor / client module communicating data over 802.11 Wi-Fi.',
+    slots: '1 Wi-Fi radio interface',
+    interfaces: [
+      { name: 'Wireless0', shortName: 'WiFi0', speed: '300', duplex: 'half', autoMdix: false }
+    ]
+  },
+  'WiredEndDevice-PT': {
+    family: 'pc',
+    category: 'End Devices & Workstations',
+    series: 'Generic IoT & Workstations',
+    name: 'WiredEndDevice-PT',
+    description: 'Generic wired Ethernet sensor / client module connecting to network switchports.',
+    functions: 'Wired client device communicating sensor and control telemetry over Ethernet.',
+    slots: '1 FastEthernet port',
+    interfaces: [
+      { name: 'FastEthernet0', shortName: 'Fa0', speed: '100', duplex: 'auto', autoMdix: true }
+    ]
+  },
+  'Sniffer': {
+    family: 'pc',
+    category: 'Network Analysis & Diagnostics',
+    series: 'Generic Network Tools',
+    name: 'Sniffer (Packet Sniffer / Analyzer)',
+    description: 'Hardware packet sniffer and protocol analyzer with dual capture interfaces for deep packet inspection and traffic analysis.',
+    functions: 'Promiscuous mode packet sniffer capturing live Ethernet frames, IP packets, TCP handshakes, and application layer protocols.',
+    slots: '2 FastEthernet / Gigabit capture ports (Port0, Port1)',
+    interfaces: [
+      { name: 'Port0', shortName: 'Port0', speed: '100', duplex: 'auto', autoMdix: true },
+      { name: 'Port1', shortName: 'Port1', speed: '100', duplex: 'auto', autoMdix: true }
     ]
   },
   'Cell-Tower': {
@@ -980,39 +1358,121 @@ export const DEVICE_MODELS = {
     series: 'Generic WAN Emulation',
     name: 'Cloud-PT (Generic WAN)',
     description: 'Generic Multi-port WAN Emulation Cloud simulating ISP switching fabrics.',
-    functions: 'Multi-interface WAN cloud for simulating Frame Relay, ATM, DSLAM, and Internet ISP routing networks.',
+    functions: 'Multi-interface WAN cloud for simulating Frame Relay, ATM, DSLAM, Cable CMTS, and Internet ISP routing networks.',
     slots: 'Ethernet, Serial, Modem RJ-11, and Coaxial interfaces',
     interfaces: [
-      { name: 'Ethernet0', shortName: 'Eth0', speed: '100', duplex: 'auto', autoMdix: true },
+      { name: 'Ethernet6', shortName: 'Eth6', speed: '100', duplex: 'auto', autoMdix: true },
       { name: 'Serial0',   shortName: 'Se0',  speed: '1.544', duplex: 'full', autoMdix: false },
-      { name: 'Modem0',    shortName: 'Mod0', speed: '56', duplex: 'full', autoMdix: false },
-      { name: 'Coaxial0',  shortName: 'Coax0', speed: '10', duplex: 'half', autoMdix: false }
+      { name: 'Serial1',   shortName: 'Se1',  speed: '1.544', duplex: 'full', autoMdix: false },
+      { name: 'Modem4',    shortName: 'Mod4', speed: '56', duplex: 'full', autoMdix: false },
+      { name: 'Modem5',    shortName: 'Mod5', speed: '56', duplex: 'full', autoMdix: false },
+      { name: 'Coaxial7',  shortName: 'Coax7', speed: '10', duplex: 'half', autoMdix: false }
     ]
   },
-  'DSL-Modem': {
+  'Cloud': {
+    family: 'cloud',
+    category: 'WAN Infrastructure',
+    series: 'Generic WAN Emulation',
+    name: 'Cloud-PT (Generic WAN)',
+    description: 'Generic Multi-port WAN Emulation Cloud simulating ISP switching fabrics.',
+    functions: 'Multi-interface WAN cloud for simulating Frame Relay, ATM, DSLAM, Cable CMTS, and Internet ISP routing networks.',
+    slots: 'Ethernet, Serial, Modem RJ-11, and Coaxial interfaces',
+    interfaces: [
+      { name: 'Ethernet6', shortName: 'Eth6', speed: '100', duplex: 'auto', autoMdix: true },
+      { name: 'Serial0',   shortName: 'Se0',  speed: '1.544', duplex: 'full', autoMdix: false },
+      { name: 'Serial1',   shortName: 'Se1',  speed: '1.544', duplex: 'full', autoMdix: false },
+      { name: 'Modem4',    shortName: 'Mod4', speed: '56', duplex: 'full', autoMdix: false },
+      { name: 'Modem5',    shortName: 'Mod5', speed: '56', duplex: 'full', autoMdix: false },
+      { name: 'Coaxial7',  shortName: 'Coax7', speed: '10', duplex: 'half', autoMdix: false }
+    ]
+  },
+  'PT-Cloud': {
+    family: 'cloud',
+    category: 'WAN Infrastructure',
+    series: 'Generic WAN Emulation',
+    name: 'Cloud-PT (Generic WAN)',
+    description: 'Generic Multi-port WAN Emulation Cloud simulating ISP switching fabrics.',
+    functions: 'Multi-interface WAN cloud for simulating Frame Relay, ATM, DSLAM, Cable CMTS, and Internet ISP routing networks.',
+    slots: 'Ethernet, Serial, Modem RJ-11, and Coaxial interfaces',
+    interfaces: [
+      { name: 'Ethernet6', shortName: 'Eth6', speed: '100', duplex: 'auto', autoMdix: true },
+      { name: 'Serial0',   shortName: 'Se0',  speed: '1.544', duplex: 'full', autoMdix: false },
+      { name: 'Serial1',   shortName: 'Se1',  speed: '1.544', duplex: 'full', autoMdix: false },
+      { name: 'Modem4',    shortName: 'Mod4', speed: '56', duplex: 'full', autoMdix: false },
+      { name: 'Modem5',    shortName: 'Mod5', speed: '56', duplex: 'full', autoMdix: false },
+      { name: 'Coaxial7',  shortName: 'Coax7', speed: '10', duplex: 'half', autoMdix: false }
+    ]
+  },
+  'Cloud-PT-Empty': {
+    family: 'cloud',
+    category: 'WAN Infrastructure',
+    series: 'Generic WAN Emulation',
+    name: 'Cloud-PT-Empty (Modular WAN)',
+    description: 'Blank modular multi-port WAN Emulation Cloud with 10 empty interface bays for custom ISP modules.',
+    functions: 'Modular blank WAN Emulation Cloud. Allows engineers to install custom serial, modem, coaxial, and Ethernet expansion modules to build specialized ISP frame relay or multiprotocol fabrics.',
+    slots: '10 modular expansion slots (empty chassis)',
+    interfaces: []
+  },
+  'PT-Empty-Cloud': {
+    family: 'cloud',
+    category: 'WAN Infrastructure',
+    series: 'Generic WAN Emulation',
+    name: 'Cloud-PT-Empty (Modular WAN)',
+    description: 'Blank modular multi-port WAN Emulation Cloud with 10 empty interface bays for custom ISP modules.',
+    functions: 'Modular blank WAN Emulation Cloud. Allows engineers to install custom serial, modem, coaxial, and Ethernet expansion modules to build specialized ISP frame relay or multiprotocol fabrics.',
+    slots: '10 modular expansion slots (empty chassis)',
+    interfaces: []
+  },
+  'Cable-Modem-PT': {
     family: 'modem',
     category: 'Broadband Modems',
     series: 'Generic Physical Devices',
-    name: 'DSL Modem-PT',
-    description: 'Digital Subscriber Line Broadband Modem (RJ-45 Ethernet to RJ-11 Phone Line).',
-    functions: 'Modulates digital Ethernet packets into high-frequency analog signals over copper telephone subscriber lines to connect to ISP DSLAMs.',
-    slots: '1 RJ-45 Ethernet port, 1 RJ-11 Telephone port',
+    name: 'Cable-Modem-PT',
+    description: 'DOCSIS Broadband Cable Modem (RJ-45 Ethernet to Coaxial F-Type/BNC).',
+    functions: 'Modulates digital Ethernet frames over broadband coaxial cable TV frequencies (DOCSIS) to connect subscriber LANs to ISP CMTS systems.',
+    slots: '1 RJ-45 Ethernet port (Port0), 1 Coaxial F-connector (Port1)',
     interfaces: [
-      { name: 'Ethernet0', shortName: 'Eth0', speed: '100', duplex: 'auto', autoMdix: true },
-      { name: 'Port1',     shortName: 'Phone', speed: '10', duplex: 'full', autoMdix: false }
+      { name: 'Port0', shortName: 'Eth0', speed: '100', duplex: 'auto', autoMdix: true },
+      { name: 'Port1', shortName: 'Coax', speed: '10', duplex: 'half', autoMdix: false }
     ]
   },
   'Cable-Modem': {
     family: 'modem',
     category: 'Broadband Modems',
     series: 'Generic Physical Devices',
-    name: 'Cable Modem-PT',
+    name: 'Cable-Modem-PT',
     description: 'DOCSIS Broadband Cable Modem (RJ-45 Ethernet to Coaxial F-Type/BNC).',
-    functions: 'Modulates digital Ethernet frames over broadband coaxial cable TV frequencies (DOCSIS) to connect to ISP CMTS systems.',
-    slots: '1 RJ-45 Ethernet port, 1 Coaxial F-connector',
+    functions: 'Modulates digital Ethernet frames over broadband coaxial cable TV frequencies (DOCSIS) to connect subscriber LANs to ISP CMTS systems.',
+    slots: '1 RJ-45 Ethernet port (Port0), 1 Coaxial F-connector (Port1)',
     interfaces: [
-      { name: 'Ethernet0', shortName: 'Eth0', speed: '100', duplex: 'auto', autoMdix: true },
-      { name: 'Coaxial0',  shortName: 'Coax', speed: '10', duplex: 'half', autoMdix: false }
+      { name: 'Port0', shortName: 'Eth0', speed: '100', duplex: 'auto', autoMdix: true },
+      { name: 'Port1', shortName: 'Coax', speed: '10', duplex: 'half', autoMdix: false }
+    ]
+  },
+  'DSL-Modem-PT': {
+    family: 'modem',
+    category: 'Broadband Modems',
+    series: 'Generic Physical Devices',
+    name: 'DSL-Modem-PT',
+    description: 'Digital Subscriber Line Broadband Modem (RJ-45 Ethernet to RJ-11 Phone Line).',
+    functions: 'Modulates digital Ethernet packets into high-frequency analog signals over copper telephone subscriber lines to connect subscriber LANs to ISP DSLAMs.',
+    slots: '1 RJ-45 Ethernet port (Port0), 1 RJ-11 Telephone port (Port1)',
+    interfaces: [
+      { name: 'Port0', shortName: 'Eth0', speed: '100', duplex: 'auto', autoMdix: true },
+      { name: 'Port1', shortName: 'Phone', speed: '10', duplex: 'full', autoMdix: false }
+    ]
+  },
+  'DSL-Modem': {
+    family: 'modem',
+    category: 'Broadband Modems',
+    series: 'Generic Physical Devices',
+    name: 'DSL-Modem-PT',
+    description: 'Digital Subscriber Line Broadband Modem (RJ-45 Ethernet to RJ-11 Phone Line).',
+    functions: 'Modulates digital Ethernet packets into high-frequency analog signals over copper telephone subscriber lines to connect subscriber LANs to ISP DSLAMs.',
+    slots: '1 RJ-45 Ethernet port (Port0), 1 RJ-11 Telephone port (Port1)',
+    interfaces: [
+      { name: 'Port0', shortName: 'Eth0', speed: '100', duplex: 'auto', autoMdix: true },
+      { name: 'Port1', shortName: 'Phone', speed: '10', duplex: 'full', autoMdix: false }
     ]
   },
 
@@ -1109,6 +1569,7 @@ export function getModelsByFamily(family) {
   const familyMap = {
     securityappliance: ['firewall', 'securityappliance'],
     firewall: ['firewall', 'securityappliance'],
+    cyberobserver: ['server', 'firewall', 'cyberobserver'],
     homegateway: ['wirelessrouter', 'homegateway'],
     wirelessrouter: ['wirelessrouter', 'homegateway'],
     lap: ['ap', 'lap'],
@@ -1117,6 +1578,7 @@ export function getModelsByFamily(family) {
     server: ['server', 'coserver'],
     celltower: ['celltower', 'modem'],
     modem: ['modem', 'celltower'],
+    cloud: ['cloud'],
   };
   const targetFamilies = familyMap[f] || [f];
 

@@ -2,7 +2,7 @@ import { eventBus }         from '../engine/EventBus.js';
 import { Router }           from '../network/Router.js';
 import { Switch, L3Switch } from '../network/Switch.js';
 import { PC }               from '../network/PC.js';
-import { Server, CentralOfficeServer, Cloud } from '../network/Server.js';
+import { Server, CentralOfficeServer, CyberObserver, Cloud, MerakiServer, NetworkController } from '../network/Server.js';
 import { AccessPoint, LightweightAccessPoint } from '../network/AccessPoint.js';
 import { Hub }              from '../network/Hub.js';
 import { Repeater }         from '../network/Repeater.js';
@@ -113,8 +113,15 @@ export class TopologyBuilder {
       switch:           () => new Switch(opts),
       l3switch:         () => new L3Switch({ ...opts, type: 'l3switch' }),
       pc:               () => new PC(opts),
-      server:           () => (m.includes('CENTRAL') || m.includes('CO-SERVER')) ? new CentralOfficeServer(opts) : new Server(opts),
+      server:           () => {
+        if (m.includes('CENTRAL') || m.includes('CO-SERVER')) return new CentralOfficeServer(opts);
+        if (m.includes('CYBER') || t === 'cyberobserver') return new CyberObserver(opts);
+        if (m.includes('MERAKI-SERVER') || m.includes('MERAKISERVER')) return new MerakiServer(opts);
+        if (m.includes('CONTROLLER') || m.includes('NETWORKCONTROLLER')) return new NetworkController(opts);
+        return new Server(opts);
+      },
       coserver:         () => new CentralOfficeServer(opts),
+      cyberobserver:    () => new CyberObserver(opts),
       ap:               () => (m.includes('LAP') || m.includes('3702')) ? new LightweightAccessPoint(opts) : new AccessPoint(opts),
       lap:              () => new LightweightAccessPoint(opts),
       hub:              () => new Hub(opts),
@@ -127,7 +134,7 @@ export class TopologyBuilder {
       wirelessrouter:   () => (m.includes('DLC') || m.includes('GATEWAY')) ? new HomeGateway(opts) : new WirelessRouter(opts),
       homegateway:      () => new HomeGateway(opts),
       wlc:              () => new WLC(opts),
-      modem:            () => new DSLModem(opts),
+      modem:            () => m.includes('CABLE') ? new CableModem(opts) : new DSLModem(opts),
       celltower:        () => new CellTower(opts),
       cloud:            () => new Cloud(opts),
     };

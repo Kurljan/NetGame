@@ -369,22 +369,46 @@
 
       <div class="palette-section">
         <div class="palette-label">SECURITY &amp; FIREWALL APPLIANCES</div>
+        <div class="palette-item" data-type="firewall" data-model="ISA-3000" draggable="true" title="Cisco ISA-3000 Industrial Security Appliance (DIN-Rail, 4 GE Ports, OT/ICS DPI)">
+          <canvas class="device-icon-preview" width="48" height="48" data-draw="firewall" data-model="ISA-3000"></canvas>
+          <span>ISA-3000</span>
+        </div>
+        <div class="palette-item" data-type="firewall" data-model="5506-X" draggable="true" title="Cisco ASA 5506-X Next-Gen Firewall (8 GE Ports, FirePOWER Services)">
+          <canvas class="device-icon-preview" width="48" height="48" data-draw="firewall" data-model="5506-X"></canvas>
+          <span>5506-X</span>
+        </div>
+        <div class="palette-item" data-type="firewall" data-model="5505" draggable="true" title="Cisco ASA 5505 Security Appliance (8 FE Ports, IPsec VPN)">
+          <canvas class="device-icon-preview" width="48" height="48" data-draw="firewall" data-model="5505"></canvas>
+          <span>5505</span>
+        </div>
+        <div class="palette-item" data-type="cyberobserver" data-model="CyberObserver" draggable="true" title="CyberObserver Security Platform (Continuous Posture & Real-time Telemetry Sensor)">
+          <canvas class="device-icon-preview" width="48" height="48" data-draw="cyberobserver" data-model="CyberObserver"></canvas>
+          <span>CyberObserver</span>
+        </div>
         <div class="palette-item" data-type="securityappliance" data-model="Meraki-MX65W" draggable="true" title="Cisco Meraki MX65W (Cloud-Managed Security & SD-WAN Appliance, 802.11ac Wi-Fi, 8 GE PoE+)">
           <canvas class="device-icon-preview" width="48" height="48" data-draw="securityappliance" data-model="Meraki-MX65W"></canvas>
           <span>Meraki-MX65W</span>
         </div>
-        <div class="palette-item" data-type="firewall" data-model="ASA-5506-X" draggable="true" title="Cisco ASA 5506-X Next-Gen Firewall (8 GE Ports, FirePOWER Services)">
-          <canvas class="device-icon-preview" width="48" height="48" data-draw="firewall" data-model="ASA-5506-X"></canvas>
-          <span>ASA 5506-X</span>
-        </div>
-        <div class="palette-item" data-type="firewall" data-model="ASA-5505" draggable="true" title="Cisco ASA 5505 Security Appliance (8 FE Ports, IPsec VPN)">
-          <canvas class="device-icon-preview" width="48" height="48" data-draw="firewall" data-model="ASA-5505"></canvas>
-          <span>ASA 5505</span>
-        </div>
       </div>
 
       <div class="palette-section">
-        <div class="palette-label">SERVERS &amp; CELLULAR INFRASTRUCTURE</div>
+        <div class="palette-label">SERVERS, CELLULAR &amp; WAN INFRASTRUCTURE</div>
+        <div class="palette-item" data-type="cloud" data-model="Cloud-PT" draggable="true" title="Cloud-PT (Generic Multi-port WAN Emulation Cloud)">
+          <canvas class="device-icon-preview" width="48" height="48" data-draw="cloud" data-model="Cloud-PT"></canvas>
+          <span>Cloud-PT</span>
+        </div>
+        <div class="palette-item" data-type="cloud" data-model="Cloud-PT-Empty" draggable="true" title="Cloud-PT-Empty (Modular WAN Emulation Cloud with 10 Empty Slots)">
+          <canvas class="device-icon-preview" width="48" height="48" data-draw="cloud" data-model="Cloud-PT-Empty"></canvas>
+          <span>Cloud-PT-Empty</span>
+        </div>
+        <div class="palette-item" data-type="modem" data-model="Cable-Modem-PT" draggable="true" title="Cable-Modem-PT (DOCSIS Broadband Cable Modem, Ethernet to Coaxial)">
+          <canvas class="device-icon-preview" width="48" height="48" data-draw="modem" data-model="Cable-Modem-PT"></canvas>
+          <span>Cable-Modem-PT</span>
+        </div>
+        <div class="palette-item" data-type="modem" data-model="DSL-Modem-PT" draggable="true" title="DSL-Modem-PT (Broadband DSL Modem, Ethernet to RJ-11 Phone)">
+          <canvas class="device-icon-preview" width="48" height="48" data-draw="modem" data-model="DSL-Modem-PT"></canvas>
+          <span>DSL-Modem-PT</span>
+        </div>
         <div class="palette-item" data-type="coserver" data-model="Central-Office-Server" draggable="true" title="Central-Office-Server (Cellular Backhaul Core Gateway, IoT Registration, DNS/DHCP)">
           <canvas class="device-icon-preview" width="48" height="48" data-draw="coserver" data-model="Central-Office-Server"></canvas>
           <span>Central-Office-Server</span>
@@ -397,25 +421,65 @@
           <canvas class="device-icon-preview" width="48" height="48" data-draw="server" data-model="Server-PT"></canvas>
           <span>Server-PT</span>
         </div>
-        <div class="palette-item" data-type="modem" data-model="DSL-Modem" draggable="true" title="DSL Modem-PT (Ethernet to RJ-11 Phone)">
-          <canvas class="device-icon-preview" width="48" height="48" data-draw="modem" data-model="DSL-Modem"></canvas>
-          <span>DSL Modem</span>
+        <div class="palette-item" data-type="server" data-model="Meraki-Server" draggable="true" title="Meraki-Server (Cisco Meraki Cloud Dashboard)">
+          <canvas class="device-icon-preview" width="48" height="48" data-draw="server" data-model="Meraki-Server"></canvas>
+          <span>Meraki-Server</span>
         </div>
-        <div class="palette-item" data-type="modem" data-model="Cable-Modem" draggable="true" title="Cable Modem-PT (Ethernet to Coaxial DOCSIS)">
-          <canvas class="device-icon-preview" width="48" height="48" data-draw="modem" data-model="Cable-Modem"></canvas>
-          <span>Cable Modem</span>
-        </div>
-        <div class="palette-item" data-type="cloud" data-model="Cloud-PT" draggable="true" title="Cloud-PT (Generic WAN & ISP Internet)">
-          <canvas class="device-icon-preview" width="48" height="48" data-draw="cloud" data-model="Cloud-PT"></canvas>
-          <span>Internet Cloud</span>
+        <div class="palette-item" data-type="server" data-model="NetworkController" draggable="true" title="NetworkController (Cisco DNA / SDN Network Controller)">
+          <canvas class="device-icon-preview" width="48" height="48" data-draw="server" data-model="NetworkController"></canvas>
+          <span>NetworkController</span>
         </div>
       </div>
 
       <div class="palette-section">
-        <div class="palette-label">END DEVICES</div>
-        <div class="palette-item" data-type="pc" draggable="true" title="PC / Host Computer">
-          <canvas class="device-icon-preview" width="48" height="48" data-draw="pc"></canvas>
-          <span>PC / Host</span>
+        <div class="palette-label">END DEVICES, MOBILE &amp; VOIP</div>
+        <div class="palette-item" data-type="pc" data-model="PC-PT" draggable="true" title="PC-PT (Host Desktop Workstation)">
+          <canvas class="device-icon-preview" width="48" height="48" data-draw="pc" data-model="PC-PT"></canvas>
+          <span>PC-PT</span>
+        </div>
+        <div class="palette-item" data-type="pc" data-model="Laptop-PT" draggable="true" title="Laptop-PT (Portable Laptop Computer with Wi-Fi)">
+          <canvas class="device-icon-preview" width="48" height="48" data-draw="pc" data-model="Laptop-PT"></canvas>
+          <span>Laptop-PT</span>
+        </div>
+        <div class="palette-item" data-type="pc" data-model="WirelessEndDevice-PT" draggable="true" title="WirelessEndDevice-PT (Wireless Client / IoT Module)">
+          <canvas class="device-icon-preview" width="48" height="48" data-draw="pc" data-model="WirelessEndDevice-PT"></canvas>
+          <span>WirelessEndDevice-PT</span>
+        </div>
+        <div class="palette-item" data-type="pc" data-model="WiredEndDevice-PT" draggable="true" title="WiredEndDevice-PT (Wired Client / IoT Module)">
+          <canvas class="device-icon-preview" width="48" height="48" data-draw="pc" data-model="WiredEndDevice-PT"></canvas>
+          <span>WiredEndDevice-PT</span>
+        </div>
+        <div class="palette-item" data-type="pc" data-model="TabletPC-PT" draggable="true" title="TabletPC-PT (Touchscreen Tablet Computer)">
+          <canvas class="device-icon-preview" width="48" height="48" data-draw="pc" data-model="TabletPC-PT"></canvas>
+          <span>TabletPC-PT</span>
+        </div>
+        <div class="palette-item" data-type="pc" data-model="SMARTPHONE-PT" draggable="true" title="SMARTPHONE-PT (Cellular & Wi-Fi Smartphone)">
+          <canvas class="device-icon-preview" width="48" height="48" data-draw="pc" data-model="SMARTPHONE-PT"></canvas>
+          <span>SMARTPHONE-PT</span>
+        </div>
+        <div class="palette-item" data-type="pc" data-model="TV-PT" draggable="true" title="TV-PT (Smart TV Display)">
+          <canvas class="device-icon-preview" width="48" height="48" data-draw="pc" data-model="TV-PT"></canvas>
+          <span>TV-PT</span>
+        </div>
+        <div class="palette-item" data-type="pc" data-model="Printer-PT" draggable="true" title="Printer-PT (Networked Office Printer)">
+          <canvas class="device-icon-preview" width="48" height="48" data-draw="pc" data-model="Printer-PT"></canvas>
+          <span>Printer-PT</span>
+        </div>
+        <div class="palette-item" data-type="pc" data-model="7960" draggable="true" title="7960 (Cisco Unified IP Phone)">
+          <canvas class="device-icon-preview" width="48" height="48" data-draw="pc" data-model="7960"></canvas>
+          <span>7960</span>
+        </div>
+        <div class="palette-item" data-type="pc" data-model="Home-VoIP-PT" draggable="true" title="Home-VoIP-PT (Home VoIP Analog Telephone Adapter)">
+          <canvas class="device-icon-preview" width="48" height="48" data-draw="pc" data-model="Home-VoIP-PT"></canvas>
+          <span>Home-VoIP-PT</span>
+        </div>
+        <div class="palette-item" data-type="pc" data-model="Analog-Phone-PT" draggable="true" title="Analog-Phone-PT (Desk Telephone)">
+          <canvas class="device-icon-preview" width="48" height="48" data-draw="pc" data-model="Analog-Phone-PT"></canvas>
+          <span>Analog-Phone-PT</span>
+        </div>
+        <div class="palette-item" data-type="pc" data-model="Sniffer" draggable="true" title="Sniffer (Packet Sniffer & Protocol Analyzer)">
+          <canvas class="device-icon-preview" width="48" height="48" data-draw="pc" data-model="Sniffer"></canvas>
+          <span>Sniffer</span>
         </div>
       </div>
 
