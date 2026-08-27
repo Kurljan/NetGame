@@ -95,6 +95,15 @@ export const DEVICE_PROFILES = {
         tip: 'Best practice: Always name routers according to their topology location (e.g. R1-Gateway, Branch-R2).'
       },
       {
+        command: 'copy running-config startup-config',
+        alias: 'copy run start',
+        mode: 'Router#',
+        category: 'system',
+        purpose: 'Saves the active configuration (running-config) to NVRAM (startup-config) so it persists after a reboot.',
+        example: 'Router# copy run start\nDestination filename [startup-config]? \nBuilding configuration...\n[OK]',
+        tip: 'Always run this before turning off or reloading a device to prevent configuration loss.'
+      },
+      {
         command: 'interface <type><number>',
         alias: 'int <name>',
         mode: 'Router(config)#',
@@ -168,6 +177,14 @@ export const DEVICE_PROFILES = {
         purpose: 'Installs a manual static route into the routing table toward a destination network via an adjacent next-hop router IP.',
         example: 'Router(config)# ip route 10.2.0.0 255.255.255.0 192.168.12.2',
         tip: 'Static routes have an Administrative Distance (AD) of 1, making them more trusted than dynamic protocols.'
+      },
+      {
+        command: 'ipv6 route <network>/<prefix> <next-hop>',
+        mode: 'Router(config)#',
+        category: 'routing',
+        purpose: 'Installs a manual static route into the IPv6 routing table toward a destination IPv6 network.',
+        example: 'Router(config)# ipv6 route 2001:db8:acad:2::/64 2001:db8:acad:1::2',
+        tip: 'Ensure "ipv6 unicast-routing" is enabled globally before adding IPv6 static routes.'
       },
       {
         command: 'ip route 0.0.0.0 0.0.0.0 <next-hop>',
@@ -251,6 +268,15 @@ export const DEVICE_PROFILES = {
         tip: 'Primary verification command to troubleshoot whether the router knows how to reach a destination network.'
       },
       {
+        command: 'show ipv6 route',
+        alias: 'sh ipv6 ro',
+        mode: 'Router#',
+        category: 'show',
+        purpose: 'Displays the complete IPv6 Routing Table with route codes (C=Connected, S=Static, O=OSPF), metrics, and next-hop gateways.',
+        example: 'Router# show ipv6 route\nCodes: C - connected, S - static, O - OSPF\nC   2001:db8:acad:1::/64 is directly connected, GigabitEthernet0/0\nS   2001:db8:acad:2::/64 [1/0] via 2001:db8:acad:1::2',
+        tip: 'Use to verify if the router knows the path to an IPv6 network.'
+      },
+      {
         command: 'show ip interface brief',
         alias: 'sh ip int br',
         mode: 'Router#',
@@ -285,6 +311,15 @@ export const DEVICE_PROFILES = {
         purpose: 'Displays comprehensive Layer 1 & 2 statistics, MTU, bandwidth, delay, encapsulation, and packet counters.',
         example: 'Router# show interfaces GigabitEthernet0/0/0',
         tip: 'Checks for CRC errors, collisions, and interface line resets.'
+      },
+      {
+        command: 'show cdp neighbors',
+        alias: 'sh cdp nei',
+        mode: 'Router#',
+        category: 'show',
+        purpose: 'Displays information about directly connected Cisco devices, including device IDs, local interfaces, port IDs, and hardware platforms.',
+        example: 'Router# show cdp neighbors\nDevice ID        Local Intrfce     Holdtme    Capability  Platform  Port ID\nSwitch1          Fas 0/1           163             S I    2960      Fas 0/1',
+        tip: 'Invaluable tool for mapping out an unknown network topology at Layer 2.'
       },
       {
         command: 'show arp',
@@ -392,6 +427,15 @@ export const DEVICE_PROFILES = {
         purpose: 'Sets the administrative hostname for the switch.',
         example: 'Switch(config)# hostname SW1-Floor2\nSW1-Floor2(config)#',
         tip: 'Always identify switch floor/rack in the hostname (e.g. SW-Access-1).'
+      },
+      {
+        command: 'copy running-config startup-config',
+        alias: 'copy run start',
+        mode: 'Switch#',
+        category: 'system',
+        purpose: 'Saves the active configuration (running-config) to NVRAM (startup-config) so it persists after a reboot.',
+        example: 'Switch# copy run start\nDestination filename [startup-config]? \nBuilding configuration...\n[OK]',
+        tip: 'Always run this before turning off or reloading a device to prevent configuration loss.'
       },
       {
         command: 'vlan <vlan-id>',
@@ -528,6 +572,15 @@ export const DEVICE_PROFILES = {
         tip: 'Used for equipment audits and inventory tracking.'
       },
       {
+        command: 'show cdp neighbors',
+        alias: 'sh cdp nei',
+        mode: 'Switch#',
+        category: 'show',
+        purpose: 'Displays information about directly connected Cisco devices, including device IDs, local interfaces, port IDs, and hardware platforms.',
+        example: 'Switch# show cdp neighbors\nDevice ID        Local Intrfce     Holdtme    Capability  Platform  Port ID\nRouter1          Fas 0/1           163             R      1941      Gig 0/0',
+        tip: 'Invaluable tool for mapping out an unknown network topology at Layer 2.'
+      },
+      {
         command: 'ping <ip>',
         mode: 'Switch#',
         category: 'diagnostics',
@@ -621,6 +674,14 @@ export const DEVICE_PROFILES = {
         tip: 'Default route forwards external/Internet traffic to the perimeter firewall or WAN router.'
       },
       {
+        command: 'ipv6 route <network>/<prefix> <next-hop>',
+        mode: 'Switch(config)#',
+        category: 'routing',
+        purpose: 'Installs a static route on the multilayer switch for forwarding packets to remote IPv6 subnets.',
+        example: 'Switch(config)# ipv6 route 2001:db8::/32 2001:db8:acad:1::2',
+        tip: 'Requires IPv6 routing to be enabled.'
+      },
+      {
         command: 'router ospf <process-id>',
         mode: 'Switch(config)#',
         category: 'routing',
@@ -635,6 +696,14 @@ export const DEVICE_PROFILES = {
         purpose: 'Displays the active Layer 3 routing table inside the multilayer switch, including connected SVIs and routes.',
         example: 'Switch# show ip route',
         tip: 'Verifies inter-VLAN routes are installed and active.'
+      },
+      {
+        command: 'show ipv6 route',
+        mode: 'Switch#',
+        category: 'show',
+        purpose: 'Displays the active Layer 3 IPv6 routing table inside the multilayer switch, including connected SVIs and routes.',
+        example: 'Switch# show ipv6 route',
+        tip: 'Verifies IPv6 inter-VLAN routes are installed and active.'
       },
       {
         command: 'show vlan brief',

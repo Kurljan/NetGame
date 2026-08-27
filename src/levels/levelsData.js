@@ -146,6 +146,34 @@ export const LEVELS = [
           "status": "up"
         }
       ]
+    },
+    "briefing": {
+      "why": "Every networked device needs a unique IP address to communicate. This is the most fundamental skill in networking — without correct IP addressing, nothing works. Every network engineer configures IPs daily.",
+      "concepts": [
+        "IPv4 Addressing",
+        "Subnet Masks",
+        "/24 Networks",
+        "ICMP Ping",
+        "Layer 3"
+      ],
+      "learningGoal": "You'll be able to assign IP addresses to devices on the same LAN and verify connectivity using ping — the first skill every network admin learns."
+    },
+    "feedback": {
+      "obj1": {
+        "hint": "Click PC1, go to the Interfaces tab, and set IP to 192.168.1.10 with mask 255.255.255.0",
+        "onFail": "PC1's interface doesn't have the correct IP. Set the IP Address to 192.168.1.10 and Subnet Mask to 255.255.255.0 in the Interfaces tab.",
+        "onPass": "PC1 is correctly configured with IP 192.168.1.10 in the 192.168.1.0/24 network."
+      },
+      "obj2": {
+        "hint": "Click PC2, go to the Interfaces tab, and set IP to 192.168.1.20 with mask 255.255.255.0",
+        "onFail": "PC2's interface doesn't have the correct IP. Set the IP Address to 192.168.1.20 and Subnet Mask to 255.255.255.0.",
+        "onPass": "PC2 is correctly configured with IP 192.168.1.20 in the same /24 subnet as PC1."
+      },
+      "obj3": {
+        "hint": "Both PCs must have IPs in the same subnet. Then use the terminal or click 'Test All' to ping.",
+        "onFail": "Ping failed! Make sure both PCs have IPs in the 192.168.1.0/24 network and are connected through the switch.",
+        "onPass": "Ping successful! Both PCs can communicate because they share the same Layer 2 broadcast domain and subnet."
+      }
     }
   },
   {
@@ -382,6 +410,39 @@ export const LEVELS = [
           "status": "up"
         }
       ]
+    },
+    "briefing": {
+      "why": "In real networks, a single IP block must be divided into smaller subnets for different departments or locations. VLSM lets you allocate exactly the right number of addresses to each subnet without waste.",
+      "concepts": [
+        "Subnetting",
+        "VLSM",
+        "/25 Prefix",
+        "Subnet Boundaries",
+        "Address Blocks"
+      ],
+      "learningGoal": "You'll be able to divide a /24 network into two equal /25 subnets and assign hosts to the correct subnet — a core CCNA subnetting skill."
+    },
+    "feedback": {
+      "obj1": {
+        "hint": "PC1 needs an IP in the first half: 192.168.10.1–126 with mask 255.255.255.128",
+        "onFail": "PC1 is not in the 192.168.10.0/25 subnet. Valid IPs are 192.168.10.1 to 192.168.10.126 with mask 255.255.255.128.",
+        "onPass": "PC1 is correctly placed in the first /25 subnet (192.168.10.0–127)."
+      },
+      "obj2": {
+        "hint": "PC2 needs an IP in the second half: 192.168.10.129–254 with mask 255.255.255.128",
+        "onFail": "PC2 is not in the 192.168.10.128/25 subnet. Valid IPs are 192.168.10.129 to 192.168.10.254 with mask 255.255.255.128.",
+        "onPass": "PC2 is correctly placed in the second /25 subnet (192.168.10.128–255)."
+      },
+      "obj3": {
+        "hint": "PC1 and PC1B must be in the same /25 subnet to ping each other.",
+        "onFail": "Ping failed between PC1 and PC1B. Ensure they share the same 192.168.10.0/25 subnet.",
+        "onPass": "PCs in the first subnet can communicate — they share the same broadcast domain."
+      },
+      "obj4": {
+        "hint": "PC2 and PC2B must be in the same /25 subnet.",
+        "onFail": "Ping failed between PC2 and PC2B. Ensure they share the 192.168.10.128/25 subnet.",
+        "onPass": "PCs in the second subnet communicate successfully."
+      }
     }
   },
   {
@@ -570,6 +631,34 @@ export const LEVELS = [
           "status": "up"
         }
       ]
+    },
+    "briefing": {
+      "why": "VLANs let you logically separate traffic on the same physical switch — critical for security and performance in enterprise networks. Inter-VLAN routing connects these isolated segments through a router.",
+      "concepts": [
+        "VLANs",
+        "802.1Q Trunking",
+        "Router-on-a-Stick",
+        "Inter-VLAN Routing",
+        "Layer 2 Segmentation"
+      ],
+      "learningGoal": "You'll be able to create VLANs on a switch and configure a router sub-interface to route traffic between them — a key enterprise networking pattern."
+    },
+    "feedback": {
+      "obj1": {
+        "hint": "Select SW1, go to the VLANs tab, and create VLAN 10 named 'Sales'.",
+        "onFail": "VLAN 10 does not exist on SW1. Go to the VLANs tab and add VLAN 10.",
+        "onPass": "VLAN 10 (Sales) is configured on SW1."
+      },
+      "obj2": {
+        "hint": "Create VLAN 20 named 'HR' on SW1 in the VLANs tab.",
+        "onFail": "VLAN 20 does not exist on SW1. Add VLAN 20 in the VLANs tab.",
+        "onPass": "VLAN 20 (HR) is configured on SW1."
+      },
+      "obj3": {
+        "hint": "Configure the router with sub-interfaces for each VLAN. The trunk link carries both VLANs to the router.",
+        "onFail": "Inter-VLAN ping failed. Check: (1) trunk port on switch, (2) router sub-interfaces with correct VLAN IPs, (3) PC default gateways.",
+        "onPass": "Inter-VLAN routing works! The router forwards packets between VLAN 10 and VLAN 20 via 802.1Q trunk."
+      }
     }
   },
   {
@@ -765,6 +854,39 @@ export const LEVELS = [
           "status": "up"
         }
       ]
+    },
+    "briefing": {
+      "why": "DHCP automates IP assignment so administrators don't have to manually configure hundreds of devices. Every home and enterprise network uses DHCP — it's one of the most common network services.",
+      "concepts": [
+        "DHCP",
+        "DHCP Pool",
+        "Dynamic IP Assignment",
+        "Application Layer Services",
+        "Client-Server Model"
+      ],
+      "learningGoal": "You'll be able to configure a DHCP server to automatically assign IP addresses to client PCs and verify that dynamic addressing works."
+    },
+    "feedback": {
+      "obj1": {
+        "hint": "Click SRV1, go to the Advanced tab, and configure a DHCP pool for 192.168.1.0/24.",
+        "onFail": "The DHCP pool on SRV1 isn't configured correctly. Set the network to 192.168.1.0 with mask 255.255.255.0.",
+        "onPass": "DHCP pool is correctly configured to hand out addresses in 192.168.1.0/24."
+      },
+      "obj2": {
+        "hint": "PC1 should get an IP via DHCP. Make sure the DHCP pool is active and PC1 is on the same network.",
+        "onFail": "PC1 hasn't received a valid DHCP address. Check that SRV1's DHCP pool is configured and PC1 is connected.",
+        "onPass": "PC1 successfully received an IP address from the DHCP server."
+      },
+      "obj3": {
+        "hint": "PC2 also needs a DHCP address from the same pool.",
+        "onFail": "PC2 hasn't received a valid DHCP address. Ensure the pool has enough addresses.",
+        "onPass": "PC2 successfully received an IP address from DHCP."
+      },
+      "obj4": {
+        "hint": "Both PCs need valid IPs in the same subnet to ping each other.",
+        "onFail": "Ping failed. Both PCs need DHCP-assigned IPs in the 192.168.1.0/24 network.",
+        "onPass": "Both DHCP clients can communicate — dynamic addressing is working perfectly."
+      }
     }
   },
   {
@@ -1025,6 +1147,40 @@ export const LEVELS = [
           "status": "up"
         }
       ]
+    },
+    "briefing": {
+      "why": "Static routes are the building blocks of routing. Before learning complex protocols like OSPF, you must understand how to manually tell a router where to send packets for remote networks.",
+      "concepts": [
+        "Static Routes",
+        "WAN Links",
+        "Point-to-Point (/30)",
+        "Next-Hop IP",
+        "Default Gateway",
+        "ip route command"
+      ],
+      "learningGoal": "You'll be able to configure static routes on two routers so that PCs on separate LANs can communicate across a WAN link."
+    },
+    "feedback": {
+      "obj1": {
+        "hint": "On R1: 'ip route 10.2.0.0 255.255.255.0 10.0.0.2' — tells R1 how to reach the remote LAN via R2.",
+        "onFail": "R1 doesn't have a route to 10.2.0.0/24. Use: ip route 10.2.0.0 255.255.255.0 10.0.0.2",
+        "onPass": "R1 knows how to reach the 10.2.0.0/24 network via next-hop 10.0.0.2."
+      },
+      "obj2": {
+        "hint": "On R2: 'ip route 10.1.0.0 255.255.255.0 10.0.0.1' — tells R2 how to reach R1's LAN.",
+        "onFail": "R2 doesn't have a route to 10.1.0.0/24. Use: ip route 10.1.0.0 255.255.255.0 10.0.0.1",
+        "onPass": "R2 knows how to reach the 10.1.0.0/24 network via next-hop 10.0.0.1."
+      },
+      "obj3": {
+        "hint": "After adding routes on both routers, PC1 should be able to ping PC2 at 10.2.0.10.",
+        "onFail": "Cross-WAN ping failed. Check: (1) static routes on both routers, (2) PC default gateways, (3) WAN link IPs.",
+        "onPass": "PC1 can reach PC2 across the WAN — your static routes are working!"
+      },
+      "obj4": {
+        "hint": "Return traffic needs a route too. Make sure R2 has a route back to 10.1.0.0/24.",
+        "onFail": "Reverse ping failed. Remember: routing must work in BOTH directions. Check R2's route to 10.1.0.0/24.",
+        "onPass": "Bidirectional routing works! Both PCs can reach each other across the WAN."
+      }
     }
   },
   {
@@ -1244,6 +1400,34 @@ export const LEVELS = [
           "status": "up"
         }
       ]
+    },
+    "briefing": {
+      "why": "A default route (0.0.0.0/0) is the 'catch-all' that sends unknown traffic to the Internet gateway. Without it, internal hosts can't reach any destination outside their local network.",
+      "concepts": [
+        "Default Route",
+        "Gateway of Last Resort",
+        "Internet Access",
+        "NAT Gateway",
+        "0.0.0.0/0"
+      ],
+      "learningGoal": "You'll configure a default route pointing to an Internet gateway, enabling internal PCs to reach external networks."
+    },
+    "feedback": {
+      "obj1": {
+        "hint": "On the internal router, add: ip route 0.0.0.0 0.0.0.0 <ISP-router-IP>",
+        "onFail": "No default route found. Add a route to 0.0.0.0/0 with the ISP router as the next hop.",
+        "onPass": "Default route configured! All unknown destinations will be sent to the Internet gateway."
+      },
+      "obj2": {
+        "hint": "PCs need the internal router as their default gateway to send traffic upstream.",
+        "onFail": "Ping to external IP failed. Check that PCs have the correct default gateway and the router has a default route.",
+        "onPass": "Internal PCs can reach external networks through the default route."
+      },
+      "obj3": {
+        "hint": "Verify full path connectivity from LAN through router to ISP.",
+        "onFail": "End-to-end connectivity failed. Verify the full path: PC → LAN Router → ISP Router.",
+        "onPass": "Full Internet path is working — traffic flows from LAN through the gateway to the ISP!"
+      }
     }
   },
   {
@@ -1473,6 +1657,39 @@ export const LEVELS = [
           "status": "up"
         }
       ]
+    },
+    "briefing": {
+      "why": "The OSI model is the universal framework for understanding how networks work. Every protocol, every packet, and every troubleshooting step maps to an OSI layer. This is the most-tested concept on the CCNA.",
+      "concepts": [
+        "OSI 7-Layer Model",
+        "Encapsulation",
+        "PDU Names",
+        "Layer Functions",
+        "Packet Trace"
+      ],
+      "learningGoal": "You'll trace a packet through the OSI layers and understand what happens at each step — from application data to bits on the wire."
+    },
+    "feedback": {
+      "obj1": {
+        "hint": "Use the Packet Inspector to send a packet and observe each OSI layer.",
+        "onFail": "Not all layers are accounted for. Send a packet and examine how it's encapsulated at each layer.",
+        "onPass": "You've identified the correct encapsulation at each OSI layer."
+      },
+      "obj2": {
+        "hint": "Layer 3 adds the IP header. Check the source and destination IP addresses.",
+        "onFail": "Layer 3 (Network) information is incorrect. Verify the IP addresses in the packet.",
+        "onPass": "Correct! The Network layer adds IP addressing for end-to-end delivery."
+      },
+      "obj3": {
+        "hint": "Layer 2 adds the frame header with MAC addresses.",
+        "onFail": "Layer 2 (Data Link) information is incorrect. Check the MAC addresses.",
+        "onPass": "Correct! The Data Link layer uses MAC addresses for hop-by-hop delivery."
+      },
+      "obj4": {
+        "hint": "The full packet trace shows how data moves through the network.",
+        "onFail": "The packet trace isn't complete. Make sure devices are configured so the packet can traverse the full path.",
+        "onPass": "Complete packet trace! You can see how encapsulation works across all layers."
+      }
     }
   },
   {
@@ -1700,6 +1917,39 @@ export const LEVELS = [
           "status": "up"
         }
       ]
+    },
+    "briefing": {
+      "why": "MAC addresses are the hardware identity of every network interface. Switches use MAC address tables to forward frames efficiently — understanding this is essential for troubleshooting Layer 2 issues.",
+      "concepts": [
+        "MAC Addresses",
+        "Ethernet Frames",
+        "Layer 2 Switching",
+        "MAC Address Table",
+        "ARP"
+      ],
+      "learningGoal": "You'll understand how switches learn MAC addresses and forward Ethernet frames to the correct port."
+    },
+    "feedback": {
+      "obj1": {
+        "hint": "Each interface has a unique MAC address. Check the device properties panel.",
+        "onFail": "MAC address configuration issue detected. Each interface must have a unique hardware address.",
+        "onPass": "MAC addresses are correctly assigned to all interfaces."
+      },
+      "obj2": {
+        "hint": "Switches learn MAC addresses by examining the source MAC of incoming frames.",
+        "onFail": "The switch hasn't learned the expected MAC addresses. Ensure devices are connected and sending traffic.",
+        "onPass": "Switch MAC address table is populated correctly."
+      },
+      "obj3": {
+        "hint": "After MAC learning, the switch forwards frames only to the correct port — not flooding.",
+        "onFail": "Frame forwarding isn't working correctly. Check link connections and interface status.",
+        "onPass": "Correct! Frames are forwarded to the right port based on the MAC address table."
+      },
+      "obj4": {
+        "hint": "Send a ping to generate ARP and data frames, then inspect the Ethernet headers.",
+        "onFail": "Connectivity check failed. Ensure all links are up and IPs are configured.",
+        "onPass": "End-to-end Layer 2 communication working — frames are delivered based on MAC addresses!"
+      }
     }
   },
   {
@@ -2027,6 +2277,50 @@ export const LEVELS = [
           "status": "up"
         }
       ]
+    },
+    "briefing": {
+      "why": "IPv4 addressing goes beyond simple unicast. Understanding broadcast, multicast, and special address ranges is critical for network design and troubleshooting.",
+      "concepts": [
+        "IPv4 Unicast",
+        "Broadcast Address",
+        "Multicast (224.0.0.0/4)",
+        "Network vs Host Portion",
+        "IP Classes",
+        "Special Addresses"
+      ],
+      "learningGoal": "You'll identify and configure different types of IPv4 addresses and understand when each type is used in real networks."
+    },
+    "feedback": {
+      "obj1": {
+        "hint": "Assign a standard unicast address to the device.",
+        "onFail": "Unicast address not configured correctly.",
+        "onPass": "Unicast address assigned correctly."
+      },
+      "obj2": {
+        "hint": "The broadcast address is the last address in the subnet.",
+        "onFail": "Broadcast address identification is incorrect.",
+        "onPass": "Correct broadcast address identified."
+      },
+      "obj3": {
+        "hint": "Multicast addresses start at 224.0.0.0.",
+        "onFail": "Multicast configuration is not correct.",
+        "onPass": "Multicast address configured correctly."
+      },
+      "obj4": {
+        "hint": "Verify connectivity between configured devices.",
+        "onFail": "Connectivity check failed between devices.",
+        "onPass": "All devices can communicate as expected."
+      },
+      "obj5": {
+        "hint": "Check the network vs host portions of each address.",
+        "onFail": "Address classification is incorrect.",
+        "onPass": "Address classification is correct."
+      },
+      "obj6": {
+        "hint": "Verify the complete addressing scheme.",
+        "onFail": "Some addresses need correction.",
+        "onPass": "Complete addressing scheme is correct!"
+      }
     }
   },
   {
@@ -2176,6 +2470,35 @@ export const LEVELS = [
           "status": "up"
         }
       ]
+    },
+    "briefing": {
+      "why": "IPv6 is the future of networking — IPv4 addresses are exhausted. Every modern network runs dual-stack, and CCNA tests IPv6 heavily. Global Unicast Addresses (GUA) are the IPv6 equivalent of public IPv4 addresses.",
+      "concepts": [
+        "IPv6 GUA",
+        "128-bit Addressing",
+        "/64 Prefix",
+        "Hexadecimal Notation",
+        "Link-Local Addresses",
+        "Dual Stack"
+      ],
+      "learningGoal": "You'll assign IPv6 Global Unicast Addresses to devices and verify connectivity — your first step into IPv6 networking."
+    },
+    "feedback": {
+      "obj1": {
+        "hint": "Assign 2001:db8:acad:1::10/64 to PC1. Use the terminal: ipv6 address 2001:db8:acad:1::10/64",
+        "onFail": "PC1 doesn't have the correct IPv6 GUA. Expected: 2001:db8:acad:1::10/64",
+        "onPass": "PC1 has the correct IPv6 Global Unicast Address in the 2001:db8:acad:1::/64 network."
+      },
+      "obj2": {
+        "hint": "Assign 2001:db8:acad:1::20/64 to PC2.",
+        "onFail": "PC2 doesn't have the correct IPv6 GUA. Expected: 2001:db8:acad:1::20/64",
+        "onPass": "PC2 has the correct IPv6 GUA — both devices share the same /64 prefix."
+      },
+      "obj3": {
+        "hint": "Ping PC2's IPv6 address from PC1: ping 2001:db8:acad:1::20",
+        "onFail": "IPv6 ping failed. Ensure both PCs have GUAs in the same /64 prefix and are connected via the switch.",
+        "onPass": "IPv6 connectivity works! Both PCs communicate using Global Unicast Addresses."
+      }
     }
   },
   {
@@ -2482,6 +2805,39 @@ export const LEVELS = [
           "status": "up"
         }
       ]
+    },
+    "briefing": {
+      "why": "VLSM is how real network engineers design IP addressing plans. Instead of wasting addresses with fixed subnets, VLSM lets you allocate different-sized subnets from a single address block — maximizing efficiency.",
+      "concepts": [
+        "VLSM",
+        "Variable-Length Subnetting",
+        "Address Planning",
+        "Subnet Size Optimization",
+        "Network Design"
+      ],
+      "learningGoal": "You'll design a VLSM addressing scheme that allocates subnets of different sizes to match actual department needs."
+    },
+    "feedback": {
+      "obj1": {
+        "hint": "Start with the largest subnet requirement and work down.",
+        "onFail": "Subnet allocation doesn't match requirements. Sort by size and allocate largest first.",
+        "onPass": "Largest subnet correctly allocated."
+      },
+      "obj2": {
+        "hint": "Each subnet boundary must align to the block size.",
+        "onFail": "Subnet boundary alignment error. Next subnet starts at previous broadcast + 1.",
+        "onPass": "Subnet boundaries are correctly aligned."
+      },
+      "obj3": {
+        "hint": "Point-to-point WAN links use /30 (2 usable hosts).",
+        "onFail": "WAN link subnet is incorrect. Use /30 for point-to-point links.",
+        "onPass": "WAN link correctly uses /30 addressing."
+      },
+      "obj4": {
+        "hint": "Verify all subnets fit within the parent address block without overlap.",
+        "onFail": "Subnets overlap or exceed the address space. Review your VLSM calculations.",
+        "onPass": "All subnets fit perfectly with no overlap — efficient VLSM design!"
+      }
     }
   },
   {
@@ -2703,6 +3059,40 @@ export const LEVELS = [
           "status": "up"
         }
       ]
+    },
+    "briefing": {
+      "why": "ICMP tools like ping and traceroute are the first things you reach for when troubleshooting network problems. Understanding how they work helps you diagnose where connectivity breaks down.",
+      "concepts": [
+        "ICMP",
+        "Ping",
+        "Traceroute",
+        "TTL",
+        "Echo Request/Reply",
+        "Destination Unreachable"
+      ],
+      "learningGoal": "You'll use ICMP ping and traceroute to test connectivity and identify the path packets take through a multi-hop network."
+    },
+    "feedback": {
+      "obj1": {
+        "hint": "Use the terminal to ping across the network.",
+        "onFail": "Ping test failed. Check IP configuration and routing.",
+        "onPass": "Ping successful — ICMP echo reply received."
+      },
+      "obj2": {
+        "hint": "Traceroute shows each router hop along the path.",
+        "onFail": "Traceroute didn't complete. Verify routing tables on intermediate routers.",
+        "onPass": "Traceroute shows the complete path through all hops."
+      },
+      "obj3": {
+        "hint": "Check TTL values in the packet inspector.",
+        "onFail": "TTL verification failed.",
+        "onPass": "TTL values correctly decrement at each hop."
+      },
+      "obj4": {
+        "hint": "Test connectivity in both directions.",
+        "onFail": "Bidirectional connectivity not working.",
+        "onPass": "Full bidirectional ICMP connectivity verified!"
+      }
     }
   },
   {
@@ -2896,6 +3286,1111 @@ export const LEVELS = [
           "status": "up"
         }
       ]
+    },
+    "briefing": {
+      "why": "TCP and UDP are the two transport protocols that carry all application data. TCP provides reliable, ordered delivery (web, email, file transfer), while UDP provides fast, connectionless delivery (voice, video, DNS).",
+      "concepts": [
+        "TCP",
+        "UDP",
+        "Transport Layer",
+        "Port Numbers",
+        "3-Way Handshake",
+        "Segments vs Datagrams"
+      ],
+      "learningGoal": "You'll understand the difference between TCP and UDP, how port numbers work, and when each protocol is used."
+    },
+    "feedback": {
+      "obj1": {
+        "hint": "TCP uses a 3-way handshake: SYN → SYN-ACK → ACK.",
+        "onFail": "TCP configuration not correct.",
+        "onPass": "TCP connection established with proper handshake."
+      },
+      "obj2": {
+        "hint": "UDP is connectionless — no handshake needed.",
+        "onFail": "UDP configuration needs adjustment.",
+        "onPass": "UDP datagram delivery working correctly."
+      },
+      "obj3": {
+        "hint": "Well-known ports: HTTP=80, HTTPS=443, DNS=53, FTP=21.",
+        "onFail": "Port number assignment is incorrect.",
+        "onPass": "Port numbers correctly assigned to services."
+      },
+      "obj4": {
+        "hint": "Send both TCP and UDP packets and compare in the inspector.",
+        "onFail": "Not all transport layer objectives met.",
+        "onPass": "Both TCP and UDP transport working — you understand the transport layer!"
+      }
+    }
+  },
+  {
+    "id": 14,
+    "title": "Wireless Networking (WLAN)",
+    "topic": "Wireless / 802.11",
+    "description": "Configure the Home Gateway with a secure SSID. Connect the Wireless PC to the WiFi network, then verify connectivity to the wired PC.",
+    "ccnaRef": "CCNA ITN: Module 12 – WLAN Concepts",
+    "sandboxMode": false,
+    "objectives": [
+      {
+        "id": "obj1",
+        "desc": "Home Gateway has SSID 'Corp-WiFi'"
+      },
+      {
+        "id": "obj2",
+        "desc": "Wireless PC connects to 'Corp-WiFi'"
+      },
+      {
+        "id": "obj3",
+        "desc": "Wireless PC can ping Wired PC"
+      }
+    ],
+    "requirements": [
+      {
+        "id": "obj1",
+        "type": "custom",
+        "desc": "SSID is Corp-WiFi",
+        "check": "device('hg-1').ssid === 'Corp-WiFi'"
+      },
+      {
+        "id": "obj2",
+        "type": "custom",
+        "desc": "Wireless PC is connected to Corp-WiFi",
+        "check": "device('pc-wlan').config.ssid === 'Corp-WiFi'"
+      },
+      {
+        "id": "obj3",
+        "type": "ping",
+        "desc": "Ping from Wireless PC to Wired PC",
+        "srcDeviceId": "pc-wlan",
+        "dstIp": "192.168.1.10"
+      }
+    ],
+    "hints": [
+      "Select the Home Gateway and change the SSID in its config panel to 'Corp-WiFi'.",
+      "Select the Wireless PC, configure its wireless interface to use the 'Corp-WiFi' SSID.",
+      "Ensure both PCs have IPs in the 192.168.1.0/24 network (or use DHCP)."
+    ],
+    "topology": {
+      "devices": [
+        {
+          "id": "hg-1",
+          "type": "homegateway",
+          "hostname": "HomeRouter",
+          "x": 400,
+          "y": 200,
+          "interfaces": [
+            {
+              "name": "Ethernet1",
+              "shortName": "LAN1",
+              "status": "up",
+              "ipAddress": "192.168.1.1",
+              "subnetMask": "255.255.255.0"
+            },
+            {
+              "name": "Wireless 2.4GHz",
+              "shortName": "WiFi-2.4G",
+              "status": "up"
+            }
+          ],
+          "config": {
+            "ssid": "Default-WiFi",
+            "dhcpEnabled": true
+          }
+        },
+        {
+          "id": "pc-wired",
+          "type": "pc",
+          "hostname": "Wired-PC",
+          "x": 200,
+          "y": 300,
+          "interfaces": [
+            {
+              "name": "FastEthernet0",
+              "shortName": "Fa0",
+              "status": "up",
+              "ipAddress": "192.168.1.10",
+              "subnetMask": "255.255.255.0"
+            }
+          ],
+          "config": {
+            "defaultGateway": "192.168.1.1"
+          }
+        },
+        {
+          "id": "pc-wlan",
+          "type": "pc",
+          "hostname": "Wireless-PC",
+          "x": 600,
+          "y": 300,
+          "interfaces": [
+            {
+              "name": "Wireless0",
+              "shortName": "WLAN0",
+              "status": "up",
+              "ipAddress": "192.168.1.20",
+              "subnetMask": "255.255.255.0"
+            }
+          ],
+          "config": {
+            "defaultGateway": "192.168.1.1",
+            "ssid": ""
+          }
+        }
+      ],
+      "links": [
+        {
+          "id": "l-w1",
+          "sourceDeviceId": "pc-wired",
+          "sourceInterface": "FastEthernet0",
+          "destDeviceId": "hg-1",
+          "destInterface": "Ethernet1",
+          "type": "ethernet",
+          "status": "up"
+        },
+        {
+          "id": "l-w2",
+          "sourceDeviceId": "pc-wlan",
+          "sourceInterface": "Wireless0",
+          "destDeviceId": "hg-1",
+          "destInterface": "Wireless 2.4GHz",
+          "type": "wireless",
+          "cableType": "wireless",
+          "status": "up"
+        }
+      ]
+    },
+    "briefing": {
+      "why": "Wireless networking is everywhere — homes, offices, cafes. Understanding WLAN configuration, SSIDs, and security is essential for any network professional. The CCNA tests wireless concepts extensively.",
+      "concepts": [
+        "802.11 WiFi",
+        "SSID",
+        "WPA2 Security",
+        "Access Points",
+        "Wireless Clients",
+        "2.4 GHz / 5 GHz"
+      ],
+      "learningGoal": "You'll configure a wireless network with a custom SSID and connect a wireless client to verify WiFi connectivity."
+    },
+    "feedback": {
+      "obj1": {
+        "hint": "Select the Home Gateway and change the SSID to 'Corp-WiFi' in its configuration.",
+        "onFail": "The Home Gateway SSID is not 'Corp-WiFi'. Select it and update the wireless settings.",
+        "onPass": "SSID 'Corp-WiFi' is configured on the Home Gateway."
+      },
+      "obj2": {
+        "hint": "Select the Wireless PC and set its wireless interface SSID to 'Corp-WiFi' to connect.",
+        "onFail": "The Wireless PC is not connected to 'Corp-WiFi'. Set its SSID to match the gateway.",
+        "onPass": "Wireless PC is connected to the 'Corp-WiFi' network."
+      },
+      "obj3": {
+        "hint": "Both PCs need IPs in the same subnet. The Home Gateway provides DHCP.",
+        "onFail": "Ping between wireless and wired PCs failed. Ensure both have valid IPs in 192.168.1.0/24.",
+        "onPass": "Wireless and wired PCs can communicate — your WLAN is fully functional!"
+      }
+    }
+  },
+  {
+    "id": 15,
+    "title": "Firewall Security Zones",
+    "topic": "Network Security / Firewalls",
+    "description": "Configure the Inside and Outside interfaces on the ASA Firewall. Verify that the Inside PC can reach the Outside Server.",
+    "ccnaRef": "CCNA Sec: Firewalls and IPS",
+    "sandboxMode": false,
+    "objectives": [
+      {
+        "id": "obj1",
+        "desc": "Firewall G1/1 (Outside) IP is 203.0.113.1/30"
+      },
+      {
+        "id": "obj2",
+        "desc": "Firewall G1/2 (Inside) IP is 192.168.1.1/24"
+      },
+      {
+        "id": "obj3",
+        "desc": "Inside PC can ping Outside Server (203.0.113.2)"
+      }
+    ],
+    "requirements": [
+      {
+        "id": "obj1",
+        "type": "subnet",
+        "desc": "FW1 G1/1 is 203.0.113.1/30",
+        "hostname": "FW1",
+        "interface": "G1/1",
+        "expectedNetwork": "203.0.113.0",
+        "expectedMask": "255.255.255.252"
+      },
+      {
+        "id": "obj2",
+        "type": "subnet",
+        "desc": "FW1 G1/2 is 192.168.1.1/24",
+        "hostname": "FW1",
+        "interface": "G1/2",
+        "expectedNetwork": "192.168.1.0",
+        "expectedMask": "255.255.255.0"
+      },
+      {
+        "id": "obj3",
+        "type": "ping",
+        "desc": "Inside PC to Outside Server",
+        "srcDeviceId": "pc-in",
+        "dstIp": "203.0.113.2"
+      }
+    ],
+    "hints": [
+      "Select FW1, go to the Interfaces tab, and configure G1/1 (Outside) and G1/2 (Inside) IPs.",
+      "Ensure both interfaces are enabled (Status: up).",
+      "Test ping from PC-Inside to Server-Outside. The firewall will automatically permit outbound ICMP and its return traffic."
+    ],
+    "topology": {
+      "devices": [
+        {
+          "id": "fw-1",
+          "type": "firewall",
+          "hostname": "FW1",
+          "x": 480,
+          "y": 300,
+          "interfaces": [
+            {
+              "name": "GigabitEthernet1/1",
+              "shortName": "G1/1",
+              "status": "down",
+              "ipAddress": "",
+              "subnetMask": ""
+            },
+            {
+              "name": "GigabitEthernet1/2",
+              "shortName": "G1/2",
+              "status": "down",
+              "ipAddress": "",
+              "subnetMask": ""
+            }
+          ],
+          "config": {}
+        },
+        {
+          "id": "pc-in",
+          "type": "pc",
+          "hostname": "PC-Inside",
+          "x": 240,
+          "y": 300,
+          "interfaces": [
+            {
+              "name": "FastEthernet0",
+              "shortName": "Fa0",
+              "status": "up",
+              "ipAddress": "192.168.1.10",
+              "subnetMask": "255.255.255.0"
+            }
+          ],
+          "config": {
+            "defaultGateway": "192.168.1.1"
+          }
+        },
+        {
+          "id": "srv-out",
+          "type": "server",
+          "hostname": "Server-Outside",
+          "x": 720,
+          "y": 300,
+          "interfaces": [
+            {
+              "name": "FastEthernet0",
+              "shortName": "Fa0",
+              "status": "up",
+              "ipAddress": "203.0.113.2",
+              "subnetMask": "255.255.255.252"
+            }
+          ],
+          "config": {
+            "defaultGateway": "203.0.113.1"
+          }
+        }
+      ],
+      "links": [
+        {
+          "id": "l-fw1",
+          "sourceDeviceId": "pc-in",
+          "sourceInterface": "FastEthernet0",
+          "destDeviceId": "fw-1",
+          "destInterface": "GigabitEthernet1/2",
+          "type": "ethernet",
+          "status": "up"
+        },
+        {
+          "id": "l-fw2",
+          "sourceDeviceId": "fw-1",
+          "sourceInterface": "GigabitEthernet1/1",
+          "destDeviceId": "srv-out",
+          "destInterface": "FastEthernet0",
+          "type": "ethernet",
+          "status": "up"
+        }
+      ]
+    },
+    "briefing": {
+      "why": "Firewalls are the frontline of network security. They control which traffic is allowed in and out, protecting internal networks from unauthorized access. Every enterprise network has firewall policies.",
+      "concepts": [
+        "Firewalls",
+        "Security Zones",
+        "ACLs",
+        "Inside/Outside Zones",
+        "Traffic Filtering",
+        "Network Security"
+      ],
+      "learningGoal": "You'll configure firewall security zones and rules to control traffic flow between trusted and untrusted networks."
+    },
+    "feedback": {
+      "obj1": {
+        "hint": "Define the inside (trusted) and outside (untrusted) zones on the firewall.",
+        "onFail": "Security zones not configured correctly on the firewall.",
+        "onPass": "Firewall security zones are properly defined."
+      },
+      "obj2": {
+        "hint": "Create rules to allow internal traffic out and block unauthorized inbound traffic.",
+        "onFail": "Firewall rules are not filtering traffic correctly.",
+        "onPass": "Firewall rules correctly permit and deny the right traffic."
+      },
+      "obj3": {
+        "hint": "Test that internal hosts can reach external services while external access is blocked.",
+        "onFail": "Security policy verification failed. Check zone assignments and rules.",
+        "onPass": "Firewall security is working — internal traffic flows out, unauthorized inbound is blocked!"
+      }
+    }
+  },
+  {
+    "id": 16,
+    "title": "Collision Domains: Hubs vs Switches",
+    "topic": "Physical Layer / Ethernet",
+    "description": "A Hub and a Switch are connected. Assign IPs to PC1 and PC3. Then use the Packet Trace tab to observe how ping traffic differs when passing through a Hub (Layer 1) vs a Switch (Layer 2).",
+    "ccnaRef": "CCNA ITN: Ethernet Switching",
+    "sandboxMode": false,
+    "objectives": [
+      {
+        "id": "obj1",
+        "desc": "PC1 has IP 10.0.0.10/24"
+      },
+      {
+        "id": "obj2",
+        "desc": "PC3 has IP 10.0.0.30/24"
+      },
+      {
+        "id": "obj3",
+        "desc": "PC1 can ping PC3"
+      }
+    ],
+    "requirements": [
+      {
+        "id": "obj1",
+        "type": "subnet",
+        "desc": "PC1 IP",
+        "hostname": "PC1",
+        "interface": "Fa0",
+        "expectedNetwork": "10.0.0.0",
+        "expectedMask": "255.255.255.0"
+      },
+      {
+        "id": "obj2",
+        "type": "subnet",
+        "desc": "PC3 IP",
+        "hostname": "PC3",
+        "interface": "Fa0",
+        "expectedNetwork": "10.0.0.0",
+        "expectedMask": "255.255.255.0"
+      },
+      {
+        "id": "obj3",
+        "type": "ping",
+        "desc": "PC1 to PC3",
+        "srcDeviceId": "pc-1",
+        "dstIp": "10.0.0.30"
+      }
+    ],
+    "hints": [
+      "Assign 10.0.0.10 to PC1 and 10.0.0.30 to PC3. PC2 is already configured with 10.0.0.20.",
+      "After pinging from the Terminal, switch to the 'Packet Trace' tab at the bottom to watch the ICMP packets.",
+      "Notice how the Hub broadcasts frames to all connected ports, while the Switch learns MAC addresses and forwards only to the specific destination."
+    ],
+    "topology": {
+      "devices": [
+        {
+          "id": "hub-1",
+          "type": "hub",
+          "hostname": "Hub1",
+          "x": 300,
+          "y": 200,
+          "interfaces": [
+            {
+              "name": "FastEthernet0/0",
+              "shortName": "Fa0/0",
+              "status": "up"
+            },
+            {
+              "name": "FastEthernet0/1",
+              "shortName": "Fa0/1",
+              "status": "up"
+            },
+            {
+              "name": "FastEthernet0/2",
+              "shortName": "Fa0/2",
+              "status": "up"
+            }
+          ],
+          "config": {}
+        },
+        {
+          "id": "sw-1",
+          "type": "switch",
+          "hostname": "SW1",
+          "x": 600,
+          "y": 200,
+          "interfaces": [
+            {
+              "name": "FastEthernet0/0",
+              "shortName": "Fa0/0",
+              "status": "up"
+            },
+            {
+              "name": "FastEthernet0/1",
+              "shortName": "Fa0/1",
+              "status": "up"
+            },
+            {
+              "name": "FastEthernet0/2",
+              "shortName": "Fa0/2",
+              "status": "up"
+            }
+          ],
+          "config": {}
+        },
+        {
+          "id": "pc-1",
+          "type": "pc",
+          "hostname": "PC1",
+          "x": 150,
+          "y": 350,
+          "interfaces": [
+            {
+              "name": "FastEthernet0",
+              "shortName": "Fa0",
+              "status": "up",
+              "ipAddress": "",
+              "subnetMask": ""
+            }
+          ],
+          "config": {}
+        },
+        {
+          "id": "pc-2",
+          "type": "pc",
+          "hostname": "PC2",
+          "x": 450,
+          "y": 350,
+          "interfaces": [
+            {
+              "name": "FastEthernet0",
+              "shortName": "Fa0",
+              "status": "up",
+              "ipAddress": "10.0.0.20",
+              "subnetMask": "255.255.255.0"
+            }
+          ],
+          "config": {}
+        },
+        {
+          "id": "pc-3",
+          "type": "pc",
+          "hostname": "PC3",
+          "x": 750,
+          "y": 350,
+          "interfaces": [
+            {
+              "name": "FastEthernet0",
+              "shortName": "Fa0",
+              "status": "up",
+              "ipAddress": "",
+              "subnetMask": ""
+            }
+          ],
+          "config": {}
+        }
+      ],
+      "links": [
+        {
+          "id": "l-1",
+          "sourceDeviceId": "pc-1",
+          "sourceInterface": "FastEthernet0",
+          "destDeviceId": "hub-1",
+          "destInterface": "FastEthernet0/0",
+          "type": "ethernet",
+          "status": "up"
+        },
+        {
+          "id": "l-2",
+          "sourceDeviceId": "hub-1",
+          "sourceInterface": "FastEthernet0/1",
+          "destDeviceId": "sw-1",
+          "destInterface": "FastEthernet0/0",
+          "type": "ethernet",
+          "status": "up"
+        },
+        {
+          "id": "l-3",
+          "sourceDeviceId": "sw-1",
+          "sourceInterface": "FastEthernet0/1",
+          "destDeviceId": "pc-2",
+          "destInterface": "FastEthernet0",
+          "type": "ethernet",
+          "status": "up"
+        },
+        {
+          "id": "l-4",
+          "sourceDeviceId": "sw-1",
+          "sourceInterface": "FastEthernet0/2",
+          "destDeviceId": "pc-3",
+          "destInterface": "FastEthernet0",
+          "type": "ethernet",
+          "status": "up"
+        }
+      ]
+    },
+    "briefing": {
+      "why": "Understanding collision domains is fundamental to why we moved from hubs to switches. Hubs create one big collision domain where only one device can transmit at a time, while switches give each port its own collision domain.",
+      "concepts": [
+        "Collision Domains",
+        "Hubs vs Switches",
+        "CSMA/CD",
+        "Half-Duplex vs Full-Duplex",
+        "Physical Layer",
+        "Ethernet Evolution"
+      ],
+      "learningGoal": "You'll see the difference between hub and switch behavior and understand why switches replaced hubs in modern networks."
+    },
+    "feedback": {
+      "obj1": {
+        "hint": "Connect PCs through a hub and observe collision domain behavior.",
+        "onFail": "Hub topology not configured correctly.",
+        "onPass": "Hub topology shows single collision domain — all devices share bandwidth."
+      },
+      "obj2": {
+        "hint": "Connect PCs through a switch and compare the behavior.",
+        "onFail": "Switch topology not configured correctly.",
+        "onPass": "Switch creates separate collision domains per port — much more efficient!"
+      },
+      "obj3": {
+        "hint": "Test connectivity through both topologies to see the practical difference.",
+        "onFail": "Connectivity test failed. Check all links and IP configurations.",
+        "onPass": "You can see why switches replaced hubs — dedicated bandwidth per port!"
+      }
+    }
+  },
+  {
+    "id": 17,
+    "title": "Spanning Tree Protocol (STP)",
+    "topic": "Layer 2 Redundancy",
+    "description": "Three switches are connected in a loop to provide redundancy. STP will automatically block one port to prevent a broadcast storm. Configure the PCs and ping to verify connectivity.",
+    "ccnaRef": "CCNA SRWE: STP Concepts",
+    "sandboxMode": false,
+    "objectives": [
+      {
+        "id": "obj1",
+        "desc": "PC1 has IP 172.16.0.10/16"
+      },
+      {
+        "id": "obj2",
+        "desc": "PC2 has IP 172.16.0.20/16"
+      },
+      {
+        "id": "obj3",
+        "desc": "PC1 can ping PC2"
+      }
+    ],
+    "requirements": [
+      {
+        "id": "obj1",
+        "type": "subnet",
+        "desc": "PC1 IP",
+        "hostname": "PC1",
+        "interface": "Fa0",
+        "expectedNetwork": "172.16.0.0",
+        "expectedMask": "255.255.0.0"
+      },
+      {
+        "id": "obj2",
+        "type": "subnet",
+        "desc": "PC2 IP",
+        "hostname": "PC2",
+        "interface": "Fa0",
+        "expectedNetwork": "172.16.0.0",
+        "expectedMask": "255.255.0.0"
+      },
+      {
+        "id": "obj3",
+        "type": "ping",
+        "desc": "PC1 to PC2",
+        "srcDeviceId": "pc-1",
+        "dstIp": "172.16.0.20"
+      }
+    ],
+    "hints": [
+      "Assign the IP addresses to the PCs.",
+      "Notice the orange/amber link light on one of the switch ports. STP has put that port in a blocking state to break the Layer 2 loop.",
+      "Ping from PC1 to PC2. The traffic will flow around the blocked link."
+    ],
+    "topology": {
+      "devices": [
+        {
+          "id": "sw-1",
+          "type": "switch",
+          "hostname": "SW1",
+          "x": 450,
+          "y": 150,
+          "interfaces": [
+            {
+              "name": "GigabitEthernet0/1",
+              "shortName": "G0/1",
+              "status": "up"
+            },
+            {
+              "name": "GigabitEthernet0/2",
+              "shortName": "G0/2",
+              "status": "up"
+            },
+            {
+              "name": "FastEthernet0/1",
+              "shortName": "Fa0/1",
+              "status": "up"
+            }
+          ],
+          "config": {
+            "stpPriority": 4096
+          }
+        },
+        {
+          "id": "sw-2",
+          "type": "switch",
+          "hostname": "SW2",
+          "x": 250,
+          "y": 350,
+          "interfaces": [
+            {
+              "name": "GigabitEthernet0/1",
+              "shortName": "G0/1",
+              "status": "up"
+            },
+            {
+              "name": "GigabitEthernet0/2",
+              "shortName": "G0/2",
+              "status": "up"
+            }
+          ],
+          "config": {}
+        },
+        {
+          "id": "sw-3",
+          "type": "switch",
+          "hostname": "SW3",
+          "x": 650,
+          "y": 350,
+          "interfaces": [
+            {
+              "name": "GigabitEthernet0/1",
+              "shortName": "G0/1",
+              "status": "up"
+            },
+            {
+              "name": "GigabitEthernet0/2",
+              "shortName": "G0/2",
+              "status": "up"
+            },
+            {
+              "name": "FastEthernet0/1",
+              "shortName": "Fa0/1",
+              "status": "up"
+            }
+          ],
+          "config": {}
+        },
+        {
+          "id": "pc-1",
+          "type": "pc",
+          "hostname": "PC1",
+          "x": 450,
+          "y": 50,
+          "interfaces": [
+            {
+              "name": "FastEthernet0",
+              "shortName": "Fa0",
+              "status": "up",
+              "ipAddress": "",
+              "subnetMask": ""
+            }
+          ],
+          "config": {}
+        },
+        {
+          "id": "pc-2",
+          "type": "pc",
+          "hostname": "PC2",
+          "x": 800,
+          "y": 350,
+          "interfaces": [
+            {
+              "name": "FastEthernet0",
+              "shortName": "Fa0",
+              "status": "up",
+              "ipAddress": "",
+              "subnetMask": ""
+            }
+          ],
+          "config": {}
+        }
+      ],
+      "links": [
+        {
+          "id": "l-1",
+          "sourceDeviceId": "pc-1",
+          "sourceInterface": "FastEthernet0",
+          "destDeviceId": "sw-1",
+          "destInterface": "FastEthernet0/1",
+          "type": "ethernet",
+          "status": "up"
+        },
+        {
+          "id": "l-2",
+          "sourceDeviceId": "sw-1",
+          "sourceInterface": "GigabitEthernet0/1",
+          "destDeviceId": "sw-2",
+          "destInterface": "GigabitEthernet0/1",
+          "type": "ethernet",
+          "status": "up"
+        },
+        {
+          "id": "l-3",
+          "sourceDeviceId": "sw-2",
+          "sourceInterface": "GigabitEthernet0/2",
+          "destDeviceId": "sw-3",
+          "destInterface": "GigabitEthernet0/2",
+          "type": "ethernet",
+          "status": "up"
+        },
+        {
+          "id": "l-4",
+          "sourceDeviceId": "sw-3",
+          "sourceInterface": "GigabitEthernet0/1",
+          "destDeviceId": "sw-1",
+          "destInterface": "GigabitEthernet0/2",
+          "type": "ethernet",
+          "status": "up"
+        },
+        {
+          "id": "l-5",
+          "sourceDeviceId": "sw-3",
+          "sourceInterface": "FastEthernet0/1",
+          "destDeviceId": "pc-2",
+          "destInterface": "FastEthernet0",
+          "type": "ethernet",
+          "status": "up"
+        }
+      ]
+    },
+    "briefing": {
+      "why": "STP prevents broadcast storms and loops in networks with redundant switch connections. Without STP, a single redundant link would crash your entire network within seconds. It's essential for high-availability designs.",
+      "concepts": [
+        "Spanning Tree Protocol",
+        "Bridge ID",
+        "Root Bridge",
+        "Port States",
+        "Loop Prevention",
+        "RSTP",
+        "Layer 2 Redundancy"
+      ],
+      "learningGoal": "You'll understand how STP elects a root bridge and blocks redundant ports to prevent switching loops while maintaining fault tolerance."
+    },
+    "feedback": {
+      "obj1": {
+        "hint": "STP automatically elects the root bridge based on the lowest Bridge ID (priority + MAC).",
+        "onFail": "Root bridge election not verified. Check bridge priorities.",
+        "onPass": "Root bridge correctly identified — lowest Bridge ID wins."
+      },
+      "obj2": {
+        "hint": "Non-root switches have root ports (best path to root) and designated/blocked ports.",
+        "onFail": "STP port roles are not correct. Verify root port and blocked port assignments.",
+        "onPass": "STP port roles are correct — root, designated, and blocked ports properly assigned."
+      },
+      "obj3": {
+        "hint": "Despite blocked ports, all devices should still be reachable through the spanning tree.",
+        "onFail": "Connectivity failed despite STP. Check that the tree provides a loop-free path to all devices.",
+        "onPass": "STP provides loop-free connectivity with redundancy — perfect Layer 2 design!"
+      }
+    }
+  },
+  {
+    "id": 18,
+    "title": "IPv6 Static Routing",
+    "topic": "IPv6 Routing",
+    "description": "Configure IPv6 static routes on R1 and R2 so that PC1 can communicate with PC2 over the IPv6 network.",
+    "ccnaRef": "CCNA SRWE: Module 2 - Static Routing",
+    "sandboxMode": false,
+    "objectives": [
+      {
+        "id": "obj1",
+        "desc": "R1 has an IPv6 static route to 2001:db8:2::/64 via 2001:db8:a::2"
+      },
+      {
+        "id": "obj2",
+        "desc": "R2 has an IPv6 static route to 2001:db8:1::/64 via 2001:db8:a::1"
+      },
+      {
+        "id": "obj3",
+        "desc": "PC1 can ping PC2 via IPv6"
+      }
+    ],
+    "requirements": [
+      {
+        "id": "obj1",
+        "type": "ipv6-route",
+        "desc": "R1 Static Route Configured",
+        "hostname": "R1",
+        "expectedNetwork": "2001:db8:2::",
+        "expectedPrefix": 64,
+        "expectedNextHop": "2001:db8:a::2"
+      },
+      {
+        "id": "obj2",
+        "type": "ipv6-route",
+        "desc": "R2 Static Route Configured",
+        "hostname": "R2",
+        "expectedNetwork": "2001:db8:1::",
+        "expectedPrefix": 64,
+        "expectedNextHop": "2001:db8:a::1"
+      },
+      {
+        "id": "obj3",
+        "type": "ping",
+        "desc": "PC1 → PC2 IPv6 ping",
+        "srcDeviceId": "pc-18a",
+        "dstIp": "2001:db8:2::10"
+      }
+    ],
+    "hints": [
+      "Ensure both routers have 'ipv6 unicast-routing' enabled.",
+      "On R1: ipv6 route 2001:db8:2::/64 2001:db8:a::2",
+      "On R2: ipv6 route 2001:db8:1::/64 2001:db8:a::1",
+      "Verify routes with 'show ipv6 route'.",
+      "Test connectivity by running 'ping 2001:db8:2::10' from PC1."
+    ],
+    "topology": {
+      "devices": [
+        {
+          "id": "pc-18a",
+          "type": "pc",
+          "hostname": "PC1",
+          "x": 100,
+          "y": 300,
+          "interfaces": [
+            {
+              "name": "FastEthernet0",
+              "shortName": "Fa0",
+              "status": "up",
+              "ipv6Address": "2001:db8:1::10",
+              "ipv6Prefix": 64,
+              "macAddress": "AA:BB:CC:18:00:01"
+            }
+          ],
+          "config": {
+            "defaultGatewayIPv6": "2001:db8:1::1"
+          }
+        },
+        {
+          "id": "sw-18a",
+          "type": "switch",
+          "hostname": "SW1",
+          "x": 300,
+          "y": 300,
+          "interfaces": [
+            {
+              "name": "FastEthernet0/1",
+              "shortName": "Fa0/1",
+              "status": "up",
+              "vlanId": 1
+            },
+            {
+              "name": "GigabitEthernet0/1",
+              "shortName": "G0/1",
+              "status": "up",
+              "vlanId": 1
+            }
+          ]
+        },
+        {
+          "id": "r-18a",
+          "type": "router",
+          "hostname": "R1",
+          "x": 500,
+          "y": 200,
+          "interfaces": [
+            {
+              "name": "GigabitEthernet0/0/0",
+              "shortName": "G0/0/0",
+              "status": "up",
+              "ipv6Address": "2001:db8:1::1",
+              "ipv6Prefix": 64
+            },
+            {
+              "name": "Serial0/0/0",
+              "shortName": "S0/0/0",
+              "status": "up",
+              "ipv6Address": "2001:db8:a::1",
+              "ipv6Prefix": 64
+            }
+          ],
+          "config": {
+            "ipv6UnicastRouting": true
+          }
+        },
+        {
+          "id": "r-18b",
+          "type": "router",
+          "hostname": "R2",
+          "x": 750,
+          "y": 200,
+          "interfaces": [
+            {
+              "name": "Serial0/0/0",
+              "shortName": "S0/0/0",
+              "status": "up",
+              "ipv6Address": "2001:db8:a::2",
+              "ipv6Prefix": 64
+            },
+            {
+              "name": "GigabitEthernet0/0/0",
+              "shortName": "G0/0/0",
+              "status": "up",
+              "ipv6Address": "2001:db8:2::1",
+              "ipv6Prefix": 64
+            }
+          ],
+          "config": {
+            "ipv6UnicastRouting": true
+          }
+        },
+        {
+          "id": "sw-18b",
+          "type": "switch",
+          "hostname": "SW2",
+          "x": 950,
+          "y": 300,
+          "interfaces": [
+            {
+              "name": "GigabitEthernet0/1",
+              "shortName": "G0/1",
+              "status": "up",
+              "vlanId": 1
+            },
+            {
+              "name": "FastEthernet0/1",
+              "shortName": "Fa0/1",
+              "status": "up",
+              "vlanId": 1
+            }
+          ]
+        },
+        {
+          "id": "pc-18b",
+          "type": "pc",
+          "hostname": "PC2",
+          "x": 1150,
+          "y": 300,
+          "interfaces": [
+            {
+              "name": "FastEthernet0",
+              "shortName": "Fa0",
+              "status": "up",
+              "ipv6Address": "2001:db8:2::10",
+              "ipv6Prefix": 64,
+              "macAddress": "AA:BB:CC:18:00:02"
+            }
+          ],
+          "config": {
+            "defaultGatewayIPv6": "2001:db8:2::1"
+          }
+        }
+      ],
+      "links": [
+        {
+          "id": "l18-1",
+          "sourceDeviceId": "pc-18a",
+          "sourceInterface": "FastEthernet0",
+          "destDeviceId": "sw-18a",
+          "destInterface": "FastEthernet0/1",
+          "type": "ethernet",
+          "status": "up"
+        },
+        {
+          "id": "l18-2",
+          "sourceDeviceId": "sw-18a",
+          "sourceInterface": "GigabitEthernet0/1",
+          "destDeviceId": "r-18a",
+          "destInterface": "GigabitEthernet0/0/0",
+          "type": "ethernet",
+          "status": "up"
+        },
+        {
+          "id": "l18-3",
+          "sourceDeviceId": "r-18a",
+          "sourceInterface": "Serial0/0/0",
+          "destDeviceId": "r-18b",
+          "destInterface": "Serial0/0/0",
+          "type": "serial",
+          "status": "up"
+        },
+        {
+          "id": "l18-4",
+          "sourceDeviceId": "r-18b",
+          "sourceInterface": "GigabitEthernet0/0/0",
+          "destDeviceId": "sw-18b",
+          "destInterface": "GigabitEthernet0/1",
+          "type": "ethernet",
+          "status": "up"
+        },
+        {
+          "id": "l18-5",
+          "sourceDeviceId": "sw-18b",
+          "sourceInterface": "FastEthernet0/1",
+          "destDeviceId": "pc-18b",
+          "destInterface": "FastEthernet0",
+          "type": "ethernet",
+          "status": "up"
+        }
+      ]
+    },
+    "briefing": {
+      "why": "As networks transition to IPv6, you need to know how to configure static routes for IPv6 — the syntax is different from IPv4 but the concepts are the same. Dual-stack environments require both.",
+      "concepts": [
+        "IPv6 Static Routes",
+        "ipv6 route command",
+        "Next-Hop Link-Local",
+        "IPv6 Routing Table",
+        "Dual Stack"
+      ],
+      "learningGoal": "You'll configure IPv6 static routes between routers so that IPv6 hosts on different networks can communicate across WAN links."
+    },
+    "feedback": {
+      "obj1": {
+        "hint": "Use: ipv6 route <destination-prefix> <next-hop-link-local or interface>",
+        "onFail": "IPv6 static route not found on the router. Configure it using the ipv6 route command.",
+        "onPass": "IPv6 static route correctly configured."
+      },
+      "obj2": {
+        "hint": "The remote router also needs a return route.",
+        "onFail": "Return IPv6 route is missing. Both routers need routes to each other's LANs.",
+        "onPass": "Bidirectional IPv6 routing is configured."
+      },
+      "obj3": {
+        "hint": "Ping the remote host's IPv6 address to verify end-to-end connectivity.",
+        "onFail": "IPv6 ping failed. Check routes on both routers and host IPv6 addresses.",
+        "onPass": "IPv6 end-to-end connectivity works! Static IPv6 routing is complete."
+      }
     }
   }
 ];

@@ -69,12 +69,14 @@ Device.registerType('switch', Switch);
 //  L3 Switch — inherits Switch + adds routing
 // ────────────────────────────────────────────────────────────────
 import { RoutingTable } from '../routing/RoutingTable.js';
+import { IPv6RoutingTable } from '../routing/IPv6RoutingTable.js';
 
 export class L3Switch extends Switch {
   constructor(opts = {}) {
     super(opts);
     this.type         = 'l3switch';
     this.routingTable = new RoutingTable(opts.routingTable || []);
+    this.ipv6RoutingTable = new IPv6RoutingTable(opts.ipv6RoutingTable || []);
   }
 
   toJSON() {
@@ -82,6 +84,8 @@ export class L3Switch extends Switch {
       ...super.toJSON(),
       type: 'l3switch',
       routingTable: this.routingTable.toJSON(),
+      ipv6RoutingTable: this.ipv6RoutingTable.toJSON(),
+      config: this.config
     };
   }
 }

@@ -2,12 +2,14 @@
 // Cisco ASA Adaptive Security Appliance (ASA 5505, ASA 5506-X) & Meraki MX Security Appliance (Meraki-MX65W)
 import { Device, Interface } from './Device.js';
 import { RoutingTable } from '../routing/RoutingTable.js';
+import { IPv6RoutingTable } from '../routing/IPv6RoutingTable.js';
 import { getModelSpec } from './DeviceModels.js';
 
 export class Firewall extends Device {
   constructor(opts = {}) {
     super(opts.type || 'firewall', opts);
     this.routingTable = new RoutingTable(opts.routingTable || []);
+    this.ipv6RoutingTable = new IPv6RoutingTable(opts.ipv6RoutingTable || []);
     this.securityZones = opts.config?.securityZones || {
       'inside': { securityLevel: 100 },
       'outside': { securityLevel: 0 },
@@ -35,6 +37,7 @@ export class Firewall extends Device {
     return {
       ...super.toJSON(),
       routingTable: this.routingTable.toJSON(),
+      ipv6RoutingTable: this.ipv6RoutingTable.toJSON(),
       config: {
         securityZones: this.securityZones,
         inspectRules: this.inspectRules,

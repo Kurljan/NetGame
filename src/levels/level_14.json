@@ -1,0 +1,137 @@
+{
+  "id": 14,
+  "title": "Wireless Networking (WLAN)",
+  "topic": "Wireless / 802.11",
+  "description": "Configure the Home Gateway with a secure SSID. Connect the Wireless PC to the WiFi network, then verify connectivity to the wired PC.",
+  "ccnaRef": "CCNA ITN: Module 12 – WLAN Concepts",
+  "sandboxMode": false,
+  "objectives": [
+    {
+      "id": "obj1",
+      "desc": "Home Gateway has SSID 'Corp-WiFi'"
+    },
+    {
+      "id": "obj2",
+      "desc": "Wireless PC connects to 'Corp-WiFi'"
+    },
+    {
+      "id": "obj3",
+      "desc": "Wireless PC can ping Wired PC"
+    }
+  ],
+  "requirements": [
+    {
+      "id": "obj1",
+      "type": "custom",
+      "desc": "SSID is Corp-WiFi",
+      "check": "device('hg-1').ssid === 'Corp-WiFi'"
+    },
+    {
+      "id": "obj2",
+      "type": "custom",
+      "desc": "Wireless PC is connected to Corp-WiFi",
+      "check": "device('pc-wlan').config.ssid === 'Corp-WiFi'"
+    },
+    {
+      "id": "obj3",
+      "type": "ping",
+      "desc": "Ping from Wireless PC to Wired PC",
+      "srcDeviceId": "pc-wlan",
+      "dstIp": "192.168.1.10"
+    }
+  ],
+  "hints": [
+    "Select the Home Gateway and change the SSID in its config panel to 'Corp-WiFi'.",
+    "Select the Wireless PC, configure its wireless interface to use the 'Corp-WiFi' SSID.",
+    "Ensure both PCs have IPs in the 192.168.1.0/24 network (or use DHCP)."
+  ],
+  "topology": {
+    "devices": [
+      {
+        "id": "hg-1",
+        "type": "homegateway",
+        "hostname": "HomeRouter",
+        "x": 400,
+        "y": 200,
+        "interfaces": [
+          {
+            "name": "Ethernet1",
+            "shortName": "LAN1",
+            "status": "up",
+            "ipAddress": "192.168.1.1",
+            "subnetMask": "255.255.255.0"
+          },
+          {
+            "name": "Wireless 2.4GHz",
+            "shortName": "WiFi-2.4G",
+            "status": "up"
+          }
+        ],
+        "config": {
+          "ssid": "Default-WiFi",
+          "dhcpEnabled": true
+        }
+      },
+      {
+        "id": "pc-wired",
+        "type": "pc",
+        "hostname": "Wired-PC",
+        "x": 200,
+        "y": 300,
+        "interfaces": [
+          {
+            "name": "FastEthernet0",
+            "shortName": "Fa0",
+            "status": "up",
+            "ipAddress": "192.168.1.10",
+            "subnetMask": "255.255.255.0"
+          }
+        ],
+        "config": {
+          "defaultGateway": "192.168.1.1"
+        }
+      },
+      {
+        "id": "pc-wlan",
+        "type": "pc",
+        "hostname": "Wireless-PC",
+        "x": 600,
+        "y": 300,
+        "interfaces": [
+          {
+            "name": "Wireless0",
+            "shortName": "WLAN0",
+            "status": "up",
+            "ipAddress": "192.168.1.20",
+            "subnetMask": "255.255.255.0"
+          }
+        ],
+        "config": {
+          "defaultGateway": "192.168.1.1",
+          "ssid": ""
+        }
+      }
+    ],
+    "links": [
+      {
+        "id": "l-w1",
+        "sourceDeviceId": "pc-wired",
+        "sourceInterface": "FastEthernet0",
+        "destDeviceId": "hg-1",
+        "destInterface": "Ethernet1",
+        "type": "ethernet",
+        "status": "up"
+      },
+      {
+        "id": "l-w2",
+        "sourceDeviceId": "pc-wlan",
+        "sourceInterface": "Wireless0",
+        "destDeviceId": "hg-1",
+        "destInterface": "Wireless 2.4GHz",
+        "type": "wireless",
+        "cableType": "wireless",
+        "status": "up"
+      }
+    ]
+  }
+}

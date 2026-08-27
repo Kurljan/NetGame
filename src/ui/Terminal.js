@@ -176,6 +176,37 @@ export class Terminal {
       return;
     }
 
+    // ── copy running-config startup-config ─────────────────
+    if (cmd === 'copy running-config startup-config' || cmd === 'copy run start') {
+      if (this._mode !== 'enable') { this._print('% Must be in privileged mode.', 'err'); return; }
+      this.device.startupConfig = this.device.toJSON();
+      this._print(`Building configuration...\n[OK]`, 'ok');
+      return;
+    }
+
+    // ── router ospf <id> ───────────────────────────────────
+    if (p0 === 'router' && p1 === 'ospf' && parts[2]) {
+      if (this._mode !== 'config') { this._print('% Must be in config mode.', 'err'); return; }
+      const id = parseInt(parts[2], 10);
+      if (!this.device.config) this.device.config = {};
+      if (!this.device.config.ospf) this.device.config.ospf = { processId: id, networks: [] };
+      this._mode = 'config-router';
+      this._curOspf = id;
+      this._updatePrompt();
+      return;
+    }
+
+    // ── network <ip> <wildcard> area <id> ──────────────────
+    if (p0 === 'network' && this._mode === 'config-router' && parts.length >= 5) {
+      if (parts[3] !== 'area') return;
+      const net = parts[1];
+      const wildcard = parts[2];
+      const area = parts[4];
+      this.device.config.ospf.networks.push({ network: net, wildcard, area });
+      this._print(`  Added OSPF network ${net} ${wildcard} to area ${area}`, 'ok');
+      return;
+    }
+
     // ── ipv6 unicast-routing ───────────────────────────────
     if (p0 === 'ipv6' && p1 === 'unicast-routing') {
       if (this._mode !== 'config') { this._print('% Must be in config mode.', 'err'); return; }
@@ -235,6 +266,8 @@ export class Terminal {
         }
         this._print(`  Interface ${this._ifaceName}: IPv6 address set to ${iface.ipv6Address}/${iface.ipv6Prefix}`, 'ok');
       }
+
+      if (this.device.ipv6RoutingTable) this.sim.updateConnectedRoutesIPv6(this.device);
 
       eventBus.emit('panel:showDevice', this.device);
       eventBus.emit('topology:changed');
@@ -327,6 +360,40 @@ export class Terminal {
       return;
     }
 
+    // ── ipv6 route ─────────────────────────────────────────
+    if (p0 === 'ipv6' && p1 === 'route' && parts.length >= 4) {
+      if (!this.device.ipv6RoutingTable) { this._print('% Not a router or IPv6 routing not enabled.', 'err'); return; }
+      const rawPrefix = parts[2]; // e.g. 2001:db8::/64
+      const nh = parts[3];
+      if (!rawPrefix.includes('/')) { this._print(`% Usage: ipv6 route <prefix>/<len> <next-hop>`, 'err'); return; }
+      const [net, maskStr] = rawPrefix.split('/');
+      const mask = parseInt(maskStr, 10);
+      if (!IPv6Calculator.isValidIPv6(net) || isNaN(mask)) { this._print(`% Invalid prefix: ${rawPrefix}`, 'err'); return; }
+      if (!IPv6Calculator.isValidIPv6(nh)) { this._print(`% Invalid next-hop: ${nh}`, 'err'); return; }
+      
+      this.device.ipv6RoutingTable.addStatic(net, mask, IPv6Calculator.compress(nh));
+      this._print(`  IPv6 static route added: ${IPv6Calculator.compress(net)}/${mask} via ${IPv6Calculator.compress(nh)}`, 'ok');
+      eventBus.emit('panel:showDevice', this.device);
+      eventBus.emit('topology:changed');
+      return;
+    }
+
+    // ── no ipv6 route ──────────────────────────────────────
+    if (p0 === 'no' && p1 === 'ipv6' && parts[2]?.toLowerCase() === 'route' && parts.length >= 4) {
+      if (!this.device.ipv6RoutingTable) { this._print('% Not a router.', 'err'); return; }
+      const rawPrefix = parts[3];
+      if (!rawPrefix.includes('/')) { this._print(`% Usage: no ipv6 route <prefix>/<len>`, 'err'); return; }
+      const [net, maskStr] = rawPrefix.split('/');
+      const mask = parseInt(maskStr, 10);
+      if (!IPv6Calculator.isValidIPv6(net) || isNaN(mask)) { this._print(`% Invalid prefix: ${rawPrefix}`, 'err'); return; }
+      
+      this.device.ipv6RoutingTable.removeRoute(net, mask);
+      this._print(`  IPv6 route removed: ${IPv6Calculator.compress(net)}/${mask}`, 'ok');
+      eventBus.emit('panel:showDevice', this.device);
+      eventBus.emit('topology:changed');
+      return;
+    }
+
     // ── hostname ───────────────────────────────────────────
     if (p0 === 'hostname' && parts[1]) {
       if (this._mode !== 'config') { this._print('% Must be in config mode.', 'err'); return; }
@@ -405,7 +472,7 @@ export class Terminal {
 
     // ── exit / end ─────────────────────────────────────────
     if (cmd === 'exit' || cmd === 'end') {
-      if (this._mode === 'iface' || this._mode === 'config-vlan')  { this._mode = 'config'; this._ifaceName = ''; }
+      if (this._mode === 'iface' || this._mode === 'config-vlan' || this._mode === 'config-router')  { this._mode = 'config'; this._ifaceName = ''; this._curOspf = null; }
       else if (this._mode === 'config') this._mode = 'enable';
       else if (this._mode === 'enable') this._mode = 'user';
       this._updatePrompt();
@@ -461,7 +528,8 @@ export class Terminal {
 
     // show ipv6 route
     if (a === 'ipv6 route' || a === 'ipv6 ro' || a === 'ipv6 r') {
-      this._showIpv6Route();
+      if (!this.device.ipv6RoutingTable) { this._print('% Not a router or IPv6 routing not enabled.', 'err'); return; }
+      this._print(this.device.ipv6RoutingTable.showIpv6Route(), 'out');
       return;
     }
 
@@ -495,7 +563,47 @@ export class Terminal {
       return;
     }
 
+    // show cdp neighbors
+    if (a === 'cdp neighbors' || a === 'cdp nei') {
+      this._showCdpNeighbors();
+      return;
+    }
+
     this._print(`% Unknown show command: "show ${a}". Type "help" or click 📖 Device Guide for a list.`, 'err');
+  }
+
+  _showCdpNeighbors() {
+    this._print('Capability Codes: R - Router, T - Trans Bridge, B - Source Route Bridge', 'out');
+    this._print('                  S - Switch, H - Host, I - IGMP, r - Repeater, P - Phone,', 'out');
+    this._print('                  D - Remote, C - CVTA, M - Two-port Mac Relay\n', 'out');
+    this._print('Device ID        Local Intrfce     Holdtme    Capability  Platform  Port ID', 'out');
+    
+    const links = this.sim.linksOf(this.device.id);
+    for (const link of links) {
+      const neighborId = link.other(this.device.id);
+      const neighbor = this.sim.devices.get(neighborId);
+      if (!neighbor) continue;
+
+      const isSrc = link.sourceDeviceId === this.device.id;
+      const localIf = isSrc ? link.sourceInterface : link.destInterface;
+      const remoteIf = isSrc ? link.destInterface : link.sourceInterface;
+
+      const locShort = this.device.interfaces.find(i => i.name === localIf || i.shortName === localIf)?.shortName || localIf;
+      const remShort = neighbor.interfaces.find(i => i.name === remoteIf || i.shortName === remoteIf)?.shortName || remoteIf;
+
+      let cap = 'H';
+      if (neighbor.type === 'switch' || neighbor.type === 'l3switch') cap = 'S';
+      else if (neighbor.type === 'router') cap = 'R';
+      else if (neighbor.type === 'ap' || neighbor.type === 'wirelessrouter') cap = 'T';
+
+      const devIdStr = neighbor.hostname.padEnd(16).substring(0, 16);
+      const locIfStr = locShort.padEnd(17).substring(0, 17);
+      const holdStr = '163'.padEnd(11);
+      const capStr = cap.padEnd(12);
+      const platStr = (neighbor.model || neighbor.type).padEnd(10).substring(0, 10);
+
+      this._print(`${devIdStr} ${locIfStr} ${holdStr} ${capStr} ${platStr} ${remShort}`, 'out');
+    }
   }
 
   _showVersion() {
@@ -691,7 +799,7 @@ export class Terminal {
   _updatePrompt() {
     if (!this._promptEl || !this.device) return;
     const h  = this.device.hostname;
-    const prompts = { user: `${h}>`, enable: `${h}#`, config: `${h}(config)#`, iface: `${h}(config-if)#` };
+    const prompts = { user: `${h}>`, enable: `${h}#`, config: `${h}(config)#`, iface: `${h}(config-if)#`, 'config-vlan': `${h}(config-vlan)#`, 'config-router': `${h}(config-router)#` };
     const text = prompts[this._mode] || `${h}>`;
     this._promptEl.textContent = text;
     if (this._inputEl) this._inputEl.placeholder = '';
@@ -700,7 +808,7 @@ export class Terminal {
   _promptText() {
     if (!this.device) return '> ';
     const h = this.device.hostname;
-    const p = { user: `${h}> `, enable: `${h}# `, config: `${h}(config)# `, iface: `${h}(config-if)# ` };
+    const p = { user: `${h}> `, enable: `${h}# `, config: `${h}(config)# `, iface: `${h}(config-if)# `, 'config-vlan': `${h}(config-vlan)# `, 'config-router': `${h}(config-router)# ` };
     return p[this._mode] || `${h}> `;
   }
 

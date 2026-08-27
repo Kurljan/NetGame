@@ -143,7 +143,31 @@
         <span class="hud-label">Time</span>
         <span id="hud-timer" class="hud-timer">00:00</span>
       </div>
-      <button id="hud-guide-btn" class="hud-btn guide-btn" title="Open Device & CLI Command Manual">💡 Device Manual</button>
+      
+      <div class="hud-dropdown">
+        <button id="hud-tools-btn" class="hud-btn tools-btn">⚙️ Tools <span id="tools-hint-badge" class="hint-badge hidden"></span></button>
+        <div id="hud-tools-menu" class="hud-dropdown-menu hidden">
+          <button id="hud-checker-btn" class="dropdown-item">📝 Objective Checker</button>
+          <button id="hud-briefing-btn" class="dropdown-item">📖 Briefing</button>
+          <button id="hud-hint-btn" class="dropdown-item">💡 Hints <span id="menu-hint-badge" class="hint-badge hidden"></span></button>
+          <div class="dropdown-divider"></div>
+          <button id="hud-guide-btn" class="dropdown-item">💡 Device Manual</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HINT DRAWER (drops down from HUD) -->
+  <div id="hint-drawer" class="hint-drawer">
+    <div class="hint-drawer-header">
+      <span class="hint-drawer-title">💡 Hints</span>
+      <span class="hint-drawer-count" id="hint-drawer-count">0 / 0</span>
+    </div>
+    <div class="hint-drawer-body" id="hint-drawer-body">
+      <div class="hint-empty">Click "Show Next Hint" to reveal your first hint.</div>
+    </div>
+    <div class="hint-drawer-footer">
+      <button id="hint-next-btn" class="hint-next-btn">Show Next Hint</button>
     </div>
   </div>
 

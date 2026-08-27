@@ -1,0 +1,118 @@
+{
+  "id": 18,
+  "title": "IPv6 Static Routing",
+  "topic": "IPv6 Routing",
+  "description": "Configure IPv6 static routes on R1 and R2 so that PC1 can communicate with PC2 over the IPv6 network.",
+  "ccnaRef": "CCNA SRWE: Module 2 - Static Routing",
+  "sandboxMode": false,
+  "objectives": [
+    { "id": "obj1", "desc": "R1 has an IPv6 static route to 2001:db8:2::/64 via 2001:db8:a::2" },
+    { "id": "obj2", "desc": "R2 has an IPv6 static route to 2001:db8:1::/64 via 2001:db8:a::1" },
+    { "id": "obj3", "desc": "PC1 can ping PC2 via IPv6" }
+  ],
+  "requirements": [
+    {
+      "id": "obj1",
+      "type": "ipv6-route",
+      "desc": "R1 Static Route Configured",
+      "hostname": "R1",
+      "expectedNetwork": "2001:db8:2::",
+      "expectedPrefix": 64,
+      "expectedNextHop": "2001:db8:a::2"
+    },
+    {
+      "id": "obj2",
+      "type": "ipv6-route",
+      "desc": "R2 Static Route Configured",
+      "hostname": "R2",
+      "expectedNetwork": "2001:db8:1::",
+      "expectedPrefix": 64,
+      "expectedNextHop": "2001:db8:a::1"
+    },
+    {
+      "id": "obj3",
+      "type": "ping",
+      "desc": "PC1 → PC2 IPv6 ping",
+      "srcDeviceId": "pc-18a",
+      "dstIp": "2001:db8:2::10"
+    }
+  ],
+  "hints": [
+    "Ensure both routers have 'ipv6 unicast-routing' enabled.",
+    "On R1: ipv6 route 2001:db8:2::/64 2001:db8:a::2",
+    "On R2: ipv6 route 2001:db8:1::/64 2001:db8:a::1",
+    "Verify routes with 'show ipv6 route'.",
+    "Test connectivity by running 'ping 2001:db8:2::10' from PC1."
+  ],
+  "topology": {
+    "devices": [
+      {
+        "id": "pc-18a", "type": "pc", "hostname": "PC1", "x": 100, "y": 300,
+        "interfaces": [
+          { "name": "FastEthernet0", "shortName": "Fa0", "status": "up",
+            "ipv6Address": "2001:db8:1::10", "ipv6Prefix": 64,
+            "macAddress": "AA:BB:CC:18:00:01" }
+        ],
+        "config": {
+          "defaultGatewayIPv6": "2001:db8:1::1"
+        }
+      },
+      {
+        "id": "sw-18a", "type": "switch", "hostname": "SW1", "x": 300, "y": 300,
+        "interfaces": [
+          { "name": "FastEthernet0/1", "shortName": "Fa0/1", "status": "up", "vlanId": 1 },
+          { "name": "GigabitEthernet0/1", "shortName": "G0/1", "status": "up", "vlanId": 1 }
+        ]
+      },
+      {
+        "id": "r-18a", "type": "router", "hostname": "R1", "x": 500, "y": 200,
+        "interfaces": [
+          { "name": "GigabitEthernet0/0/0", "shortName": "G0/0/0", "status": "up",
+            "ipv6Address": "2001:db8:1::1", "ipv6Prefix": 64 },
+          { "name": "Serial0/0/0", "shortName": "S0/0/0", "status": "up",
+            "ipv6Address": "2001:db8:a::1", "ipv6Prefix": 64 }
+        ],
+        "config": {
+          "ipv6UnicastRouting": true
+        }
+      },
+      {
+        "id": "r-18b", "type": "router", "hostname": "R2", "x": 750, "y": 200,
+        "interfaces": [
+          { "name": "Serial0/0/0", "shortName": "S0/0/0", "status": "up",
+            "ipv6Address": "2001:db8:a::2", "ipv6Prefix": 64 },
+          { "name": "GigabitEthernet0/0/0", "shortName": "G0/0/0", "status": "up",
+            "ipv6Address": "2001:db8:2::1", "ipv6Prefix": 64 }
+        ],
+        "config": {
+          "ipv6UnicastRouting": true
+        }
+      },
+      {
+        "id": "sw-18b", "type": "switch", "hostname": "SW2", "x": 950, "y": 300,
+        "interfaces": [
+          { "name": "GigabitEthernet0/1", "shortName": "G0/1", "status": "up", "vlanId": 1 },
+          { "name": "FastEthernet0/1", "shortName": "Fa0/1", "status": "up", "vlanId": 1 }
+        ]
+      },
+      {
+        "id": "pc-18b", "type": "pc", "hostname": "PC2", "x": 1150, "y": 300,
+        "interfaces": [
+          { "name": "FastEthernet0", "shortName": "Fa0", "status": "up",
+            "ipv6Address": "2001:db8:2::10", "ipv6Prefix": 64,
+            "macAddress": "AA:BB:CC:18:00:02" }
+        ],
+        "config": {
+          "defaultGatewayIPv6": "2001:db8:2::1"
+        }
+      }
+    ],
+    "links": [
+      { "id": "l18-1", "sourceDeviceId": "pc-18a", "sourceInterface": "FastEthernet0", "destDeviceId": "sw-18a", "destInterface": "FastEthernet0/1", "type": "ethernet", "status": "up" },
+      { "id": "l18-2", "sourceDeviceId": "sw-18a", "sourceInterface": "GigabitEthernet0/1", "destDeviceId": "r-18a", "destInterface": "GigabitEthernet0/0/0", "type": "ethernet", "status": "up" },
+      { "id": "l18-3", "sourceDeviceId": "r-18a", "sourceInterface": "Serial0/0/0", "destDeviceId": "r-18b", "destInterface": "Serial0/0/0", "type": "serial", "status": "up" },
+      { "id": "l18-4", "sourceDeviceId": "r-18b", "sourceInterface": "GigabitEthernet0/0/0", "destDeviceId": "sw-18b", "destInterface": "GigabitEthernet0/1", "type": "ethernet", "status": "up" },
+      { "id": "l18-5", "sourceDeviceId": "sw-18b", "sourceInterface": "FastEthernet0/1", "destDeviceId": "pc-18b", "destInterface": "FastEthernet0", "type": "ethernet", "status": "up" }
+    ]
+  }
+}

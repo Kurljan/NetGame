@@ -14,6 +14,8 @@ import { LevelManager, LEVELS } from './levels/LevelManager.js';
 import { SubnetCalculator as SC } from './subnetting/SubnetCalculator.js';
 import { DeviceCommandGuide } from './ui/DeviceCommandGuide.js';
 import { SubnetPracticeUI } from './ui/SubnetPracticeUI.js';
+import { LevelBriefing }    from './ui/LevelBriefing.js';
+import { ObjectiveChecker }  from './ui/ObjectiveChecker.js';
 
 // ──────────────────────────────────────────────────────────────
 //  Global game state
@@ -40,6 +42,8 @@ const hud         = new HUD(sim);
 const levels      = new LevelManager();
 const deviceGuide = new DeviceCommandGuide(sim);
 const subnetUI    = new SubnetPracticeUI();
+const briefing    = new LevelBriefing();
+const checker     = new ObjectiveChecker(sim);
 
 canvas.setData(sim.devices, sim.links);
 canvas.startLoop();
@@ -93,6 +97,10 @@ document.getElementById('menu-sandbox')?.addEventListener('click',  () => {
   document.getElementById('hud-level-num').textContent  = 'SANDBOX';
   document.getElementById('hud-level-name').textContent = 'Free Build';
   document.getElementById('hud-objectives').innerHTML   = '<div class="objective-chip">Free mode — no objectives</div>';
+  checker.hide();
+  document.getElementById('hud-tools-btn').style.display = 'none';
+  document.getElementById('hud-tools-menu')?.classList.add('hidden');
+  document.getElementById('hint-drawer')?.classList.remove('open');
   showScreen('game');
 });
 document.getElementById('menu-subnet-practice')?.addEventListener('click', () => {
@@ -115,7 +123,10 @@ function openDeviceGuideFromGame() {
   showScreen('device-guide');
 }
 
-document.getElementById('hud-guide-btn')?.addEventListener('click', openDeviceGuideFromGame);
+document.getElementById('hud-guide-btn')?.addEventListener('click', () => {
+  openDeviceGuideFromGame();
+  document.getElementById('hud-tools-menu')?.classList.add('hidden');
+});
 document.getElementById('btn-device-guide')?.addEventListener('click', openDeviceGuideFromGame);
 document.getElementById('btn-floating-guide')?.addEventListener('click', openDeviceGuideFromGame);
 
@@ -155,10 +166,19 @@ function startLevel(levelData) {
   // Load topology from level JSON
   builder.loadTopology(levelData.topology);
 
-  // Load HUD objectives
+  // Load HUD objectives & hint system
   hud.loadLevel(levelData);
 
+  // Load the objective checker panel
+  checker.loadLevel(levelData);
+
+  // Re-show educational buttons (may be hidden by sandbox)
+  const toolsBtn = document.getElementById('hud-tools-btn');
+  if (toolsBtn) toolsBtn.style.display = '';
+
+  // Show the game screen first, then show the briefing overlay on top
   showScreen('game');
+  briefing.show(levelData);
 }
 
 // ──────────────────────────────────────────────────────────────
@@ -166,8 +186,33 @@ function startLevel(levelData) {
 // ──────────────────────────────────────────────────────────────
 document.getElementById('hud-menu-btn')?.addEventListener('click', () => {
   if (confirm('Return to the main menu? Your progress will be lost.')) {
+    checker.hide();
     showScreen('menu');
   }
+});
+
+// ──────────────────────────────────────────────────────────────
+//  Briefing: re-read button
+// ──────────────────────────────────────────────────────────────
+document.getElementById('hud-briefing-btn')?.addEventListener('click', () => {
+  briefing.reshow();
+  document.getElementById('hud-tools-menu')?.classList.add('hidden');
+});
+
+// ──────────────────────────────────────────────────────────────
+//  Objective Checker: open button
+// ──────────────────────────────────────────────────────────────
+document.getElementById('hud-checker-btn')?.addEventListener('click', () => {
+  checker.show();
+  document.getElementById('hud-tools-menu')?.classList.add('hidden');
+});
+
+// ──────────────────────────────────────────────────────────────
+//  Checker ↔ HUD sync: when checker runs, also update HUD chips
+// ──────────────────────────────────────────────────────────────
+eventBus.on('checker:results', ({ results }) => {
+  // Delegate to HUD so chips and score stay in sync
+  hud.runObjectiveChecks();
 });
 
 // ──────────────────────────────────────────────────────────────

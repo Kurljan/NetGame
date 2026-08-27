@@ -2,12 +2,14 @@
 // Wireless Router (HomeRouter-PT-AC, Linksys WRT300N), Home Gateway (DLC100) & Wireless LAN Controller (WLC-PT, 2504, 3504)
 import { Device, Interface } from './Device.js';
 import { RoutingTable } from '../routing/RoutingTable.js';
+import { IPv6RoutingTable } from '../routing/IPv6RoutingTable.js';
 import { getModelSpec } from './DeviceModels.js';
 
 export class WirelessRouter extends Device {
   constructor(opts = {}) {
     super(opts.type || 'wirelessrouter', opts);
     this.routingTable = new RoutingTable(opts.routingTable || []);
+    this.ipv6RoutingTable = new IPv6RoutingTable(opts.ipv6RoutingTable || []);
     this.ssid         = opts.config?.ssid         || 'Default-WiFi';
     this.ssid5g       = opts.config?.ssid5g       || 'Default-WiFi-5G';
     this.security     = opts.config?.security     || 'WPA2';
@@ -37,6 +39,7 @@ export class WirelessRouter extends Device {
     return {
       ...super.toJSON(),
       routingTable: this.routingTable.toJSON(),
+      ipv6RoutingTable: this.ipv6RoutingTable.toJSON(),
       config: {
         ssid: this.ssid,
         ssid5g: this.ssid5g,

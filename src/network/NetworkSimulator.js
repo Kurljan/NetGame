@@ -116,6 +116,33 @@ export class NetworkSimulator {
     }
   }
 
+  /**
+   * For a router, add connected IPv6 routes for each interface.
+   */
+  updateConnectedRoutesIPv6(router) {
+    if (!router.ipv6RoutingTable) return;
+    router.ipv6RoutingTable.routes = router.ipv6RoutingTable.routes.filter(r => r.type !== 'C');
+
+    for (const iface of router.interfaces) {
+      if (iface.status !== 'up') continue;
+      if (iface.ipv6Address && iface.ipv6Prefix) {
+        try {
+          const expanded = IPv6Calculator.expand(iface.ipv6Address);
+          const hexCharsToCheck = Math.floor(iface.ipv6Prefix / 4);
+          const network = expanded.replace(/:/g, '').slice(0, hexCharsToCheck).padEnd(32, '0');
+          // re-insert colons
+          let networkStr = '';
+          for (let i = 0; i < 32; i += 4) {
+            networkStr += network.slice(i, i+4) + (i < 28 ? ':' : '');
+          }
+          router.ipv6RoutingTable.addConnectedRoute(networkStr, iface.ipv6Prefix, iface.name);
+        } catch (e) {
+          // ignore invalid
+        }
+      }
+    }
+  }
+
   // ──────────────────────────────────────────────────────────
   //  MAIN: Simulate sending a packet
   // ──────────────────────────────────────────────────────────
@@ -191,6 +218,7 @@ export class NetworkSimulator {
   }
 
   _routedDeliveryIPv6(pkt, srcDevice, dstDevice, dstIp) {
+    // Step 1: Check if srcDevice has a default gateway
     const gw = srcDevice.config?.defaultGatewayIPv6 || srcDevice.interfaces.find(i => i.ipv6Gateway)?.ipv6Gateway || '';
     if (!gw) {
       pkt._result = 'failure';
@@ -198,6 +226,7 @@ export class NetworkSimulator {
       return { packet: pkt, pathDeviceIds: [srcDevice.id], success: false, error: pkt._errorReason };
     }
 
+    // Step 2: Find the gateway device
     const gwDevice = this._findDeviceByIPv6(gw);
     if (!gwDevice) {
       pkt._result = 'failure';
@@ -205,18 +234,81 @@ export class NetworkSimulator {
       return { packet: pkt, pathDeviceIds: [srcDevice.id], success: false, error: pkt._errorReason };
     }
 
+    // Step 3: Walk the routing path hop by hop
     const path = [srcDevice.id];
+    let current = gwDevice;
+    const visited = new Set([srcDevice.id]);
+    let hops = 0;
+    const maxHops = 20;
+
+    // Add path from src to gwDevice via BFS (through switches etc.)
     const toGw = this._bfsPath(srcDevice.id, gwDevice.id);
     if (toGw) toGw.forEach(id => { if (!path.includes(id)) path.push(id); });
 
-    if (dstDevice) {
-      const fromGw = this._bfsPath(gwDevice.id, dstDevice.id);
-      if (fromGw) fromGw.forEach(id => { if (!path.includes(id)) path.push(id); });
+    while (hops++ < maxHops) {
+      if (visited.has(current.id)) {
+        pkt._result = 'failure';
+        pkt._errorReason = `Routing loop detected at ${current.hostname}.`;
+        return { packet: pkt, pathDeviceIds: path, success: false, error: pkt._errorReason };
+      }
+      visited.add(current.id);
+
+      // Decrement TTL (Hop Limit in IPv6)
+      pkt.ttl--;
+      if (pkt.ttl <= 0) {
+        pkt._result = 'failure';
+        pkt._errorReason = `Hop Limit expired at ${current.hostname}. Too many hops.`;
+        return { packet: pkt, pathDeviceIds: path, success: false, error: pkt._errorReason };
+      }
+
+      // Does this router have a directly-connected route to dstIp?
+      const directIface = current.interfaces?.find(i =>
+        i.status === 'up' && i.ipv6Address &&
+        IPv6Calculator.isSameSubnet(i.ipv6Address, dstIp, i.ipv6Prefix)
+      );
+
+      if (directIface) {
+        // Found! Deliver to destination
+        if (dstDevice) {
+          const toDst = this._bfsPath(current.id, dstDevice.id);
+          if (toDst) toDst.forEach(id => { if (!path.includes(id)) path.push(id); });
+        }
+        pkt._result = 'success';
+        pkt._path = path;
+        return { packet: pkt, pathDeviceIds: path, success: true };
+      }
+
+      // Consult routing table
+      if (!current.ipv6RoutingTable) {
+        pkt._result = 'failure';
+        pkt._errorReason = `${current.hostname} has no IPv6 routing table. Not a router or IPv6 unicast-routing disabled.`;
+        return { packet: pkt, pathDeviceIds: path, success: false, error: pkt._errorReason };
+      }
+
+      const route = current.ipv6RoutingTable.longestPrefixMatch(dstIp);
+      if (!route) {
+        pkt._result = 'failure';
+        pkt._errorReason = `No route to host ${dstIp} on ${current.hostname}. Add a static route or enable a routing protocol.`;
+        return { packet: pkt, pathDeviceIds: path, success: false, error: pkt._errorReason };
+      }
+
+      // Follow next-hop
+      const nextHopDevice = this._findDeviceByIPv6(route.nextHop);
+      if (!nextHopDevice) {
+        pkt._result = 'failure';
+        pkt._errorReason = `Next-hop ${route.nextHop} unreachable from ${current.hostname}.`;
+        return { packet: pkt, pathDeviceIds: path, success: false, error: pkt._errorReason };
+      }
+
+      const seg = this._bfsPath(current.id, nextHopDevice.id);
+      if (seg) seg.forEach(id => { if (!path.includes(id)) path.push(id); });
+
+      current = nextHopDevice;
     }
 
-    pkt._result = 'success';
-    pkt._path = path;
-    return { packet: pkt, pathDeviceIds: path, success: true };
+    pkt._result = 'failure';
+    pkt._errorReason = 'Max hops exceeded.';
+    return { packet: pkt, pathDeviceIds: path, success: false, error: pkt._errorReason };
   }
 
   // ──────────────────────────────────────────────────────────

@@ -1,0 +1,135 @@
+{
+  "id": 16,
+  "title": "Collision Domains: Hubs vs Switches",
+  "topic": "Physical Layer / Ethernet",
+  "description": "A Hub and a Switch are connected. Assign IPs to PC1 and PC3. Then use the Packet Trace tab to observe how ping traffic differs when passing through a Hub (Layer 1) vs a Switch (Layer 2).",
+  "ccnaRef": "CCNA ITN: Ethernet Switching",
+  "sandboxMode": false,
+  "objectives": [
+    {
+      "id": "obj1",
+      "desc": "PC1 has IP 10.0.0.10/24"
+    },
+    {
+      "id": "obj2",
+      "desc": "PC3 has IP 10.0.0.30/24"
+    },
+    {
+      "id": "obj3",
+      "desc": "PC1 can ping PC3"
+    }
+  ],
+  "requirements": [
+    {
+      "id": "obj1",
+      "type": "subnet",
+      "desc": "PC1 IP",
+      "hostname": "PC1",
+      "interface": "Fa0",
+      "expectedNetwork": "10.0.0.0",
+      "expectedMask": "255.255.255.0"
+    },
+    {
+      "id": "obj2",
+      "type": "subnet",
+      "desc": "PC3 IP",
+      "hostname": "PC3",
+      "interface": "Fa0",
+      "expectedNetwork": "10.0.0.0",
+      "expectedMask": "255.255.255.0"
+    },
+    {
+      "id": "obj3",
+      "type": "ping",
+      "desc": "PC1 to PC3",
+      "srcDeviceId": "pc-1",
+      "dstIp": "10.0.0.30"
+    }
+  ],
+  "hints": [
+    "Assign 10.0.0.10 to PC1 and 10.0.0.30 to PC3. PC2 is already configured with 10.0.0.20.",
+    "After pinging from the Terminal, switch to the 'Packet Trace' tab at the bottom to watch the ICMP packets.",
+    "Notice how the Hub broadcasts frames to all connected ports, while the Switch learns MAC addresses and forwards only to the specific destination."
+  ],
+  "topology": {
+    "devices": [
+      {
+        "id": "hub-1",
+        "type": "hub",
+        "hostname": "Hub1",
+        "x": 300,
+        "y": 200,
+        "interfaces": [
+          { "name": "FastEthernet0/0", "shortName": "Fa0/0", "status": "up" },
+          { "name": "FastEthernet0/1", "shortName": "Fa0/1", "status": "up" },
+          { "name": "FastEthernet0/2", "shortName": "Fa0/2", "status": "up" }
+        ],
+        "config": {}
+      },
+      {
+        "id": "sw-1",
+        "type": "switch",
+        "hostname": "SW1",
+        "x": 600,
+        "y": 200,
+        "interfaces": [
+          { "name": "FastEthernet0/0", "shortName": "Fa0/0", "status": "up" },
+          { "name": "FastEthernet0/1", "shortName": "Fa0/1", "status": "up" },
+          { "name": "FastEthernet0/2", "shortName": "Fa0/2", "status": "up" }
+        ],
+        "config": {}
+      },
+      {
+        "id": "pc-1",
+        "type": "pc",
+        "hostname": "PC1",
+        "x": 150,
+        "y": 350,
+        "interfaces": [
+          { "name": "FastEthernet0", "shortName": "Fa0", "status": "up", "ipAddress": "", "subnetMask": "" }
+        ],
+        "config": {}
+      },
+      {
+        "id": "pc-2",
+        "type": "pc",
+        "hostname": "PC2",
+        "x": 450,
+        "y": 350,
+        "interfaces": [
+          { "name": "FastEthernet0", "shortName": "Fa0", "status": "up", "ipAddress": "10.0.0.20", "subnetMask": "255.255.255.0" }
+        ],
+        "config": {}
+      },
+      {
+        "id": "pc-3",
+        "type": "pc",
+        "hostname": "PC3",
+        "x": 750,
+        "y": 350,
+        "interfaces": [
+          { "name": "FastEthernet0", "shortName": "Fa0", "status": "up", "ipAddress": "", "subnetMask": "" }
+        ],
+        "config": {}
+      }
+    ],
+    "links": [
+      {
+        "id": "l-1", "sourceDeviceId": "pc-1", "sourceInterface": "FastEthernet0",
+        "destDeviceId": "hub-1", "destInterface": "FastEthernet0/0", "type": "ethernet", "status": "up"
+      },
+      {
+        "id": "l-2", "sourceDeviceId": "hub-1", "sourceInterface": "FastEthernet0/1",
+        "destDeviceId": "sw-1", "destInterface": "FastEthernet0/0", "type": "ethernet", "status": "up"
+      },
+      {
+        "id": "l-3", "sourceDeviceId": "sw-1", "sourceInterface": "FastEthernet0/1",
+        "destDeviceId": "pc-2", "destInterface": "FastEthernet0", "type": "ethernet", "status": "up"
+      },
+      {
+        "id": "l-4", "sourceDeviceId": "sw-1", "sourceInterface": "FastEthernet0/2",
+        "destDeviceId": "pc-3", "destInterface": "FastEthernet0", "type": "ethernet", "status": "up"
+      }
+    ]
+  }
+}

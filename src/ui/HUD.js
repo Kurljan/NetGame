@@ -1,5 +1,5 @@
 // src/ui/HUD.js
-// Top HUD: level info, objectives chips, score, timer.
+// Top HUD: level info, objectives chips, score, timer, and hint system.
 
 import { eventBus }          from '../engine/EventBus.js';
 import { SubnetValidator }   from '../subnetting/SubnetValidator.js';
@@ -17,14 +17,54 @@ export class HUD {
     this._objectives = [];
     this._levelData  = null;
 
+    // Hint system state
+    this._hints     = [];
+    this._hintIndex = 0;       // how many hints have been revealed
+    this._hintOpen  = false;
+
     this._scoreEl   = document.getElementById('hud-score');
     this._timerEl   = document.getElementById('hud-timer');
     this._objEl     = document.getElementById('hud-objectives');
     this._levelNumEl = document.getElementById('hud-level-num');
     this._levelNameEl= document.getElementById('hud-level-name');
 
+    // Hint drawer DOM
+    this._hintDrawer   = document.getElementById('hint-drawer');
+    this._hintBody     = document.getElementById('hint-drawer-body');
+    this._hintCount    = document.getElementById('hint-drawer-count');
+    this._hintNextBtn  = document.getElementById('hint-next-btn');
+    
+    // Tools dropdown & items
+    this._toolsBtn     = document.getElementById('hud-tools-btn');
+    this._toolsMenu    = document.getElementById('hud-tools-menu');
+    this._hintHudBtn   = document.getElementById('hud-hint-btn');
+    this._toolsBadge   = document.getElementById('tools-hint-badge');
+    this._menuBadge    = document.getElementById('menu-hint-badge');
+
     document.getElementById('btn-test-all')?.addEventListener('click', () => this.runObjectiveChecks());
     document.getElementById('hud-menu-btn')?.addEventListener('click', () => eventBus.emit('screen:menu'));
+
+    // Toggle Tools Dropdown
+    this._toolsBtn?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      this._toolsMenu?.classList.toggle('hidden');
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!this._toolsMenu?.contains(e.target) && e.target !== this._toolsBtn) {
+        this._toolsMenu?.classList.add('hidden');
+      }
+    });
+
+    // Hint button toggles the drawer
+    this._hintHudBtn?.addEventListener('click', () => {
+      this.toggleHintDrawer();
+      this._toolsMenu?.classList.add('hidden'); // close menu
+    });
+
+    // "Show Next Hint" button
+    this._hintNextBtn?.addEventListener('click', () => this.showNextHint());
   }
 
   // ──────────────────────────────────────────────────────────
@@ -38,6 +78,13 @@ export class HUD {
 
     if (this._levelNumEl)  this._levelNumEl.textContent  = `LV ${levelData.id || '?'}`;
     if (this._levelNameEl) this._levelNameEl.textContent = levelData.title || 'Level';
+
+    // Load hints
+    this._hints     = levelData.hints || [];
+    this._hintIndex = 0;
+    this._hintOpen  = false;
+    this._renderHintDrawer();
+    this._closeHintDrawer();
 
     this._renderObjectives();
     this._updateScore();
@@ -103,6 +150,78 @@ export class HUD {
         time:  this._timer,
         level: this._levelData,
       });
+    }
+  }
+
+  // ──────────────────────────────────────────────────────────
+  //  Hint System
+  // ──────────────────────────────────────────────────────────
+  toggleHintDrawer() {
+    if (this._hintOpen) {
+      this._closeHintDrawer();
+    } else {
+      this._openHintDrawer();
+    }
+  }
+
+  _openHintDrawer() {
+    this._hintOpen = true;
+    this._hintDrawer?.classList.add('open');
+  }
+
+  _closeHintDrawer() {
+    this._hintOpen = false;
+    this._hintDrawer?.classList.remove('open');
+  }
+
+  showNextHint() {
+    if (this._hintIndex >= this._hints.length) return;
+    this._hintIndex++;
+    this._renderHintDrawer();
+    this._openHintDrawer();
+  }
+
+  _renderHintDrawer() {
+    if (!this._hintBody) return;
+
+    // Update counter
+    if (this._hintCount) {
+      this._hintCount.textContent = `${this._hintIndex} / ${this._hints.length}`;
+    }
+
+    // Render revealed hints
+    if (this._hintIndex === 0) {
+      this._hintBody.innerHTML = '<div class="hint-empty">Click "Show Next Hint" to reveal your first hint.</div>';
+    } else {
+      this._hintBody.innerHTML = this._hints.slice(0, this._hintIndex).map((hint, i) => `
+        <div class="hint-item">
+          <span class="hint-num">${i + 1}</span>
+          <span class="hint-text">${hint}</span>
+        </div>
+      `).join('');
+    }
+
+    // Disable button when all hints revealed
+    if (this._hintNextBtn) {
+      const allRevealed = this._hintIndex >= this._hints.length;
+      this._hintNextBtn.disabled = allRevealed;
+      this._hintNextBtn.textContent = allRevealed ? 'All Hints Revealed' : 'Show Next Hint';
+    }
+
+    // Update HUD button badges
+    const remaining = this._hints.length - this._hintIndex;
+    if (remaining > 0 && this._hints.length > 0) {
+      if (this._toolsBadge) {
+        this._toolsBadge.textContent = remaining;
+        this._toolsBadge.classList.remove('hidden');
+      }
+      if (this._menuBadge) {
+        this._menuBadge.textContent = remaining;
+        this._menuBadge.classList.remove('hidden');
+      }
+    } else {
+      if (this._toolsBadge) this._toolsBadge.classList.add('hidden');
+      if (this._menuBadge) this._menuBadge.classList.add('hidden');
     }
   }
 

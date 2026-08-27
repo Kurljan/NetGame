@@ -180,11 +180,12 @@ export class InputHandler {
   _onDrop(e) {
     e.preventDefault();
     const type   = e.dataTransfer.getData('device-type');
+    const model  = e.dataTransfer.getData('device-model');
     if (!type) return;
     const rect   = this.canvas.el.getBoundingClientRect();
     const screen = { x: e.clientX - rect.left, y: e.clientY - rect.top };
     const world  = this.canvas.screenToWorld(screen.x, screen.y);
-    eventBus.emit('device:drop', { type, world });
+    eventBus.emit('device:drop', { type, model, world });
   }
 
   // ──────────────────────────────────────────────────────────

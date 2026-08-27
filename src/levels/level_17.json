@@ -1,0 +1,142 @@
+{
+  "id": 17,
+  "title": "Spanning Tree Protocol (STP)",
+  "topic": "Layer 2 Redundancy",
+  "description": "Three switches are connected in a loop to provide redundancy. STP will automatically block one port to prevent a broadcast storm. Configure the PCs and ping to verify connectivity.",
+  "ccnaRef": "CCNA SRWE: STP Concepts",
+  "sandboxMode": false,
+  "objectives": [
+    {
+      "id": "obj1",
+      "desc": "PC1 has IP 172.16.0.10/16"
+    },
+    {
+      "id": "obj2",
+      "desc": "PC2 has IP 172.16.0.20/16"
+    },
+    {
+      "id": "obj3",
+      "desc": "PC1 can ping PC2"
+    }
+  ],
+  "requirements": [
+    {
+      "id": "obj1",
+      "type": "subnet",
+      "desc": "PC1 IP",
+      "hostname": "PC1",
+      "interface": "Fa0",
+      "expectedNetwork": "172.16.0.0",
+      "expectedMask": "255.255.0.0"
+    },
+    {
+      "id": "obj2",
+      "type": "subnet",
+      "desc": "PC2 IP",
+      "hostname": "PC2",
+      "interface": "Fa0",
+      "expectedNetwork": "172.16.0.0",
+      "expectedMask": "255.255.0.0"
+    },
+    {
+      "id": "obj3",
+      "type": "ping",
+      "desc": "PC1 to PC2",
+      "srcDeviceId": "pc-1",
+      "dstIp": "172.16.0.20"
+    }
+  ],
+  "hints": [
+    "Assign the IP addresses to the PCs.",
+    "Notice the orange/amber link light on one of the switch ports. STP has put that port in a blocking state to break the Layer 2 loop.",
+    "Ping from PC1 to PC2. The traffic will flow around the blocked link."
+  ],
+  "topology": {
+    "devices": [
+      {
+        "id": "sw-1",
+        "type": "switch",
+        "hostname": "SW1",
+        "x": 450,
+        "y": 150,
+        "interfaces": [
+          { "name": "GigabitEthernet0/1", "shortName": "G0/1", "status": "up" },
+          { "name": "GigabitEthernet0/2", "shortName": "G0/2", "status": "up" },
+          { "name": "FastEthernet0/1", "shortName": "Fa0/1", "status": "up" }
+        ],
+        "config": {
+          "stpPriority": 4096
+        }
+      },
+      {
+        "id": "sw-2",
+        "type": "switch",
+        "hostname": "SW2",
+        "x": 250,
+        "y": 350,
+        "interfaces": [
+          { "name": "GigabitEthernet0/1", "shortName": "G0/1", "status": "up" },
+          { "name": "GigabitEthernet0/2", "shortName": "G0/2", "status": "up" }
+        ],
+        "config": {}
+      },
+      {
+        "id": "sw-3",
+        "type": "switch",
+        "hostname": "SW3",
+        "x": 650,
+        "y": 350,
+        "interfaces": [
+          { "name": "GigabitEthernet0/1", "shortName": "G0/1", "status": "up" },
+          { "name": "GigabitEthernet0/2", "shortName": "G0/2", "status": "up" },
+          { "name": "FastEthernet0/1", "shortName": "Fa0/1", "status": "up" }
+        ],
+        "config": {}
+      },
+      {
+        "id": "pc-1",
+        "type": "pc",
+        "hostname": "PC1",
+        "x": 450,
+        "y": 50,
+        "interfaces": [
+          { "name": "FastEthernet0", "shortName": "Fa0", "status": "up", "ipAddress": "", "subnetMask": "" }
+        ],
+        "config": {}
+      },
+      {
+        "id": "pc-2",
+        "type": "pc",
+        "hostname": "PC2",
+        "x": 800,
+        "y": 350,
+        "interfaces": [
+          { "name": "FastEthernet0", "shortName": "Fa0", "status": "up", "ipAddress": "", "subnetMask": "" }
+        ],
+        "config": {}
+      }
+    ],
+    "links": [
+      {
+        "id": "l-1", "sourceDeviceId": "pc-1", "sourceInterface": "FastEthernet0",
+        "destDeviceId": "sw-1", "destInterface": "FastEthernet0/1", "type": "ethernet", "status": "up"
+      },
+      {
+        "id": "l-2", "sourceDeviceId": "sw-1", "sourceInterface": "GigabitEthernet0/1",
+        "destDeviceId": "sw-2", "destInterface": "GigabitEthernet0/1", "type": "ethernet", "status": "up"
+      },
+      {
+        "id": "l-3", "sourceDeviceId": "sw-2", "sourceInterface": "GigabitEthernet0/2",
+        "destDeviceId": "sw-3", "destInterface": "GigabitEthernet0/2", "type": "ethernet", "status": "up"
+      },
+      {
+        "id": "l-4", "sourceDeviceId": "sw-3", "sourceInterface": "GigabitEthernet0/1",
+        "destDeviceId": "sw-1", "destInterface": "GigabitEthernet0/2", "type": "ethernet", "status": "up"
+      },
+      {
+        "id": "l-5", "sourceDeviceId": "sw-3", "sourceInterface": "FastEthernet0/1",
+        "destDeviceId": "pc-2", "destInterface": "FastEthernet0", "type": "ethernet", "status": "up"
+      }
+    ]
+  }
+}

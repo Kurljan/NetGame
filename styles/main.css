@@ -16,6 +16,10 @@ html, body {
   -webkit-font-smoothing: antialiased;
 }
 
+input, textarea {
+  user-select: auto;
+}
+
 /* ── Design Tokens ──────────────────────────────────────────── */
 :root {
   --bg-base:       #0a0e1a;

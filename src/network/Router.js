@@ -1,5 +1,6 @@
 import { Device, Interface } from './Device.js';
 import { RoutingTable } from '../routing/RoutingTable.js';
+import { IPv6RoutingTable } from '../routing/IPv6RoutingTable.js';
 import { getModelSpec } from './DeviceModels.js';
 
 export class Router extends Device {
@@ -7,6 +8,8 @@ export class Router extends Device {
     super('router', opts);
     /** @type {RoutingTable} */
     this.routingTable   = new RoutingTable(opts.routingTable || []);
+    /** @type {IPv6RoutingTable} */
+    this.ipv6RoutingTable = new IPv6RoutingTable(opts.ipv6RoutingTable || []);
     this.natEnabled     = opts.config?.natEnabled     || false;
     this.natInside      = opts.config?.natInside      || '';
     this.natOutside     = opts.config?.natOutside     || '';
@@ -34,6 +37,7 @@ export class Router extends Device {
     return {
       ...super.toJSON(),
       routingTable: this.routingTable.toJSON(),
+      ipv6RoutingTable: this.ipv6RoutingTable.toJSON(),
       config: {
         natEnabled: this.natEnabled,
         natInside: this.natInside,

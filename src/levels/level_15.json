@@ -1,0 +1,140 @@
+{
+  "id": 15,
+  "title": "Firewall Security Zones",
+  "topic": "Network Security / Firewalls",
+  "description": "Configure the Inside and Outside interfaces on the ASA Firewall. Verify that the Inside PC can reach the Outside Server.",
+  "ccnaRef": "CCNA Sec: Firewalls and IPS",
+  "sandboxMode": false,
+  "objectives": [
+    {
+      "id": "obj1",
+      "desc": "Firewall G1/1 (Outside) IP is 203.0.113.1/30"
+    },
+    {
+      "id": "obj2",
+      "desc": "Firewall G1/2 (Inside) IP is 192.168.1.1/24"
+    },
+    {
+      "id": "obj3",
+      "desc": "Inside PC can ping Outside Server (203.0.113.2)"
+    }
+  ],
+  "requirements": [
+    {
+      "id": "obj1",
+      "type": "subnet",
+      "desc": "FW1 G1/1 is 203.0.113.1/30",
+      "hostname": "FW1",
+      "interface": "G1/1",
+      "expectedNetwork": "203.0.113.0",
+      "expectedMask": "255.255.255.252"
+    },
+    {
+      "id": "obj2",
+      "type": "subnet",
+      "desc": "FW1 G1/2 is 192.168.1.1/24",
+      "hostname": "FW1",
+      "interface": "G1/2",
+      "expectedNetwork": "192.168.1.0",
+      "expectedMask": "255.255.255.0"
+    },
+    {
+      "id": "obj3",
+      "type": "ping",
+      "desc": "Inside PC to Outside Server",
+      "srcDeviceId": "pc-in",
+      "dstIp": "203.0.113.2"
+    }
+  ],
+  "hints": [
+    "Select FW1, go to the Interfaces tab, and configure G1/1 (Outside) and G1/2 (Inside) IPs.",
+    "Ensure both interfaces are enabled (Status: up).",
+    "Test ping from PC-Inside to Server-Outside. The firewall will automatically permit outbound ICMP and its return traffic."
+  ],
+  "topology": {
+    "devices": [
+      {
+        "id": "fw-1",
+        "type": "firewall",
+        "hostname": "FW1",
+        "x": 480,
+        "y": 300,
+        "interfaces": [
+          {
+            "name": "GigabitEthernet1/1",
+            "shortName": "G1/1",
+            "status": "down",
+            "ipAddress": "",
+            "subnetMask": ""
+          },
+          {
+            "name": "GigabitEthernet1/2",
+            "shortName": "G1/2",
+            "status": "down",
+            "ipAddress": "",
+            "subnetMask": ""
+          }
+        ],
+        "config": {}
+      },
+      {
+        "id": "pc-in",
+        "type": "pc",
+        "hostname": "PC-Inside",
+        "x": 240,
+        "y": 300,
+        "interfaces": [
+          {
+            "name": "FastEthernet0",
+            "shortName": "Fa0",
+            "status": "up",
+            "ipAddress": "192.168.1.10",
+            "subnetMask": "255.255.255.0"
+          }
+        ],
+        "config": {
+          "defaultGateway": "192.168.1.1"
+        }
+      },
+      {
+        "id": "srv-out",
+        "type": "server",
+        "hostname": "Server-Outside",
+        "x": 720,
+        "y": 300,
+        "interfaces": [
+          {
+            "name": "FastEthernet0",
+            "shortName": "Fa0",
+            "status": "up",
+            "ipAddress": "203.0.113.2",
+            "subnetMask": "255.255.255.252"
+          }
+        ],
+        "config": {
+          "defaultGateway": "203.0.113.1"
+        }
+      }
+    ],
+    "links": [
+      {
+        "id": "l-fw1",
+        "sourceDeviceId": "pc-in",
+        "sourceInterface": "FastEthernet0",
+        "destDeviceId": "fw-1",
+        "destInterface": "GigabitEthernet1/2",
+        "type": "ethernet",
+        "status": "up"
+      },
+      {
+        "id": "l-fw2",
+        "sourceDeviceId": "fw-1",
+        "sourceInterface": "GigabitEthernet1/1",
+        "destDeviceId": "srv-out",
+        "destInterface": "FastEthernet0",
+        "type": "ethernet",
+        "status": "up"
+      }
+    ]
+  }
+}
