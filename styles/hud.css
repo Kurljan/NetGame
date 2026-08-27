@@ -552,6 +552,18 @@
   color: var(--text-dim);
   font-weight: 500;
 }
+.hint-close-btn {
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  font-size: 14px;
+  cursor: pointer;
+  padding: 0 4px;
+  transition: color 0.2s;
+}
+.hint-close-btn:hover {
+  color: var(--cyan);
+}
 
 .hint-drawer-body {
   padding: 10px 14px;

@@ -65,6 +65,9 @@ export class HUD {
 
     // "Show Next Hint" button
     this._hintNextBtn?.addEventListener('click', () => this.showNextHint());
+
+    // Close Hint Drawer button
+    document.getElementById('hint-close-btn')?.addEventListener('click', () => this._closeHintDrawer());
   }
 
   // ──────────────────────────────────────────────────────────
